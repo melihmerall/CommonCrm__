@@ -13,11 +13,15 @@ namespace CommonCrm.Controllers
 			_logger = logger;
 			
 		}
-		
+		[Route("/panel/dashboard")]
 		public IActionResult Index()
 		{
 			return View();
 		}
+        public IActionResult Testss()
+        {
+            return View();
+        }
 
-	}
+    }
 }

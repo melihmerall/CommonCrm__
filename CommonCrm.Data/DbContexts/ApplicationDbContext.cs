@@ -8,14 +8,15 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Attribute = CommonCrm.Data.Entities.Product.Attribute;
 
 namespace CommonCrm.Data.DbContexts
 {
 	public class ApplicationDbContext : DbContext
 	{
-		public ApplicationDbContext(DbContextOptions options)
-		: base(options)
+		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+			: base(options)
 		{
 		}
 
@@ -33,21 +34,9 @@ namespace CommonCrm.Data.DbContexts
 	}
 	public class IdentityContext : IdentityDbContext<ApplicationUser>
 	{
-		public IdentityContext(DbContextOptions options)
-		: base(options)
+		public IdentityContext(DbContextOptions<IdentityContext> options)
+			: base(options)
 		{
-		}
-
-		public DbSet<ApplicationUser> Users { get; set; }
-
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
-		{
-			base.OnModelCreating(modelBuilder);
-
-			// Identity model configuration
-			modelBuilder.Entity<ApplicationUser>()
-				.ToTable("Users");
-
 		}
 	}
 }

@@ -5,16 +5,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommonCrm.Data.Entities.AppUser;
+using Microsoft.AspNetCore.Identity;
 
 namespace CommonCrm.Data.Repositories
 {
 	public class Repository<T> : IRepository<T> where T : class
 	{
 		private readonly ApplicationDbContext _context;
+		private readonly UserManager<ApplicationUser?> _userManager;
 
-		public Repository(ApplicationDbContext context)
+		public Repository(ApplicationDbContext context, UserManager<ApplicationUser> _userManager)
 		{
 			_context = context;
+			_userManager = _userManager;
 		}
 
 		public async Task CreateAsync(T entity)
@@ -47,5 +51,6 @@ namespace CommonCrm.Data.Repositories
 		{
 			return await _context.Set<T>().ToListAsync();
 		}
+		
 	}
 }

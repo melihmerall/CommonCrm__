@@ -1,13 +1,18 @@
 using CommonCrm.Business.Extensions;
 using CommonCrm.Data.DbContexts;
+using CommonCrm.Data.Entities.AppUser;
+using CommonCrm.Data.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using NuGet.Protocol.Core.Types;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.EnableRetryOnFailure()));
 
@@ -15,16 +20,29 @@ builder.Services.AddDbContext<IdentityContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.EnableRetryOnFailure()));
 
 // Identity ve Authorization servislerini ekleme
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-	.AddEntityFrameworkStores<IdentityContext>(); // DbContext tipinizi ayarlayýn
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+	.AddEntityFrameworkStores<IdentityContext>()
+	.AddDefaultUI()
+	.AddDefaultTokenProviders(); // DbContext tipinizi ayarlayï¿½n
 
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+	options.AddPolicy("AdminPolicy", policy =>
+	{
+		policy.RequireRole("Admin");
+		policy.RequireClaim("Permission", "CreateProduct", "UpdateProduct", "DeleteProduct");
+	});
 
-// GenericAuthorizationHandler'ý ekleme
-builder.Services.AddScoped<IAuthorizationHandler, GenericAuthorizationHandler>();
+	options.AddPolicy("UserPolicy", policy =>
+	{
+		policy.RequireRole("User");
+		policy.RequireClaim("Permission", "ViewProduct");
+	});
+});
 
-
+builder.Services.AddScoped<IAuthorizationHandler, RoleAndClaimAuthorizationHandler>();
+builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 
 
@@ -44,10 +62,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
 	name: "default",
-	pattern: "{controller=Home}/{action=Index}/{id?}");
-
+	pattern: "{controller=Auth}/{action=Login}/{id?}");
 app.Run();

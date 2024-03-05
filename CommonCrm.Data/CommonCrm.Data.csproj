@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\IdentityDb\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>
