@@ -1,7 +1,11 @@
 using CommonCrm.Business.Extensions;
+using CommonCrm.Business.Services;
 using CommonCrm.Data.DbContexts;
 using CommonCrm.Data.Entities.AppUser;
+using CommonCrm.Data.Entities.Product;
 using CommonCrm.Data.Repositories;
+using CommonCrm.Data.Repositories.Abstract;
+using CommonCrm.Data.Repositories.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -19,11 +23,22 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDbContext<IdentityContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.EnableRetryOnFailure()));
 
+//automapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 // Identity ve Authorization servislerini ekleme
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 	.AddEntityFrameworkStores<IdentityContext>()
 	.AddDefaultUI()
 	.AddDefaultTokenProviders(); // DbContext tipinizi ayarlay�n
+
+builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+
+builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<CategoryService>();
+builder.Services.AddScoped<AttributeService>();
+builder.Services.AddScoped<ProductUnitService>();
+
 
 
 builder.Services.AddAuthorization(options =>

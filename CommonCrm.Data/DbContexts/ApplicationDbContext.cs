@@ -31,6 +31,7 @@ namespace CommonCrm.Data.DbContexts
 		public DbSet<Category> categories;
 		public DbSet<Attribute> attributes;
 		public DbSet<ProductUnit> productsUnit;
+		
 	}
 	public class IdentityContext : IdentityDbContext<ApplicationUser>
 	{

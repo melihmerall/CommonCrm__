@@ -1,22 +1,30 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using CommonCrm.Data.Entities.AppUser;
 
 namespace CommonCrm.Models.UserVM;
 
 public class CreateUserViewModel
 {
-    [Microsoft.Build.Framework.Required]
     public string UserName { get; set; }
 
-    [Microsoft.Build.Framework.Required]
     [EmailAddress]
     public string Email { get; set; }
 
-    [Microsoft.Build.Framework.Required]
-    [DataType(DataType.Password)]
     public string Password { get; set; }
 
-    [Microsoft.Build.Framework.Required]
-    [DataType(DataType.Password)]
     [Compare("Password", ErrorMessage = "Şifreler eşleşmiyor.")]
     public string ConfirmPassword { get; set; }
+
+    public string Country { get; set; }
+    public string City { get; set; }
+    public string Description { get; set; }
+    public bool IsActive { get; set; }
+    public bool IsCompany { get; set; }
+    public bool IsCustomer { get; set; }
+    public string? CompanyTitle { get; set; }
+    public string? ImagePath { get; set; }
+    public DateTime? BirthDate { get; set; }
+    public Gender Gender { get; set; }
+
 }
+

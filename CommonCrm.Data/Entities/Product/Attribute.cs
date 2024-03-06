@@ -14,6 +14,8 @@ namespace CommonCrm.Data.Entities.Product
 		public int Volume { get; set; }
         public int Weight { get; set; }
 		public int Packet { get; set; }
+		public int ProductId { get; set; }
+		public Product Product { get; set; }
 
 
 
