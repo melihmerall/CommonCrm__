@@ -38,7 +38,7 @@ public class AuthController: Controller
                 if (result.Succeeded)
                 {
                     // Başarılı giriş durumunda yönlendirme yapabilirsiniz
-                    TempData["CustomMessage"] = "Giriş başarılı! Hoşgeldin {HttpContext?.User?.Identity?.Name}.";
+                    TempData["CustomMessage"] = $"Giriş başarılı! Hoşgeldin {HttpContext?.User?.Identity?.Name}.";
                     return RedirectToAction("Index", "Home");
                 }
             }

@@ -18,7 +18,6 @@ namespace CommonCrm.Controllers
 		[Route("/panel/dashboard")]
 		public IActionResult Index()
 		{
-			TempData["CustomMessage"] = $"Giriş başarılı! Hoşgeldin {HttpContext?.User?.Identity?.Name}.";
 
 			return View();
 		}
