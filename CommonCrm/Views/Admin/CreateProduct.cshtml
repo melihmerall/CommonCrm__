@@ -1,121 +1,187 @@
-﻿@model CommonCrm.Business.DTOs.CreateProductDto
+﻿<div class="page-content">
+    <div class="container-fluid">
 
-@{
-    Layout = null;
-}
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Add Product</h4>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Create Product</title>
-</head>
-<body>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Ürünler</a></li>
+                            <li class="breadcrumb-item active">Ürün Yükleme</li>
+                        </ol>
+                    </div>
 
-<div class="container mt-5">
-    <h2>Create Product</h2>
-
-    <form asp-action="CreateProduct" asp-controller="Admin" method="post">
-        <div class="mb-3">
-            <label asp-for="Name" class="form-label"></label>
-            <input asp-for="Name" class="form-control" required />
+                </div>
+            </div>
         </div>
+        <!-- end page title -->
 
-        <div class="mb-3">
-            <label asp-for="EnglishName" class="form-label"></label>
-            <input asp-for="EnglishName" class="form-control" />
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <div id="addproduct-nav-pills-wizard" class="twitter-bs-wizard">
+                            <ul class="twitter-bs-wizard-nav nav nav-pills nav-justified">
+                                <li class="nav-item">
+                                    <a href="#basic-info" class="nav-link active" data-bs-toggle="tab">
+                                        <span class="step-number">01</span>
+                                        <span class="step-title">Ürün Detayları</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#product-img" class="nav-link" data-bs-toggle="tab">
+                                        <span class="step-number">02</span>
+                                        <span class="step-title">Ürün Resimi Ekle</span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="#metadata" class="nav-link" data-bs-toggle="tab">
+                                        <span class="step-number">03</span>
+                                        <span class="step-title">Meta Detayları</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <!-- end ul -->
+                            <div class="tab-content twitter-bs-wizard-tab-content">
+                                <div class="tab-pane active" id="basic-info">
+                                    <h4 class="card-title">Ürün Detayları</h4>
+                                    <p class="card-title-desc">Aşağıdaki tüm bilgileri doldurun</p>
+
+                                    <form>
+                                        <div class="mb-3">
+                                            <label class="form-label" for="productname">Ürün İsmi</label>
+                                            <input id="productname" name="productname" type="text" class="form-control">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-4">
+
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="manufacturername">
+                                                        Üretici Adı
+                                                    </label>
+                                                    <input id="manufacturername" name="manufacturername" type="text"
+                                                           class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="manufacturerbrand">
+                                                        Üretici Markası
+                                                    </label>
+                                                    <input id="manufacturerbrand" name="manufacturerbrand" type="text"
+                                                           class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="price">Fiyat</label>
+                                                    <input id="price" name="price" type="text" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" data-select2-id="13">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label" class="control-label">Katagori</label>
+                                                    <select class="form-control select2">
+                                                        <option>Seçiniz...</option>
+                                                        <option value="EL">Elektronik</option>
+                                                        <option value="FA">Moda</option>
+                                                        <option value="FI">Spor</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label" class="control-label">Özellikler</label>
+
+                                                    <select class="select2 form-control select2-multiple"
+                                                            multiple="multiple" data-placeholder="Seçiniz...">
+                                                        <option value="TO">Dokunmatik ekran</option>
+                                                        <option value="CF">Çağrı Fonksiyonu</option>
+                                                        <option value="NO" selected>Bildirimler</option>
+                                                        <option value="FI" selected>Spor</option>
+                                                        <option value="OU">Dış mekan</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label" for="productdesc">Ürün Açıklaması</label>
+                                            <textarea class="form-control" id="productdesc" rows="5"></textarea>
+                                        </div>
+                                    </form>
+
+                                </div>
+                                <div class="tab-pane" id="product-img">
+                                    <h4 class="card-title">Ürün Görselleri</h4>
+                                    <p class="card-title-desc">Ürün resmini yükleyin</p>
+                                    <form action="/" method="post" class="dropzone dz-clickable">
+
+                                        <div class="dz-message needsclick">
+                                            <div class="mb-3">
+                                                <i class="display-4 text-muted ri-upload-cloud-2-line"></i>
+                                            </div>
+
+                                            <h4>Dosyaları buraya bırakın veya yüklemek için tıklayın.</h4>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="tab-pane" id="metadata">
+                                    <h4 class="card-title">Meta Detayları</h4>
+                                    <p class="card-title-desc">Aşağıdaki tüm bilgileri doldurun</p>
+
+                                    <form>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="metatitle">Meta title</label>
+                                                    <input id="metatitle" name="metatitle" type="text"
+                                                           class="form-control">
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="metakeywords">Anahtar Kelimeler</label>
+                                                    <input id="metakeywords" name="metakeywords" type="text"
+                                                           class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label" for="metadescription">Meta Açıklaması</label>
+                                            <textarea class="form-control" id="metadescription" rows="5"></textarea>
+                                        </div>
+                                    </form>
+
+                                    <div class="text-center mt-4">
+                                        <button type="submit" class="btn btn-primary me-2 waves-effect waves-light">
+                                            Değişiklikleri Kaydet
+                                        </button>
+                                        <button type="submit" class="btn btn-light waves-effect">İptal et</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="pager wizard twitter-bs-wizard-pager-link">
+                                <li class="previous disabled"><a href="#">Önceki</a></li>
+                                <li class="next disabled"><a href="#">Sonraki</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        <!-- end row -->
 
-        <div class="mb-3">
-            <label asp-for="Code" class="form-label"></label>
-            <input asp-for="Code" class="form-control" />
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="CategoryIds" class="form-label"></label>
-            <select asp-for="CategoryIds" asp-items="Model.Categories" class="form-select" multiple required>
-
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="UnitId" class="form-label"></label>
-            <select asp-items="Model.ProductUnits" asp-for="UnitId" class="form-select" required>
-
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="AttributeId" class="form-label"></label>
-            <select asp-items="Model.Attributes" asp-for="AttributeId" class="form-select" required>
-
-            </select>
-        </div>
-
-        <!-- TL -->
-        <div class="mb-3">
-            <label asp-for="SalesPriceTL" class="form-label"></label>
-            <input asp-for="SalesPriceTL" type="number" class="form-control" required />
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="KdvTL" class="form-label"></label>
-            <input asp-for="KdvTL" type="number" class="form-control" required />
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="TotalTL" class="form-label"></label>
-            <input asp-for="TotalTL" type="number" class="form-control" required />
-        </div>
-
-        <!-- Dolar -->
-        <div class="mb-3">
-            <label asp-for="SalesPriceDolar" class="form-label"></label>
-            <input asp-for="SalesPriceDolar" type="number" class="form-control" required />
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="KdvDolar" class="form-label"></label>
-            <input asp-for="KdvDolar" type="number" class="form-control" required />
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="TotalDolar" class="form-label"></label>
-            <input asp-for="TotalDolar" type="number" class="form-control" required />
-        </div>
-
-        <!-- Euro -->
-        <div class="mb-3">
-            <label asp-for="SalesPriceEuro" class="form-label"></label>
-            <input asp-for="SalesPriceEuro" type="number" class="form-control" required />
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="KdvEuro" class="form-label"></label>
-            <input asp-for="KdvEuro" type="number" class="form-control" required />
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="TotalEuro" class="form-label"></label>
-            <input asp-for="TotalEuro" type="number" class="form-control" required />
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="OfferQuantity" class="form-label"></label>
-            <input asp-for="OfferQuantity" type="number" class="form-control" required />
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="Description" class="form-label"></label>
-            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Create Product</button>
-    </form>
+    </div> <!-- container-fluid -->
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>

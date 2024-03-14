@@ -12,8 +12,8 @@ public class RoleViewModel
     public List<ClaimViewModel>? Claims { get; set; }
     public List<SelectListItem>? SelectedClaims { get; set; }
     public string[]? SelectedIds { get; set; }
-    public Dictionary<string, IList<string>> RoleClaims { get; set; }
-    public List<IdentityRole> Roles { get; set; } 
+    public Dictionary<string, IList<string>>? RoleClaims { get; set; }
+    public List<IdentityRole>? Roles { get; set; } 
 }
 public class ClaimViewModel
 {
