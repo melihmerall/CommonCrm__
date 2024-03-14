@@ -1,33 +1,87 @@
-﻿@model System.Collections.Generic.List<Microsoft.AspNetCore.Identity.IdentityRole>
-
-@{
+﻿@{
     ViewBag.Title = "title";
     Layout = "_Layout";
 }
 
-@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
+@using CommonCrm.Business.Extensions
+@model   CommonCrm.Models.RoleVM.RoleViewModel
 
-<h2>Roller</h2>
+<div class="page-content">
+    <div class="container-fluid">
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Rol Adı</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Name</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Düzenle</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Sil</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Rol Listesi</h4>
 
-<a asp-action="Create">Yeni Rol Ekle</a>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+
+                            <li class="breadcrumb-item active">Roller</li>
+                        </ol>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <h4 class="card-title">Mevcut Roller</h4>
+
+                        <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                               style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                            <tr>
+                                <th>Rol Adı</th>
+                                <th>Rol İzinleri</th>
+                                <th>Düzenle</th>
+                                <th>Sil</th>
+
+
+                            </tr>
+                            </thead>
+
+
+                            <tbody>
+                            @foreach (var i in Model.RoleClaims)
+                            {
+                                
+                                foreach (var c in Model.Roles)
+                                {
+                                    <tr>
+                                        <td>@i.Key</td>
+                                    
+                                        <td>@i.Value.ToOneLineStringJustNotNulls()</td>
+
+                                        <td>
+                                            <a href="/rol/duzenle/@c.Id" class="btn btn-outline-secondary btn-sm edit" title="Düzenle">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="/rol/sil/@c.Id" class="btn btn-outline-secondary btn-sm deleted" title="Sil">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    continue;
+                                }
+                                
+                            }
+
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div>
+</div>

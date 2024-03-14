@@ -25,6 +25,10 @@ namespace CommonCrm.Data.DbContexts
 			modelBuilder.Entity<Product>()
 				   .HasMany(p => p.Categories)
 				   .WithMany(c => c.Products);
+			modelBuilder.Entity<Product>()
+				.HasOne(p => p.Attribute)
+				.WithOne(a => a.Product)
+				.HasForeignKey<Attribute>(a => a.ProductId);
 		}
 
 		public DbSet<Product> products;

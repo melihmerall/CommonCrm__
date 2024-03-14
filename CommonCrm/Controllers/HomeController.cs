@@ -1,6 +1,7 @@
 using CommonCrm.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CommonCrm.Controllers
 {
@@ -13,15 +14,14 @@ namespace CommonCrm.Controllers
 			_logger = logger;
 			
 		}
+		
 		[Route("/panel/dashboard")]
 		public IActionResult Index()
 		{
+			TempData["CustomMessage"] = $"Giriş başarılı! Hoşgeldin {HttpContext?.User?.Identity?.Name}.";
+
 			return View();
 		}
-        public IActionResult Testss()
-        {
-            return View();
-        }
 
     }
 }

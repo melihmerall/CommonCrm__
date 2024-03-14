@@ -36,11 +36,6 @@ namespace CommonCrm.Data.Entities.Product
         public int OfferQuantity { get; set; } //
 
         public string Description { get; set; }
-
-
-
-
-
-
+        
     }
 }

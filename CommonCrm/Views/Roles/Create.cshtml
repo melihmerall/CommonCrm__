@@ -1,8 +1,67 @@
-﻿@model dynamic
+﻿@using CommonCrm.Models.RoleVM
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model CommonCrm.Models.RoleVM.RoleViewModel
 
 @{
     ViewBag.Title = "title";
     Layout = "_Layout";
 }
+<div class="page-content">
+    <div class="container-fluid">
 
-<h2>title</h2>
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Rol Ekle</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <form asp-controller="Roles" asp-action="Create" method="post">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label>Rol Adı</label>
+                                        <input asp-for="RoleName" type="text" class="form-control" required placeholder="Admin,Yönetici..."/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Rol Açıklaması</label>
+                                        <input asp-for="Description" type="text" class="form-control" required placeholder="Rolü kullanacak kişi/kişilerin şirket pozisyonu..."/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Role Ait İşlem İzinlerini Seçin</label>
+                                        <select asp-for="SelectedIds" asp-items="Model.SelectedClaims" class="select2 form-control select2-multiple" multiple="multiple" data-placeholder="Seçimleriniz...">
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-0">
+                                    <div>
+                                        <button type="submit" class="btn btn-primary waves-effect waves-light me-1">
+                                            Rol Ekle
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+
+                    </div>
+
+
+                </div>
+            </div>
+            <!-- end select2 -->
+
+        </div>
+
+
+    </div>
+</div>

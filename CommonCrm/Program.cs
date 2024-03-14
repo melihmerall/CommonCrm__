@@ -8,6 +8,7 @@ using CommonCrm.Data.Repositories.Abstract;
 using CommonCrm.Data.Repositories.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using NuGet.Protocol.Core.Types;
@@ -30,7 +31,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 	.AddEntityFrameworkStores<IdentityContext>()
 	.AddDefaultUI()
-	.AddDefaultTokenProviders(); // DbContext tipinizi ayarlay�n
+	.AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 
@@ -43,6 +44,9 @@ builder.Services.AddScoped<ProductUnitService>();
 
 builder.Services.AddAuthorization(options =>
 {
+	options.DefaultPolicy = new AuthorizationPolicyBuilder()
+		.RequireAuthenticatedUser()
+		.Build();
 	options.AddPolicy("AdminPolicy", policy =>
 	{
 		policy.RequireRole("Admin");
@@ -54,7 +58,20 @@ builder.Services.AddAuthorization(options =>
 		policy.RequireRole("User");
 		policy.RequireClaim("Permission", "ViewProduct");
 	});
+	
 });
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+	options.Cookie.HttpOnly = true;
+	options.LoginPath = "/Auth/Login";
+	options.AccessDeniedPath = "/Auth/AccessDenied";
+	options.SlidingExpiration = true;
+	options.Cookie.Name = ".Crm.Identity.Token";
+	options.ExpireTimeSpan = TimeSpan.FromDays(1);
+
+});
+
 
 builder.Services.AddScoped<IAuthorizationHandler, RoleAndClaimAuthorizationHandler>();
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();

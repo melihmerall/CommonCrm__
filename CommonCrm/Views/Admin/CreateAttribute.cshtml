@@ -14,8 +14,8 @@
 <body>
 <form asp-action="CreateProductUnit" asp-controller="Admin" method="post">
 <div class="mb-3">
-    <label asp-for="Width" class="form-label"></label>
-    <input asp-for="Name" class="form-control" required />
+    <label  class="form-label"></label>
+    <input class="form-control" required />
     @if (userName != null)
     {
         <input asp-for="CreatedBy" value="@userName" hidden="hidden"/>

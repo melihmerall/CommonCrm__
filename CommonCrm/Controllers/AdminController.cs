@@ -57,6 +57,7 @@ public class AdminController : Controller
 
 
     #endregion
+    
     #region User Process
     [HttpGet]
     [Route("/panel/kullanici-ekle")]

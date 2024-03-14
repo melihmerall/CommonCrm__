@@ -3,52 +3,132 @@
 @{
     Layout = null;
 }
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
+
+    <meta charset="utf-8"/>
+    <title>CRM GİRİS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page with Bootstrap 5</title>
-    <!-- Bootstrap 5 CSS CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f4f4f4;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description"/>
+    <meta content="Themesdesign" name="author"/>
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="/assets/images/logos.png">
 
-        .login-container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 300px;
-            text-align: center;
-        }
+    <!-- Bootstrap Css -->
+    <link href="/assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css"/>
+    <!-- Icons Css -->
+    <link href="/assets/css/icons.min.css" rel="stylesheet" type="text/css"/>
+    <!-- App Css-->
+    <link href="/assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="/assets/libs/toastr/build/toastr.min.css">
 
-        .login-container h2 {
-            margin-bottom: 20px;
-        }
-    </style>
+
 </head>
-<body>
-    <div class="login-container">
-        <h2 class="mb-4">Login</h2>
-        <form asp-controller="Auth" asp-action="Login" method="post">
-            <div class="mb-3">
-                <input type="text" asp-for="Email" class="form-control" placeholder="Username" required>
-            </div>
-            <div class="mb-3">
-                <input type="password" asp-for="Password" class="form-control" placeholder="Password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
-    </div>
 
-    <!-- Bootstrap 5 JS and Popper.js CDN (Optional for Bootstrap JS features) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<body class="auth-body-bg">
+<div class="home-btn d-none d-sm-block">
+    <a href="">
+        <i class="mdi mdi-home-variant h2 text-white"></i>
+    </a>
+</div>
+<div>
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            <div class="col-lg-4">
+                <div class="authentication-page-content p-4 d-flex align-items-center min-vh-100">
+                    <div class="w-100">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-9">
+                                <div>
+
+                                    <div class="text-center">
+                                        <div>
+                                            <a class="authentication-logo">
+                                                <img src="/assets/images/logos.png" height="160" alt="logo">
+                                            </a>
+                                        </div>
+
+                                        <h4 class="font-size-18 mt-4">Hoşgeldiniz!</h4>
+                                        <p class="text-muted">Giriş Yaparak Devam edebilirsiniz.</p>
+                                    </div>
+
+                                    <div class="p-2 mt-5">
+                                        @if (TempData["LoginErrorMessage"] != null)
+                                        {
+                                            <div id="toast-container" class="toast-top-right">
+                                                <div class="toast toast-error" aria-live="assertive" style="display: block;">
+                                                    <div class="toast-message"> @TempData["LoginErrorMessage"]</div>
+                                                </div>
+                                            </div>
+                                        }
+                                        <form asp-controller="Auth" asp-action="Login" method="post">
+
+                                            <div class="mb-3 auth-form-group-custom mb-4">
+                                                <i class="ri-user-2-line auti-custom-input-icon"></i>
+                                                <label asp-for="Email" class="fw-semibold">Email</label>
+                                                <input asp-for="Email" type="text" class="form-control" id="username" placeholder="Email Gir">
+                                            </div>
+
+                                            <div class="mb-3 auth-form-group-custom mb-4">
+                                                <i class="ri-lock-2-line auti-custom-input-icon"></i>
+                                                <label asp-for="Password">Şifre</label>
+                                                <input asp-for="Password" type="password" class="form-control" id="userpassword" placeholder="Şifre Gir">
+                                            </div>
+
+
+                                            <div class="mt-4 text-center">
+                                                <button class="btn btn-primary w-md waves-effect waves-light" type="submit">Giriş Yap</button>
+                                            </div>
+
+                                            <div class="mt-4 text-center">
+                                                <a href="" class="text-muted"><i class="mdi mdi-lock me-1"></i> Şifremi Unuttum!</a>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <div class="mt-5 text-center">
+                                        <p>Üye Değil misin ? <a href="" class="fw-medium text-primary"> İletişim </a> </p>
+                                        @* <p>© <script>document.write(new Date().getFullYear())</script>Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesdesign</p> *@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="authentication-bg">
+                    <div class="bg-overlay"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+<script>
+function hideToast() {
+    var toastContainer = document.getElementById('toast-container');
+    toastContainer.style.display = 'none';
+}
+
+setTimeout(hideToast, 4000);
+</script>
+<!-- JAVASCRIPT -->
+<script src="assets/libs/jquery/jquery.min.js"></script>
+<script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/libs/metismenu/metisMenu.min.js"></script>
+<script src="assets/libs/simplebar/simplebar.min.js"></script>
+<script src="assets/libs/node-waves/waves.min.js"></script>
+<script src="assets/libs/toastr/build/toastr.min.js"></script>
+
+<!-- toastr init -->
+<script src="assets/js/pages/toastr.init.js"></script>
+<script src="assets/js/app.js"></script>
+
 </body>
 </html>
