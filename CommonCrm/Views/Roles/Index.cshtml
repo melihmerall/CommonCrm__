@@ -1,0 +1,33 @@
+﻿@model System.Collections.Generic.List<Microsoft.AspNetCore.Identity.IdentityRole>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
+
+<h2>Roller</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Rol Adı</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Düzenle</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Sil</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create">Yeni Rol Ekle</a>
