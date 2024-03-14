@@ -164,9 +164,15 @@ public class AdminController : Controller
         _attributeService.Create(entity);
         return View();
     }
-    
+
 
     #endregion
-    
-  
+
+    [Route("/ürünler/ürünler")]
+
+    public IActionResult Product()
+    {
+        return View();
+    }
+
 }
