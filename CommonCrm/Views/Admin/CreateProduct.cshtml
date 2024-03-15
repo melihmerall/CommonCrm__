@@ -1,186 +1,266 @@
 ﻿<div class="page-content">
-    <div class="container-fluid">
+<div class="container-fluid">
 
-        <!-- start page title -->
-        <div class="row">
-            <div class="col-12">
-                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">Ürün Ekle</h4>
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Ürün Ekle</h4>
 
-                    <div class="page-title-right">
-                        <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">Ürünler</a></li>
-                            <li class="breadcrumb-item active">Ürün Ekle</li>
-                        </ol>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a href="javascript: void(0);">Ürünler</a>
+                    </li>
+                    <li class="breadcrumb-item active">Ürün Ekle</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row">
+<div class="col-lg-6">
+    <div class="card">
+        <div class="card-body">
+            <div id="addproduct-nav-pills-wizard" class="twitter-bs-wizard">
+                <!-- end ul -->
+                <div class="tab-content twitter-bs-wizard-tab-content">
+                    <div class="tab-pane active" id="basic-info">
+                        <h4 class="card-title">Ürün Kimliği</h4>
+                        <p class="card-title-desc">Aşağıdaki tüm bilgileri doldurun</p>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label" for="productname">Ürün İsmi</label>
+                                    <input id="productname" name="productname" type="text" class="form-control">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="productname">İngilizce Ürün İsmi</label>
+                                    <input id="productname" name="productname" type="text" class="form-control">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="manufacturername">
+                                        Kod
+                                    </label>
+                                    <input id="manufacturername" name="manufacturername" type="text"
+                                           class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="manufacturerbrand">
+                                        Birim
+                                    </label>
+                                    <input id="manufacturerbrand" name="manufacturerbrand" type="text"
+                                           class="form-control">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="manufacturerbrand">
+                                        Kategori
+                                    </label>
+                                    <input id="manufacturerbrand" name="manufacturerbrand" type="text"
+                                           class="form-control">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="manufacturerbrand">
+                                        Koleksiyon
+                                    </label>
+                                    <input id="manufacturerbrand" name="manufacturerbrand" type="text"
+                                           class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label" for="productdesc">Ürün Açıklaması</label>
+                                    <textarea class="form-control" id="productdesc" rows="5"></textarea>
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6">
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="productdesc">İngilizce Ürün Açıklaması</label>
+                                    <textarea class="form-control" id="productdesc" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
 
                 </div>
+
             </div>
+
         </div>
-        <!-- end page title -->
+    </div>
+</div>
+<div class="col-lg-6">
+    <div class="card">
+        <div class="card-body">
+            <div id="addproduct-nav-pills-wizard" class="twitter-bs-wizard">
+                <!-- end ul -->
+                <div class="tab-content twitter-bs-wizard-tab-content">
+                    <div class="tab-pane active" id="basic-info">
+                        <h4 title="sa" class="card-title">Fiyat</h4>
+                        <p class="card-title-desc">Aşağıdaki tüm bilgileri doldurun</p>
 
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-body">
-
-                        <div id="addproduct-nav-pills-wizard" class="twitter-bs-wizard">
-                            <ul class="twitter-bs-wizard-nav nav nav-pills nav-justified">
-                                <li class="nav-item">
-                                    <a href="#basic-info" class="nav-link active" data-bs-toggle="tab">
-                                        <span class="step-number">01</span>
-                                        <span class="step-title">Ürün Detayları</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#product-img" class="nav-link" data-bs-toggle="tab">
-                                        <span class="step-number">02</span>
-                                        <span class="step-title">Ürün Resimi Ekle</span>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a href="#metadata" class="nav-link" data-bs-toggle="tab">
-                                        <span class="step-number">03</span>
-                                        <span class="step-title">Meta Detayları</span>
-                                    </a>
-                                </li>
-                            </ul>
-                            <!-- end ul -->
-                            <div class="tab-content twitter-bs-wizard-tab-content">
-                                <div class="tab-pane active" id="basic-info">
-                                    <h4 class="card-title">Ürün Detayları</h4>
-                                    <p class="card-title-desc">Aşağıdaki tüm bilgileri doldurun</p>
-
-                                    <form>
-                                        <div class="mb-3">
-                                            <label class="form-label" for="productname">Ürün İsmi</label>
-                                            <input id="productname" name="productname" type="text" class="form-control">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="mb-3">
+                                    <label class="form-label" for="productname">Satış</label>
+                                    <hr/>
+                                    <div class="input-group m-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">₺</span>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-lg-4">
+                                        <input data-inputmask="'alias': 'numeric', 'groupSeparator': '.', 'radixPoint': ',', 'digits': 2, 'digitsOptional': false, 'prefix': '₺ ', 'placeholder': '0'"
+                                               class="form-control input-mask text-left" type="text" class="form-control" id="input-currency-tl" placeholder="0" aria-describedby="validationTooltipUsernamePrepend">
 
-                                                <div class="mb-3">
-                                                    <label class="form-label" for="manufacturername">
-                                                        Üretici Adı
-                                                    </label>
-                                                    <input id="manufacturername" name="manufacturername" type="text"
-                                                           class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4">
-
-                                                <div class="mb-3">
-                                                    <label class="form-label" for="manufacturerbrand">
-                                                        Üretici Markası
-                                                    </label>
-                                                    <input id="manufacturerbrand" name="manufacturerbrand" type="text"
-                                                           class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <div class="mb-3">
-                                                    <label class="form-label" for="price">Fiyat</label>
-                                                    <input id="price" name="price" type="text" class="form-control">
-                                                </div>
-                                            </div>
+                                    </div>
+                                    <div class="input-group m-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">$</span>
                                         </div>
-                                        <div class="row" data-select2-id="13">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label class="form-label" class="control-label">Katagori</label>
-                                                    <select class="form-control select2">
-                                                        <option>Seçiniz...</option>
-                                                        <option value="EL">Elektronik</option>
-                                                        <option value="FA">Moda</option>
-                                                        <option value="FI">Spor</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label class="form-label" class="control-label">Özellikler</label>
+                                        <input id="input-currency" class="form-control input-mask text-left " placeholder="0"
+                                               data-inputmask="'alias': 'numeric', 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'prefix': '$ ', 'placeholder': '0'">
 
-                                                    <select class="select2 form-control select2-multiple"
-                                                            multiple="multiple" data-placeholder="Seçiniz...">
-                                                        <option value="TO">Dokunmatik ekran</option>
-                                                        <option value="CF">Çağrı Fonksiyonu</option>
-                                                        <option value="NO" selected>Bildirimler</option>
-                                                        <option value="FI" selected>Spor</option>
-                                                        <option value="OU">Dış mekan</option>
-                                                    </select>
-                                                </div>
-                                            </div>
+                                    </div>
+                                    <div class="input-group m-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">€</span>
                                         </div>
+                                        <input id="input-currency-euro" class="form-control input-mask text-left" placeholder="0"
+                                               data-inputmask="'alias': 'numeric', 'groupSeparator': '.', 'radixPoint': ',', 'digits': 2, 'digitsOptional': false, 'prefix': '€ ', 'placeholder': '0'">
 
-                                        <div class="mb-3">
-                                            <label class="form-label" for="productdesc">Ürün Açıklaması</label>
-                                            <textarea class="form-control" id="productdesc" rows="5"></textarea>
-                                        </div>
-                                    </form>
+                                    </div>
+
 
                                 </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="mb-3">
+                                    <label class="form-label"  for="productname">Satış</label>
+                                    <hr/>
+                                    <div class="input-group m-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">%</span>
+                                        </div>
+                                        <input data-inputmask="'alias': 'numeric', 'groupSeparator': '.', 'radixPoint': ',', 'digits': 2, 'digitsOptional': false, 'prefix': '₺ ', 'placeholder': '0'"
+                                               class="form-control input-mask text-left" type="text" class="form-control" id="input-currency-tl" placeholder="0" aria-describedby="validationTooltipUsernamePrepend">
+
+                                    </div>
+                                    <div class="input-group m-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">%</span>
+                                        </div>
+                                        <input id="input-currency" class="form-control input-mask text-left " placeholder="0"
+                                               data-inputmask="'alias': 'numeric', 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'prefix': '$ ', 'placeholder': '0'">
+
+                                    </div>
+                                    <div class="input-group m-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">%</span>
+                                        </div>
+                                        <input id="input-currency-euro" class="form-control input-mask text-left" placeholder="0"
+                                               data-inputmask="'alias': 'numeric', 'groupSeparator': '.', 'radixPoint': ',', 'digits': 2, 'digitsOptional': false, 'prefix': '€ ', 'placeholder': '0'">
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="mb-3">
+                                    <label class="form-label" for="productname">Satış</label>
+                                    <hr/>
+                                    <div class="input-group m-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">₺</span>
+                                        </div>
+                                        <input data-inputmask="'alias': 'numeric', 'groupSeparator': '.', 'radixPoint': ',', 'digits': 2, 'digitsOptional': false, 'prefix': '₺ ', 'placeholder': '0'"
+                                               class="form-control input-mask text-left" type="text" class="form-control" id="input-currency-tl" placeholder="0" aria-describedby="validationTooltipUsernamePrepend">
+
+                                    </div>
+                                    <div class="input-group m-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">$</span>
+                                        </div>
+                                        <input id="input-currency" class="form-control input-mask text-left " placeholder="0"
+                                               data-inputmask="'alias': 'numeric', 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'prefix': '$ ', 'placeholder': '0'">
+
+                                    </div>
+                                    <div class="input-group m-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">€</span>
+                                        </div>
+                                        <input id="input-currency-euro" class="form-control input-mask text-left" placeholder="0"
+                                               data-inputmask="'alias': 'numeric', 'groupSeparator': '.', 'radixPoint': ',', 'digits': 2, 'digitsOptional': false, 'prefix': '€ ', 'placeholder': '0'">
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="mb-4">
+                                    <label class="form-label" onmouseover="showCustomInfoBox(this)" title="Birden fazla döviz olduğu için arayüzde gösterilmek üzere birinin varsayılan olması gerekiyor." for="productname">Varsayılan</label>
+                                    <hr/>
+                                </div>
+
+                                <div class="form-check mb-4" style="margin-left: 12px!important;">
+                                    <input class="form-check-input" type="radio" name="formRadios" id="formRadios1" checked="">
+                                   
+                                </div>
+                                <div class="form-check mb-4" style="margin-left: 12px!important;">
+                                    <input class="form-check-input" type="radio" name="formRadios" id="formRadios2">
+                                    
+                                </div>
+                                <div class="form-check mb-4" style="margin-left: 12px!important;">
+                                    <input class="form-check-input" type="radio" name="formRadios" id="formRadios2">
+                                    
+                                </div>
+                            </div>
+                         
+
+                            <div class="col-lg-12">
                                 <div class="tab-pane" id="product-img">
-                                    <h4 class="card-title">Ürün Görselleri</h4>
+                                    <h4 class="card-title">Görsel</h4>
                                     <p class="card-title-desc">Ürün resmini yükleyin</p>
                                     <form action="/" method="post" class="dropzone dz-clickable">
-
                                         <div class="dz-message needsclick">
                                             <div class="mb-3">
-                                                <i class="display-4 text-muted ri-upload-cloud-2-line"></i>
+                                                <i class="display-6 text-muted ri-upload-cloud-2-line"></i>
                                             </div>
 
                                             <h4>Dosyaları buraya bırakın veya yüklemek için tıklayın.</h4>
                                         </div>
                                     </form>
                                 </div>
-                                <div class="tab-pane" id="metadata">
-                                    <h4 class="card-title">Meta Detayları</h4>
-                                    <p class="card-title-desc">Aşağıdaki tüm bilgileri doldurun</p>
-
-                                    <form>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <div class="mb-3">
-                                                    <label class="form-label" for="metatitle">Meta başlığı</label>
-                                                    <input id="metatitle" name="metatitle" type="text"
-                                                           class="form-control">
-                                                </div>
-
-                                            </div>
-
-                                            <div class="col-sm-6">
-                                                <div class="mb-3">
-                                                    <label class="form-label" for="metakeywords">Anahtar Kelimeler</label>
-                                                    <input id="metakeywords" name="metakeywords" type="text"
-                                                           class="form-control">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="form-label" for="metadescription">Meta Açıklaması</label>
-                                            <textarea class="form-control" id="metadescription" rows="5"></textarea>
-                                        </div>
-                                    </form>
-
-                                    <div class="text-center mt-4">
-                                        <button type="submit" class="btn btn-primary me-2 waves-effect waves-light">
-                                            Değişiklikleri Kaydet
-                                        </button>
-                                        <button type="submit" class="btn btn-light waves-effect">İptal et</button>
-                                    </div>
-                                </div>
                             </div>
-                          
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- end row -->
 
-    </div> <!-- container-fluid -->
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+<!-- end row -->
+
+</div> <!-- container-fluid -->
 </div>
 <!-- twitter-bootstrap-wizard js -->
 <script src="~/assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>

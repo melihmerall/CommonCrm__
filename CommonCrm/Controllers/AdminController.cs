@@ -73,17 +73,35 @@ public class AdminController : Controller
         {
             var user = model.MapTo<ApplicationUser>();
 
+            var userMail = _userManager?.FindByEmailAsync(model?.Email);
+            if(userMail != null)
+            {
+                TempData["ErrorMessage"] = $"Hata! Geçersiz mail adresi.";
+                return View(model) ;
+
+            }
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
-                // Kullanıcı başarıyla oluşturuldu, diğer işlemler
-                return RedirectToAction("Index", "Home"); //ana sayfaya yönlendiriyoruz
+                
+                return RedirectToAction("Index", "Home"); 
             }
 
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
+            }
+        }
+        else
+        {
+            foreach (var modelError in ModelState.Values)
+            {
+                foreach (var error in modelError.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.ErrorMessage);
+
+                }
             }
         }
 
@@ -168,7 +186,7 @@ public class AdminController : Controller
 
     #endregion
 
-    [Route("/ürünler/ürünler")]
+    [Route("/urun/listesi")]
 
     public IActionResult Product()
     {

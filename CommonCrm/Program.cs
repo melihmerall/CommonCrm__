@@ -1,3 +1,4 @@
+using System.Globalization;
 using CommonCrm.Business.Extensions;
 using CommonCrm.Business.Services;
 using CommonCrm.Data.DbContexts;
@@ -27,11 +28,28 @@ builder.Services.AddDbContext<IdentityContext>(options =>
 //automapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+
 // Identity ve Authorization servislerini ekleme
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+	.AddErrorDescriber<LocalizedIdentityErrorDescriber>()
 	.AddEntityFrameworkStores<IdentityContext>()
 	.AddDefaultUI()
 	.AddDefaultTokenProviders();
+builder.Services.Configure<IdentityOptions>(options =>
+{
+	options.Password.RequireDigit = false;
+	options.Password.RequiredLength = 8;
+	options.Password.RequireLowercase = false;
+	options.Password.RequireUppercase = false;
+	options.Password.RequireNonAlphanumeric = false;
+
+	options.Password.RequiredUniqueChars = 0;
+
+	//options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+	//options.Lockout.MaxFailedAccessAttempts = 5;
+	//options.Lockout.AllowedForNewUsers = true;
+	
+});
 
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 
@@ -75,7 +93,6 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddScoped<IAuthorizationHandler, RoleAndClaimAuthorizationHandler>();
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
 
 
 var app = builder.Build();

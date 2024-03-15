@@ -5,19 +5,21 @@ namespace CommonCrm.Models.UserVM;
 
 public class CreateUserViewModel
 {
-    public string UserName { get; set; }
+    [Required(ErrorMessage = "Boş olamaz.")]
+    public string? UserName { get; set; }
 
     [EmailAddress]
-    public string Email { get; set; }
-
+    public string? Email { get; set; }
+    
+    [Required(ErrorMessage = "Boş olamaz.")]
     public string Password { get; set; }
 
     [Compare("Password", ErrorMessage = "Şifreler eşleşmiyor.")]
     public string ConfirmPassword { get; set; }
 
-    public string Country { get; set; }
-    public string City { get; set; }
-    public string Description { get; set; }
+    public string? Country { get; set; }
+    public string? City { get; set; }
+    public string? Description { get; set; }
     public bool IsActive { get; set; }
     public bool IsCompany { get; set; }
     public bool IsCustomer { get; set; }

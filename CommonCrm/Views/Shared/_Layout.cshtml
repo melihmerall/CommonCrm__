@@ -15,7 +15,17 @@
     <!-- Custom Css -->
     <link href="~/assets/css/custom.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="~/assets/libs/twitter-bootstrap-wizard/prettify.css">
+    <link href="~/assets/libs/ion-rangeslider/css/ion.rangeSlider.min.css" rel="stylesheet" type="text/css"/>
 
+    <link href="~/assets/libs/ion-rangeslider/css/ion.rangeSlider.min.css" rel="stylesheet" type="text/css"/>
+    <link href="~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css"/>
+    <link href="~/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css"/>
+    <link href="~/assets/libs/datatables.net-select-bs4/css//select.bootstrap4.min.css" rel="stylesheet" type="text/css"/>
+    <script src="~/assets/libs/parsleyjs/parsley.min.js"></script>
+
+    <script src="~/assets/js/pages/form-validation.init.js"></script>
+    <!-- Responsive datatable examples -->
+    <link href="~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet"/>
     <!-- select2 css -->
     <link href="~/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css"/>
 
@@ -407,13 +417,22 @@
                         <span>Anasayfa</span>
                     </a>
                 </li>
-
                 <li>
-                    <a target="_self" href="~/urun/ekle" class="">
-                        <i class="ri-calendar-2-line"></i>
-                        Ürün Ekle
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-store-2-line"></i>
+                        <span>Ürün Yönetimi</span>
                     </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a target="_self" href="/urun/ekle">Ürün Ekle</a>
+                        </li>
+                        <li>
+                            <a target="_self" href="/urun/listesi">Ürünleri Gör</a>
+                        </li>
+
+                    </ul>
                 </li>
+
                 <li class="menu-title">Yönetim</li>
 
                 <li>
@@ -426,7 +445,7 @@
                             <a target="_self" href="/panel/kullanici-ekle">Kullanıcı Ekle</a>
                         </li>
                         <li>
-                            <a target="_self" href="/panel/kullanici-liste">Kullanıcıları Listele</a>
+                            <a target="_self" href="/panel/kullanici-liste">Kullanıcıları Gör</a>
                         </li>
 
                     </ul>
@@ -446,12 +465,6 @@
                         </li>
                     </ul>
                 </li>
-                        <li>
-                            <a target="_self" href="/ürünler/ürünler" class="">
-                                <i class="ri-dashboard-line"></i>
-                                <span>Ürünler</span>
-                            </a>
-                        </li>
 
 
             </ul>
@@ -474,14 +487,14 @@
             </div>
         </div>
     }
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <div id="toast-container" class="toast-top-right">
-                <div class="toast toast-error" aria-live="assertive" style="display: block;">
-                    <div class="toast-message"> @TempData["ErrorMessage"]</div>
-                </div>
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div id="toast-container" class="toast-top-right">
+            <div class="toast toast-error" aria-live="assertive" style="display: block;">
+                <div class="toast-message"> @TempData["ErrorMessage"]</div>
             </div>
-        }
+        </div>
+    }
     @RenderBody()
 </div>
 <!-- end main content-->
@@ -541,17 +554,61 @@ setTimeout(hideToast, 4000);
 <script src="~/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
 
 <!-- Responsive examples -->
+<script src="~/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<!-- Buttons examples -->
+<script src="~/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="~/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
+<script src="~/assets/libs/jszip/jszip.min.js"></script>
+<script src="~/assets/libs/pdfmake/build/pdfmake.min.js"></script>
+<script src="~/assets/libs/pdfmake/build/vfs_fonts.js"></script>
+<script src="~/assets/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="~/assets/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="~/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js"></script>
+
+<script src="~/assets/libs/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+<script src="~/assets/libs/datatables.net-select/js/dataTables.select.min.js"></script>
+
+<!-- Responsive examples -->
 <script src="~/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="~/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
-<script src="assets/js/pages/toastr.init.js"></script>
-<script src="assets/js/app.js"></script>
+
+<!-- Datatable init js -->
+<script src="~/assets/js/pages/datatables.init.js"></script>
+<script src="~/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="~/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+<script src="~/assets/js/pages/toastr.init.js"></script>
+<script src="~/assets/js/app.js"></script>
 <script src="~/assets/js/pages/dashboard.init.js"></script>
 <!-- App js -->
+<script src="~/assets/libs/ion-rangeslider/js/ion.rangeSlider.min.js"></script>
 
+<!-- init js -->
+<script src="~/assets/js/pages/product-filter-range.init.js"></script>
 <script src="~/assets/libs/apexcharts/apexcharts.min.js"></script>
+<!-- form mask -->
+<script src="~/assets/libs/inputmask/jquery.inputmask.min.js"></script>
 
+<!-- form mask init -->
+<script src="~/assets/js/pages/form-mask.init.js"></script>
 <script src="~/assets/js/app.js"></script>
 <script src="~/assets/js/ajax.js"></script>
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+<script>
+function showCustomTooltip(label) {
+    var customTooltip = document.getElementById("customTooltip");
+    customTooltip.style.display = "block";
+    customTooltip.style.left = (label.offsetLeft + label.offsetWidth) + "px";
+    customTooltip.style.top = label.offsetTop + "px";
+}
+
+function hideCustomTooltip() {
+    var customTooltip = document.getElementById("customTooltip");
+    customTooltip.style.display = "none";
+}
+</script>
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

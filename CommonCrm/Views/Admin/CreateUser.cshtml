@@ -1,120 +1,116 @@
 ﻿@using CommonCrm.Data.Entities.AppUser
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model CommonCrm.Models.UserVM.CreateUserViewModel
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-@{
-    Layout = null;
-}
+<div class="page-content">
+    <div class="container-fluid">
 
-<!DOCTYPE html>
-
-<html lang="tr">
-<head>
-    <title>Create User</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <!-- Özel CSS (opsiyonel) -->
-    <link rel="stylesheet" href="path/to/custom-style.css">
-</head>
-<body>
-<div class="container">
-    <h1>Create User</h1>
-
-    <form asp-action="CreateUser" asp-controller="Admin" method="post" class="needs-validation" >
-        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
-
-        <div class="form-group">
-            <label asp-for="UserName">Username</label>
-            <input asp-for="UserName" class="form-control" required />
-            <div class="invalid-feedback">
-                <span asp-validation-for="UserName" class="text-danger"></span>
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Kullanıcı Ekle</h4>
+                </div>
             </div>
         </div>
+        <!-- end page title -->
 
-        <div class="form-group">
-            <label asp-for="Email">Email</label>
-            <input asp-for="Email" class="form-control" required />
-            <div class="invalid-feedback">
-                <span asp-validation-for="Email" class="text-danger"></span>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <form asp-controller="Admin" asp-action="CreateUser" method="post">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label>Kullanıcı Adı</label>
+                                        <input asp-for="UserName" type="text" class="form-control" required placeholder="Kullanıcı adı"/>
+                                        <span asp-validation-for="UserName" class="text-danger"></span>
+
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Email</label>
+                                        <input asp-for="Email" type="email" class="form-control" required placeholder="Email"/>
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label>Şifre</label>
+                                        <div>
+                                            <input asp-for="Password" type="password" id="pass2" class="form-control" required
+                                                   placeholder="Password"/>
+                                            <span asp-validation-for="Password" class="text-danger"></span>
+
+                                        </div>
+                                        <div class="mt-2">
+                                            <input asp-for="ConfirmPassword" type="password" class="form-control" required data-parsley-equalto="#pass2"
+                                                   placeholder="Şifreyi doğrula"/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Kullanıcı Açıklaması</label>
+                                        <input asp-for="Description" type="text" class="form-control"  placeholder="Açıklama"/>
+                                        <span asp-validation-for="Description" class="text-danger"></span>
+
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input asp-for="IsActive" class="form-check-input" type="checkbox" id="formCheck1">
+                                        <label class="form-check-label" for="formCheck1">
+                                            Aktif Mi?
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input asp-for="IsCustomer" class="form-check-input" type="checkbox" id="formCheck1">
+                                        <label class="form-check-label" for="formCheck1">
+                                            Müşteri Mi?
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input asp-for="IsCompany" class="form-check-input" type="checkbox" id="formCheck1">
+                                        <label class="form-check-label" for="formCheck1">
+                                            Şirket Mi?
+                                        </label>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Şirket Adı</label>
+                                        <input asp-for="CompanyTitle" type="text" class="form-control"  placeholder="Şirket Adı"/>
+                                        <span asp-validation-for="CompanyTitle" class="text-danger"></span>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Gender">Cinsiyet</label>
+                                        <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control"></select>
+                                    </div>
+                                </div>
+                                <br/>
+
+                                <div class="mb-1 mt-4">
+                                    <div>
+                                        <button type="submit" class="btn btn-primary waves-effect waves-light me-1">
+                                            Kullanıcı Ekle
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+
+                    </div>
+
+
+                </div>
             </div>
+            <!-- end select2 -->
+
         </div>
 
-        <div class="form-group">
-            <label asp-for="Password">Password</label>
-            <input asp-for="Password" type="password" class="form-control" required />
-            <div class="invalid-feedback">
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-        </div>
 
-        <div class="form-group">
-            <label asp-for="ConfirmPassword">Confirm Password</label>
-            <input asp-for="ConfirmPassword" type="password" class="form-control" required />
-            <div class="invalid-feedback">
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-            </div>
-        </div>
-
-        <!-- Yeni Eklenen Alanlar -->
-        <div class="form-group">
-            <label asp-for="Country">Country</label>
-            <input asp-for="Country" class="form-control" />
-        </div>
-
-        <div class="form-group">
-            <label asp-for="City">City</label>
-            <input asp-for="City" class="form-control" />
-        </div>
-
-        <div class="form-group">
-            <label asp-for="Description">Description</label>
-            <textarea asp-for="Description" class="form-control"></textarea>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="IsActive">Is Active</label>
-            <input asp-for="IsActive" type="checkbox" />
-        </div>
-
-        <div class="form-group">
-            <label asp-for="IsCompany">Is Company</label>
-            <input asp-for="IsCompany" type="checkbox" />
-        </div>
-
-        <div class="form-group">
-            <label asp-for="IsCustomer">Is Customer</label>
-            <input asp-for="IsCustomer" type="checkbox" />
-        </div>
-
-        <div class="form-group">
-            <label asp-for="CompanyTitle">Company Title</label>
-            <input asp-for="CompanyTitle" class="form-control" />
-        </div>
-
-        <div class="form-group">
-            <label asp-for="ImagePath">Image Path</label>
-            <input asp-for="ImagePath" class="form-control" />
-        </div>
-
-        <div class="form-group">
-            <label asp-for="BirthDate">Birth Date</label>
-            <input asp-for="BirthDate" type="date" class="form-control" />
-        </div>
-
-        <div class="form-group">
-            <label asp-for="Gender">Gender</label>
-            <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control"></select>
-        </div>
-        <!-- Yeni Eklenen Alanlar -->
-
-        <button type="submit" class="btn btn-primary">Create User</button>
-    </form>
+    </div>
 </div>
+<script src="~/assets/libs/parsleyjs/parsley.min.js"></script>
 
-<!-- Bootstrap JS ve Popper.js -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-</body>
-</html>
+<script src="~/assets/js/pages/form-validation.init.js"></script>
