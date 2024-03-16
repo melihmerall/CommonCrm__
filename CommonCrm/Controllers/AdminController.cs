@@ -193,4 +193,26 @@ public class AdminController : Controller
         return View();
     }
 
+    [Route("/teklifler/teklifler")]
+    public IActionResult Offers()
+    {
+        return View();
+    }
+
+    [Route("/teklifler/talepleri")]
+    public IActionResult CreateOffers()
+    {
+        return View();
+    }
+    [Route("/teklif/olustur")]
+    public IActionResult OfferRequest()
+    {
+        return View();
+    }
+
+    [Route("/musteriler/musteriler")]
+    public IActionResult Customers()
+    {
+        return View();
+    }
 }
