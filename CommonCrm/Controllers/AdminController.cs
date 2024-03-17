@@ -60,12 +60,12 @@ public class AdminController : Controller
     
     #region User Process
     [HttpGet]
-    [Route("/panel/kullanici-ekle")]
+    [Route("/panel/user-add")]
     public async Task<IActionResult> CreateUser()
     {
         return View();
     }
-    [Route("/panel/kullanici-ekle")]
+    [Route("/panel/user-add")]
     [HttpPost]
     public async Task<IActionResult> CreateUser(CreateUserViewModel model)
     {
@@ -73,7 +73,7 @@ public class AdminController : Controller
         {
             var user = model.MapTo<ApplicationUser>();
 
-            var userMail = _userManager?.FindByEmailAsync(model?.Email);
+            var userMail = _userManager?.FindByEmailAsync(model?.Email).Result;
             if(userMail != null)
             {
                 TempData["ErrorMessage"] = $"Hata! Geçersiz mail adresi.";
@@ -85,7 +85,7 @@ public class AdminController : Controller
             if (result.Succeeded)
             {
                 
-                return RedirectToAction("Index", "Home"); 
+                return RedirectToAction("UserList", "Admin"); 
             }
 
             foreach (var error in result.Errors)
@@ -108,7 +108,7 @@ public class AdminController : Controller
         return View(model);
     }
     [HttpGet]
-    [Route("/panel/kullanici-liste")]
+    [Route("/panel/user-list")]
     public async Task<IActionResult> UserList()
     {
         var users = await _userManager.Users.ToListAsync();
@@ -116,66 +116,16 @@ public class AdminController : Controller
     }
     #endregion
 
-    #region Product Process
-    [Route("/urun/ekle")]
-    [HttpGet]
-    public async  Task<IActionResult> CreateProduct()
-    {
-        var model = new CreateProductDto();
-        
-        var productUnits = await _productUnitService.GetAll();
-        model.ProductUnits = GetSelectListItems(productUnits, "Name", "Id");
-        
-        var attributes = await _attributeService.GetAll();
-        model.Attributes = GetSelectListItems(attributes, "Name", "Id");
-        
-        var categories = await _categoryService.GetAll();
-        model.Categories = GetSelectListItems(categories, "Name", "Id");
-        
-        
-        return View(model);
-    }
-    [Route("/urun/ekle")]
-    [HttpPost]
-    public IActionResult CreateProduct(CreateProductDto model)
-    {
-        // Sadece "Admin" rolüne sahip ve "CreateProduct" yetkisi olan kullanıcılar bu eyleme erişebilir
-        
-        return View();
-    }
-
-    
-
-    #endregion
-
-    #region Product Unit Process
-    [Route("/birim/ekle")]
-    [HttpGet]
-    public async Task<IActionResult> CreateProductUnit()
-    {
-        
-        return View();
-    }
-    [Route("/birim/ekle")]
-    [HttpPost]
-    public IActionResult CreateProductUnit(ProductUnit entity)
-    {
-        _productUnitService.Create(entity);
-        return View();
-    }
-    
-
-    #endregion
 
     #region Attribute Process
-    [Route("/ozellik/ekle")]
+    [Route("/attribute/add")]
     [HttpGet]
     public async Task<IActionResult> CreateAttribute()
     {
         
         return View();
     }
-    [Route("/ozellik/ekle")]
+    [Route("/attribute/add")]
     [HttpPost]
     public IActionResult CreateAttribute(Attribute entity)
     {
@@ -185,12 +135,6 @@ public class AdminController : Controller
 
 
     #endregion
-
-    [Route("/urun/listesi")]
-
-    public IActionResult Product()
-    {
-        return View();
-    }
+    
 
 }

@@ -31,7 +31,6 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Identity ve Authorization servislerini ekleme
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-	.AddErrorDescriber<LocalizedIdentityErrorDescriber>()
 	.AddEntityFrameworkStores<IdentityContext>()
 	.AddDefaultUI()
 	.AddDefaultTokenProviders();

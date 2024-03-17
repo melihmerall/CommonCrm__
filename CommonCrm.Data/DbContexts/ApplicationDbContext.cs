@@ -26,16 +26,24 @@ namespace CommonCrm.Data.DbContexts
 				   .HasMany(p => p.Categories)
 				   .WithMany(c => c.Products);
 			modelBuilder.Entity<Product>()
-				.HasOne(p => p.Attribute)
-				.WithOne(a => a.Product)
-				.HasForeignKey<Attribute>(a => a.ProductId);
-		}
+				.HasMany(p => p.Collections)
+				.WithMany(c => c.Products);
+			
+            // modelBuilder.Entity<CategoryProduct>().HasNoKey();
+            // modelBuilder.Entity<CollectionProduct>().HasNoKey();
 
-		public DbSet<Product> products;
-		public DbSet<Category> categories;
-		public DbSet<Attribute> attributes;
-		public DbSet<ProductUnit> productsUnit;
-		
+
+
+        }
+
+        public DbSet<Product> Products { get; set; }
+		public DbSet<Category> Categories { get; set; }
+		public DbSet<Attribute> Attributes { get; set; }
+		public DbSet<ProductUnit> ProductsUnit { get; set; }
+		public DbSet<Collection> Collections { get; set; }
+		// public DbSet<CategoryProduct> CategoryProducts { get; set; }
+		// public DbSet<CollectionProduct> CollectionProducts { get; set; }
+
 	}
 	public class IdentityContext : IdentityDbContext<ApplicationUser>
 	{

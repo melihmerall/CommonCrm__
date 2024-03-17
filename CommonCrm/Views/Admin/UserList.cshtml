@@ -60,8 +60,8 @@
                             @foreach (var i in Model)
                             {
                                 var isActive = (@i.IsActive) ? "Aktif" : "Değil";
-                                var isCustomer = (@i.IsCustomer) ? "Evet" : "Hayır";
-                                var isCompany = (@i.IsCompany) ? "Evet" : "Hayır";
+                                var isCustomer = (@i.IsCustomerCompany) ? "Evet" : "Hayır";
+                                var isCompany = (@i.IsCustomerPerson) ? "Evet" : "Hayır";
 
                                 <tr>
                                     <td>@i.Id</td>

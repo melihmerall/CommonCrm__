@@ -18,19 +18,4 @@
     <ProjectReference Include="..\CommonCrm.Data\CommonCrm.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Extensions\Resources\LocalizedIdentityErrorMessages.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>LocalizedIdentityErrorMessages.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Extensions\Resources\LocalizedIdentityErrorMessages.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>LocalizedIdentityErrorMessages.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
 </Project>

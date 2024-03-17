@@ -8,13 +8,15 @@ public class CreateUserViewModel
     [Required(ErrorMessage = "Boş olamaz.")]
     public string? UserName { get; set; }
 
-    [EmailAddress]
+    [EmailAddress(ErrorMessage = "Mail Adresi formatında girin.(test@test.com)")]
     public string? Email { get; set; }
     
     [Required(ErrorMessage = "Boş olamaz.")]
     public string Password { get; set; }
 
     [Compare("Password", ErrorMessage = "Şifreler eşleşmiyor.")]
+    [Required(ErrorMessage = "Boş olamaz.")]
+
     public string ConfirmPassword { get; set; }
 
     public string? Country { get; set; }

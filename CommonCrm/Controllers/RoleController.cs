@@ -16,7 +16,7 @@ public class RolesController : Controller
         _roleManager = roleManager;
     }
 
-    [Route("/rol/listesi")]
+    [Route("/role/list")]
     public async Task<IActionResult> Index()
     {
         var model = new RoleViewModel();
@@ -38,7 +38,7 @@ public class RolesController : Controller
     }
     
     [HttpGet]
-    [Route("/rol/ekle")]
+    [Route("/role/add")]
 
     public async Task<IActionResult> Create()
     {
@@ -53,7 +53,7 @@ public class RolesController : Controller
         return View(model);
     }
     
-    [Route("/rol/ekle")]
+    [Route("/role/add")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(RoleViewModel model)
