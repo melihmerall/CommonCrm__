@@ -1,0 +1,570 @@
+﻿@using CommonCrm.Data.Entities.Product.Enums
+@model CommonCrm.Business.DTOs.CreateProductDto
+
+
+<div class="page-content">
+<div class="container-fluid">
+
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Ürün Ekle</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a href="javascript: void(0);">Ürünler</a>
+                    </li>
+                    <li class="breadcrumb-item active">Ürün Ekle</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+<form asp-action="CreateProduct" asp-controller="Product" method="post" enctype="multipart/form-data">
+<div class="row">
+<div class="col-lg-6">
+    <div class="card">
+        <div class="card-body">
+            <div id="addproduct-nav-pills-wizard" class="twitter-bs-wizard">
+                <!-- end ul -->
+                <div class="tab-content twitter-bs-wizard-tab-content">
+                    <div class="tab-pane active" id="basic-info">
+                        <h4 class="card-title">Ürün Kimliği</h4>
+                        <p class="card-title-desc">Aşağıdaki tüm bilgileri doldurun</p>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label" for="productname">Ürün İsmi</label>
+                                    <input placeholder="Bardak" asp-for="Name" id="productname" type="text" class="form-control">
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="productname">İngilizce Ürün İsmi</label>
+                                    <input placeholder="Glass" asp-for="EnglishName" id="productname" type="text" class="form-control">
+                                    <span asp-validation-for="EnglishName" class="text-danger"></span>
+
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="manufacturername">
+                                        Kod
+                                    </label>
+                                    <input placeholder="A3G35H" asp-for="Code" id="manufacturername" type="text"
+                                           class="form-control">
+                                    <span asp-validation-for="Code" class="text-danger"></span>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="manufacturerbrand">
+                                        Birim
+                                    </label>
+                                    <select data-placeholder="Birim Seç..." asp-for="UnitId" asp-items="Model.Units" class="form-control select2">
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="manufacturerbrand">
+                                        Kategori
+                                    </label>
+                                    <select asp-for="CategoryIds" asp-items="Model.Categories" class="select2 form-control select2-multiple" multiple="multiple"
+                                            data-placeholder="Kategori Seç...">
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="manufacturerbrand">
+                                        Koleksiyon
+                                    </label>
+                                    <select asp-for="CollectionIds" asp-items="Model.ProductCollections" class="select2 form-control select2-multiple" multiple="multiple"
+                                            data-placeholder="Koleksiyon Seç...">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label" for="productdesc">Ürün Açıklaması</label>
+                                    <textarea placeholder="Marka: Holuxe, Renk: Siyah" asp-for="Description" class="form-control" id="productdesc" rows="5"></textarea>
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6">
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="productdesc">İngilizce Ürün Açıklaması</label>
+                                    <textarea placeholder="Brand: Holuxe, Color: black" asp-for="EnglishDescription" class="form-control" id="productdesc" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="col-lg-6">
+    <div class="card">
+        <div class="card-body">
+            <div id="addproduct-nav-pills-wizard" class="twitter-bs-wizard">
+                <!-- end ul -->
+                <div class="tab-content twitter-bs-wizard-tab-content">
+                    <div class="tab-pane active" id="basic-info">
+                        <h4 title="sa" class="card-title">Fiyat</h4>
+                        <p class="card-title-desc">Aşağıdaki tüm bilgileri doldurun</p>
+
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="mb-3">
+                                    <label class="form-label" for="productname">Satış</label>
+                                    <hr/>
+                                    <div class="input-group m-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">₺</span>
+                                        </div>
+                                        <input onchange="updateTotal('tl')" data-role="input, input-mask" data-inputmask="'alias': 'currency', 'groupSeparator': '.', 'radixPoint': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"
+                                               class="form-control input-mask text-left" id="input-currency-tl" placeholder="0">
+                                        <input id="hidden-currency-tl" hidden asp-for="SalesPriceTL" type="text"/>
+
+
+                                    </div>
+                                    <div class="input-group m-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">$</span>
+                                        </div>
+                                        <input onchange="updateTotal('dolar')" id="input-currency-dolar" class="form-control input-mask text-left " placeholder="0"
+                                               data-inputmask="'alias': 'currency', 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                                        <input id="hidden-currency-dolar" hidden asp-for="SalesPriceDolar" type="text"/>
+
+
+                                    </div>
+                                    <div class="input-group m-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">€</span>
+                                        </div>
+                                        <input onchange="updateTotal('euro')" id="input-currency-euro" class="form-control input-mask text-left" placeholder="0"
+                                               data-inputmask="'alias': 'currency', 'groupSeparator': '.', 'radixPoint': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                                        <input id="hidden-currency-euro" hidden asp-for="SalesPriceEuro" type="text"/>
+
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="mb-3">
+                                    <label class="form-label" for="productname">KDV Oranı</label>
+                                    <hr/>
+                                    <div class="input-group m-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">%</span>
+                                        </div>
+                                        <select
+                                            asp-for="KdvTL"
+                                            onchange="updateTotal('tl')"
+                                            class="form-control input-mask text-left"
+                                            id="kdv-select-tl"
+                                            placeholder="0"
+                                            aria-describedby="validationTooltipUsernamePrepend">
+                                            <option value="0">0</option>
+                                            <option value="1">1</option>
+                                            <option value="8">8</option>
+                                            <option value="10">10</option>
+                                            <option value="18">18</option>
+                                            <option value="20">20</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group m-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">%</span>
+                                        </div>
+                                        <select
+                                            asp-for="KdvDolar"
+                                            onchange="updateTotal('dolar')"
+                                            class="form-control input-mask text-left"
+                                            id="kdv-select-dolar"
+                                            placeholder="0"
+                                            aria-describedby="validationTooltipUsernamePrepend">
+                                            <option value="0">0</option>
+                                            <option value="1">1</option>
+                                            <option value="8">8</option>
+                                            <option value="10">10</option>
+                                            <option value="18">18</option>
+                                            <option value="20">20</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group m-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">%</span>
+                                        </div>
+                                        <select
+                                            asp-for="KdvEuro"
+                                            onchange="updateTotal('euro')"
+                                            class="form-control input-mask text-left"
+                                            id="kdv-select-euro"
+                                            placeholder="0"
+                                            aria-describedby="validationTooltipUsernamePrepend">
+                                            <option value="0">0</option>
+                                            <option value="1">1</option>
+                                            <option value="8">8</option>
+                                            <option value="10">10</option>
+                                            <option value="18">18</option>
+                                            <option value="20">20</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="mb-3">
+                                    <label class="form-label" for="productname">Toplam</label>
+                                    <hr/>
+                                    <div class="input-group m-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">₺</span>
+                                        </div>
+                                        <input id="totalTl" data-inputmask="'alias': 'numeric', 'groupSeparator': '.', 'radixPoint': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"
+                                               class="form-control input-mask text-left" placeholder="0" aria-describedby="validationTooltipUsernamePrepend">
+                                        <input id="hidden-totalTl" hidden asp-for="TotalTL" type="text"/>
+
+
+                                    </div>
+                                    <div class="input-group m-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">$</span>
+                                        </div>
+                                        <input id="totalDolar" class="form-control input-mask text-left " placeholder="0"
+                                               data-inputmask="'alias': 'numeric', 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                                        <input id="hidden-totalDolar" hidden asp-for="TotalDolar" type="text"/>
+
+
+                                    </div>
+                                    <div class="input-group m-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">€</span>
+                                        </div>
+                                        <input id="totalEuro" class="form-control input-mask text-left" placeholder="0"
+                                               data-inputmask="'alias': 'numeric', 'groupSeparator': '.', 'radixPoint': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                                        <input id="hidden-totalEuro" hidden asp-for="TotalEuro" type="text"/>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="mb-4">
+                                    <label class="form-label" title="Birden fazla döviz olduğu için arayüzde gösterilmek üzere birinin varsayılan olması gerekiyor." for="productname">Varsayılan</label>
+                                    <hr/>
+                                </div>
+
+                                <div class="form-check mb-4" style="margin-left: 12px!important;">
+                                    <input asp-for="IsTlDefault" class="form-check-input" type="checkbox" checked="" value="true" id="formRadios1" onclick="uncheckOthers(this)">
+
+                                </div>
+                                <div class="form-check mb-4" style="margin-left: 12px!important;">
+                                    <input asp-for="IsDolarDefault" class="form-check-input" type="checkbox" value="false" id="formRadios2" onclick="uncheckOthers(this)">
+
+                                </div>
+                                <div class="form-check mb-4" style="margin-left: 12px!important;">
+                                    <input asp-for="IsEuroDefault" class="form-check-input" type="checkbox" value="false" id="formRadios3" onclick="uncheckOthers(this)">
+
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-body mb-4">
+                                        <h4 class="card-title">Resim Yükle</h4>
+                                        <p class="card-title-desc">
+                                            Ürün için mağazada sergilenecek bir fotoğraf yükleyin.
+                                        </p>
+                                        <div class="input-group">
+                                            <input type="file" class="form-control" id="customFile">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="col-lg-5">
+    <div class="card">
+        <div class="card-body">
+            <div id="addproduct-nav-pills-wizard" class="twitter-bs-wizard">
+                <!-- end ul -->
+                <div class="tab-content twitter-bs-wizard-tab-content">
+                    <div class="tab-pane active" id="basic-info">
+                        <h4 title="sa" class="card-title">Teklif</h4>
+                        <p class="card-title-desc">Aşağıdaki tüm bilgileri doldurun</p>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="productname">Teklif için Miktar</label>
+                                        <input asp-for="OfferQuantity" placeholder="1" id="productname" name="productname" type="number" class="form-control">
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label" for="productdesc">Satır Açıklaması</label>
+                                    <textarea placeholder="Teklif satırı için açıklama" asp-for="OfferDescription" class="form-control" id="productdesc" rows="5"></textarea>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="col-lg-7">
+    <div class="card">
+        <div class="card-body">
+            <div id="addproduct-nav-pills-wizard" class="twitter-bs-wizard">
+                <!-- end ul -->
+                <div class="tab-content twitter-bs-wizard-tab-content">
+                    <div class="tab-pane active" id="basic-info">
+                        <h4 title="sa" class="card-title">Nitelikler</h4>
+                        <p class="card-title-desc">Aşağıdaki tüm bilgileri doldurun</p>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="input-group m-2">
+                                    <div class="input-group-prepend">
+                                        <span style="padding: 0.7rem 0.9rem!important;" class="input-group-text" id="validationTooltipUsernamePrepend">
+                                            <i class="fas fa-arrows-alt-h"></i>
+                                        </span>
+                                    </div>
+                                    <input asp-for="Width" id="productname" name="productname" min="0" type="number" class="form-control" placeholder="Genişlik">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="validationTooltipUsernamePrepend">cm</span>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="input-group m-2">
+                                    <div class="input-group-prepend">
+                                        <span style="padding: 0.7rem 0.9rem!important;" class="input-group-text" id="validationTooltipUsernamePrepend">
+                                            <i class="fas fa-box"></i>
+                                        </span>
+                                    </div>
+                                    <input asp-for="Volume" id="productname" name="productname" min="0" type="number" class="form-control" placeholder="Hacim">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="validationTooltipUsernamePrepend">m³</span>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="input-group m-2">
+                                    <div class="input-group-prepend">
+                                        <span style="padding: 0.7rem 0.9rem!important;" class="input-group-text" id="validationTooltipUsernamePrepend">
+                                            <i class="fas fa-arrows-alt-v"></i>
+                                        </span>
+                                    </div>
+                                    <input asp-for="Height" id="productname" name="productname" min="0" type="number" class="form-control" placeholder="Yükseklik">
+
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="validationTooltipUsernamePrepend">cm</span>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="input-group m-2">
+                                    <div class="input-group-prepend">
+                                        <span style="padding: 0.7rem 0.9rem!important;" class="input-group-text" id="validationTooltipUsernamePrepend">
+                                            <i class="fas fa-weight-hanging"></i>
+                                        </span>
+                                    </div>
+                                    <input asp-for="Weight" id="productname" name="productname" min="0" type="number" class="form-control" placeholder="Ağırlık">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="validationTooltipUsernamePrepend">kg</span>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="input-group m-2">
+                                    <div class="input-group-prepend">
+                                        <span style="padding: 0.7rem 0.9rem!important;" class="input-group-text" id="validationTooltipUsernamePrepend">
+                                            <i class="fas fa-compress-arrows-alt"></i>
+                                        </span>
+                                    </div>
+                                    <input asp-for="Depth" id="productname" name="productname" min="0" type="number" class="form-control" placeholder="Derinlik">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="validationTooltipUsernamePrepend">cm</span>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="input-group m-2">
+                                    <div class="input-group-prepend">
+                                        <span style="padding: 0.7rem 0.9rem!important;" class="input-group-text" id="validationTooltipUsernamePrepend">
+                                            <i class="fab fa-dropbox"></i>
+                                        </span>
+                                    </div>
+                                    <input asp-for="Packet" id="productname" name="productname" min="0" type="number" class="form-control" placeholder="Paket">
+
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-4">
+    <div class="card">
+        <div class="card-body">
+            <div id="addproduct-nav-pills-wizard" class="twitter-bs-wizard">
+                <!-- end ul -->
+                <div class="tab-content">
+
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <button type="submit" class="btn btn-success waves-effect waves-light">
+                                <i class="ri-check-line align-middle me-2"></i> Kaydet
+                            </button>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</div>
+
+</form>
+
+<!-- end row -->
+
+</div> <!-- container-fluid -->
+</div>
+
+<script>
+    function updateTotal(currencyType) {
+        const salesPriceInput = document.getElementById(`input-currency-${currencyType}`);
+        const kdvSelect = document.getElementById(`kdv-select-${currencyType}`);
+        const totalInput = document.getElementById(`total${currencyType.charAt(0).toUpperCase() + currencyType.slice(1)}`);
+        const hiddenPriceInput = document.getElementById(`hidden-currency-${currencyType}`);
+        const hiddenTotalInput = document.getElementById(`hidden-total${currencyType.charAt(0).toUpperCase() + currencyType.slice(1)}`);
+        
+        hiddenPriceInput.value = toDecimal(salesPriceInput.value, currencyType);
+        
+        const salesPrice = parseFloat(hiddenPriceInput.value);
+        const selectedKdv = parseFloat(kdvSelect.value);
+        const totalPrice = salesPrice * (1 + selectedKdv / 100);
+        totalInput.value = totalPrice;
+        hiddenTotalInput.value = toDecimal(totalPrice, currencyType);
+    }
+    
+    function attachEventListeners(currencyType) {
+        const kdvSelect = document.getElementById(`kdv-select-${currencyType}`);
+        const salesPriceInput = document.getElementById(`input-currency-${currencyType}`);
+        
+        kdvSelect.addEventListener("change", () => updateTotal(currencyType));
+        salesPriceInput.addEventListener("change", () => updateTotal(currencyType));
+    }
+    
+    function toDecimal(value, type) {
+        return type === 'dolar' ? value.replace(/\,/g, '') : value.replace(/\./g, '').replace(',', '.');
+    }
+    
+    function initialize() {
+        const currencies = ["tl", "dolar", "euro"];
+        currencies.forEach(currency => {
+            attachEventListeners(currency);
+            updateTotal(currency);
+        });
+    }
+    
+    function uncheckOthers(checkbox) {
+        const checkboxes = document.getElementsByClassName("form-check-input");
+        for (let i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].value = (checkboxes[i] === checkbox);
+            checkboxes[i].checked = (checkboxes[i] === checkbox);
+        }
+    }
+    
+    window.onload = initialize;
+</script>
+<!-- twitter-bootstrap-wizard js -->
+<script src="~/assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+
+<script src="~/assets/libs/twitter-bootstrap-wizard/prettify.js"></script>
+
+<!-- select 2 plugin -->
+
+<!-- dropzone plugin -->
+<script src="~/assets/libs/dropzone/min/dropzone.min.js"></script>
+
+<!-- init js -->
+<script src="~/assets/js/pages/ecommerce-add-product.init.js"></script>
+
+<script src="~/assets/libs/select2/js/select2.min.js"></script>
+<script src="~/assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+<script src="~/assets/libs/spectrum-colorpicker2/spectrum.min.js"></script>
+<script src="~/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+<script src="~/assets/libs/admin-resources/bootstrap-filestyle/bootstrap-filestyle.min.js"></script>
+<script src="~/assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+
+<script src="~/assets/js/pages/form-advanced.init.js"></script>
