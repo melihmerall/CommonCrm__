@@ -50,7 +50,9 @@ public class CreateProductDto
         
         public List<SelectListItem?> ProductCollections { get; set; }
         public List<SelectListItem?> Categories { get; set; }
-        public List<SelectListItem?> Units { get; set; }
+        public List<SelectListItem>? Units { get; set; }
+        
+        public string? ImagePath { get; set; }
         
         //Attribute
         public int? Width { get; set; } //Genişlik cm

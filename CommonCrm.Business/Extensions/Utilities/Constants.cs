@@ -3,4 +3,8 @@
 public static class Constants
 {
     public const string Required = "Alan Boş Olamaz.";
+    public const string WrongUserAuth = "Kullanıcı girişi doğru sağlanamadı. Lütfen tekrar giriş yapınız.";
+    public const string OwnerIdNull = "Kullanıcıya ait bir Sahiplik Kimliği tanımlanmamış. Lütfen sistem yöneticisi ile iletişime geçiniz.";
+    public const string ProductSuccessCreated = "Ürün Başarı ile oluşturuldu.";
+    public const string ProductNotFound = "Ürünle ilgili veriler getirilemedi.";
 }

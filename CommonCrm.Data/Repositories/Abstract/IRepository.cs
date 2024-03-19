@@ -10,4 +10,5 @@ public interface IRepository<T>
 
     Task Update(T entity);
     Task Delete(T entity);
+    
 }

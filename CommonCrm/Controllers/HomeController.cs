@@ -14,11 +14,10 @@ namespace CommonCrm.Controllers
 			_logger = logger;
 			
 		}
-		
+		//[Authorize(Roles = "Admin, Manager, Customer")]
 		[Route("/panel/dashboard")]
 		public IActionResult Index()
 		{
-
 			return View();
 		}
 

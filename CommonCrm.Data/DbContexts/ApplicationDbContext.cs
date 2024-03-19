@@ -45,7 +45,7 @@ namespace CommonCrm.Data.DbContexts
 		// public DbSet<CollectionProduct> CollectionProducts { get; set; }
 
 	}
-	public class IdentityContext : IdentityDbContext<ApplicationUser>
+	public class IdentityContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
 	{
 		public IdentityContext(DbContextOptions<IdentityContext> options)
 			: base(options)

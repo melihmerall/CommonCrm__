@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Security.Claims;
+using CommonCrm.Data.Entities.AppUser;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -13,7 +14,7 @@ public class RoleViewModel
     public List<SelectListItem>? SelectedClaims { get; set; }
     public string[]? SelectedIds { get; set; }
     public Dictionary<string, IList<string>>? RoleClaims { get; set; }
-    public List<IdentityRole>? Roles { get; set; } 
+    public List<ApplicationRole>? Roles { get; set; } 
 }
 public class ClaimViewModel
 {

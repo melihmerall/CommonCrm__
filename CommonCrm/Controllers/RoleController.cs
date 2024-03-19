@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using CommonCrm.Data.Entities.AppUser;
 using CommonCrm.Models.RoleVM;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,19 +10,23 @@ namespace CommonCrm.Controllers;
 
 public class RolesController : Controller
 {
-    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly RoleManager<ApplicationRole> _roleManager;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public RolesController(RoleManager<IdentityRole> roleManager)
+    public RolesController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager)
     {
         _roleManager = roleManager;
+        _userManager = userManager;
     }
 
     [Route("/role/list")]
     public async Task<IActionResult> Index()
     {
         var model = new RoleViewModel();
-    
-        var roles = await _roleManager.Roles.ToListAsync();
+        var currentUser = _userManager.GetUserAsync(User).Result;
+
+        var roles = await _roleManager.Roles.Where(x=>x.OwnerId == currentUser.OwnerId).ToListAsync();
+
         var roleClaims = new Dictionary<string, IList<string>>();
 
         foreach (var role in roles)
@@ -42,6 +47,7 @@ public class RolesController : Controller
 
     public async Task<IActionResult> Create()
     {
+       
         var claims = CustomClaimTypes.GetAllClaims()
             .Select(c => new SelectListItem { Value = c.Type, Text = c.Value }).ToList();
 
@@ -59,6 +65,7 @@ public class RolesController : Controller
     public async Task<IActionResult> Create(RoleViewModel model)
     {
         var selectedClaims = new List<Claim>();
+        var currentUser = _userManager.GetUserAsync(User).Result;
 
         foreach (var selectedId in model.SelectedIds)
         {
@@ -69,7 +76,7 @@ public class RolesController : Controller
         {
             // Yeni rolü oluştur
             
-            var role = new IdentityRole { Name = model.RoleName };
+            var role = new ApplicationRole() { Name = model.RoleName, OwnerId = currentUser?.OwnerId };
             var result = await _roleManager.CreateAsync(role);
 
             if (result.Succeeded)
@@ -120,7 +127,7 @@ public class RolesController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(IdentityRole role)
+    public async Task<IActionResult> Edit(ApplicationRole role)
     {
         if (ModelState.IsValid)
         {
