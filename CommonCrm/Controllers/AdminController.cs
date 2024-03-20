@@ -72,6 +72,7 @@ public class AdminController : Controller
         if (ModelState.IsValid)
         {
             var user = model.MapTo<ApplicationUser>();
+            user.OwnerId = Guid.NewGuid();
 
             var userMail = _userManager?.FindByEmailAsync(model?.Email).Result;
             if(userMail != null)
