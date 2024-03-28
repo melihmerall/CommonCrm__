@@ -1,4 +1,5 @@
-﻿using CommonCrm.Data.Entities.AppUser;
+﻿using CommonCrm.Data.DbContexts;
+using CommonCrm.Data.Entities.AppUser;
 using CommonCrm.Models.UserVM;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -7,12 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace CommonCrm.Controllers;
 
 [AllowAnonymous]
-public class AuthController : Controller
+public class AuthController : BaseController
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
 
-    public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+    public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,ApplicationDbContext context):base(userManager,context)
     {
         _userManager = userManager;
         _signInManager = signInManager;

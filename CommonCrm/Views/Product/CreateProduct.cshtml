@@ -1,19 +1,46 @@
 ﻿@using CommonCrm.Data.Entities.Product.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Microsoft.IdentityModel.Tokens
+@using CommonCrm.Business.Extensions
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@using CommonCrm.BackgroundServices
+@using CommonCrm.Data.Entities
 @model CommonCrm.Business.DTOs.CreateProductDto
 
 @{
     var units = Model?.Units ?? new List<SelectListItem>();
     var categories = Model?.Categories ?? new List<SelectListItem?>();
     var productCollection = Model?.ProductCollections ?? new List<SelectListItem?>();
-      
 
-    
 
-    
+    var exchangeRatesdlr = CurrencyBackgroundService.SharedData._exchangeRates?.FirstOrDefault(x => x.CurrencyCode == "DLR");
+    var dollar = exchangeRatesdlr?.Rate.CurrencyFormatWithDollarSign();
+
+    var exchangeRateseur = CurrencyBackgroundService.SharedData._exchangeRates?.FirstOrDefault(x => x.CurrencyCode == "EUR");
+
+    var euro = exchangeRateseur?.Rate.CurrencyFormatWithEuroSign();
+
+    if (ViewBag.exchangeRates is List<ExchangeRate> exchangeRatesList)
+    {
+        List<ExchangeRate> exchangeRateList = new List<ExchangeRate>(exchangeRatesList);
+
+        foreach (var i in exchangeRateList)
+        {
+            if (i.CurrencyCode == "dolar")
+            {
+                dollar = i.Rate.CurrencyFormatWithDollarSign();
+            }
+
+            if (i.CurrencyCode == "euro")
+            {
+                euro = i.Rate.CurrencyFormatWithEuroSign();
+            }
+        }
+    }
 }
 <div class="page-content">
 <div class="container-fluid">
+<link href="~/assets/libs/bootstrap-editable/css/bootstrap-editable.css" rel="stylesheet" type="text/css"/>
 
 <!-- start page title -->
 <div class="row">
@@ -73,6 +100,7 @@
                             <div class="col-lg-6">
 
                                 <div class="mb-3">
+                                   
                                     <label class="form-label" for="manufacturerbrand">
                                         Birim
                                     </label>
@@ -124,202 +152,227 @@
     </div>
 </div>
 <div class="col-lg-6">
-    <div class="card">
-        <div class="card-body">
-            <div id="addproduct-nav-pills-wizard" class="twitter-bs-wizard">
-                <!-- end ul -->
-                <div class="tab-content twitter-bs-wizard-tab-content">
-                    <div class="tab-pane active" id="basic-info">
-                        <h4 title="sa" class="card-title">Fiyat</h4>
-                        <p class="card-title-desc">Aşağıdaki tüm bilgileri doldurun</p>
+<div class="card">
+<div class="card-body">
+<div id="addproduct-nav-pills-wizard" class="twitter-bs-wizard">
+<!-- end ul -->
+<div class="tab-content twitter-bs-wizard-tab-content">
+<div class="tab-pane active" id="basic-info">
+<h4 class="card-title">Fiyat</h4>
+<p class="card-title-desc">1. Kuru belirle. - 2. Varsayılan Para birimini seç. - 3. Satış fiyatını gir. - 4. Kdv Tutarını seç. <br/><br/> <strong style="font-weight: bold">Not:</strong> Varsayılan birim ve Kur güncellemelerinde en doğru sonuç için girdiğiniz değerleri sıfırlayın.</p>
+<div class="col-12">
+    <div class="col-12">
+        <div class="float-start">
+            <h6>
+                
+                <input id="hidden-dolar-currency" asp-for="CurrencyDollar" value="@dollar.Replace("$","")" hidden/>
 
-                        <div class="row">
-                            <div class="col-lg-3">
-                                <div class="mb-3">
-                                    <label class="form-label" for="productname">Satış</label>
-                                    <hr/>
-                                    <div class="input-group m-2">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">₺</span>
-                                        </div>
-                                        <input onchange="updateTotal('tl')" data-role="input, input-mask" data-inputmask="'alias': 'currency', 'groupSeparator': '.', 'radixPoint': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"
-                                               class="form-control input-mask text-left" id="input-currency-tl" placeholder="0">
-                                        <input id="hidden-currency-tl" hidden asp-for="SalesPriceTL" type="text"/>
+            </h6>
 
+        </div>
+        <div class="text-end">
 
-                                    </div>
-                                    <div class="input-group m-2">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">$</span>
-                                        </div>
-                                        <input onchange="updateTotal('dolar')" id="input-currency-dolar" class="form-control input-mask text-left " placeholder="0"
-                                               data-inputmask="'alias': 'currency', 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                                        <input id="hidden-currency-dolar" hidden asp-for="SalesPriceDolar" type="text"/>
+            <a onclick="ClearAllInput()" class="btn btn-info text-end">Değerleri Sıfırla</a>
+
+        </div>
 
 
-                                    </div>
-                                    <div class="input-group m-2">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">€</span>
-                                        </div>
-                                        <input onchange="updateTotal('euro')" id="input-currency-euro" class="form-control input-mask text-left" placeholder="0"
-                                               data-inputmask="'alias': 'currency', 'groupSeparator': '.', 'radixPoint': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                                        <input id="hidden-currency-euro" hidden asp-for="SalesPriceEuro" type="text"/>
+    </div>
 
 
-                                    </div>
+</div>
 
+<input id="hidden-euro-currency" asp-for="CurrencyEuro" value="@euro" hidden/>
 
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="mb-3">
-                                    <label class="form-label" for="productname">KDV Oranı</label>
-                                    <hr/>
-                                    <div class="input-group m-2">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">%</span>
-                                        </div>
-                                        <select
-                                            asp-for="KdvTL"
-                                            onchange="updateTotal('tl')"
-                                            class="form-control input-mask text-left"
-                                            id="kdv-select-tl"
-                                            placeholder="0"
-                                            aria-describedby="validationTooltipUsernamePrepend">
-                                            <option value="0">0</option>
-                                            <option value="1">1</option>
-                                            <option value="8">8</option>
-                                            <option value="10">10</option>
-                                            <option value="18">18</option>
-                                            <option value="20">20</option>
-                                        </select>
-                                    </div>
-                                    <div class="input-group m-2">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">%</span>
-                                        </div>
-                                        <select
-                                            asp-for="KdvDolar"
-                                            onchange="updateTotal('dolar')"
-                                            class="form-control input-mask text-left"
-                                            id="kdv-select-dolar"
-                                            placeholder="0"
-                                            aria-describedby="validationTooltipUsernamePrepend">
-                                            <option value="0">0</option>
-                                            <option value="1">1</option>
-                                            <option value="8">8</option>
-                                            <option value="10">10</option>
-                                            <option value="18">18</option>
-                                            <option value="20">20</option>
-                                        </select>
-                                    </div>
-                                    <div class="input-group m-2">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">%</span>
-                                        </div>
-                                        <select
-                                            asp-for="KdvEuro"
-                                            onchange="updateTotal('euro')"
-                                            class="form-control input-mask text-left"
-                                            id="kdv-select-euro"
-                                            placeholder="0"
-                                            aria-describedby="validationTooltipUsernamePrepend">
-                                            <option value="0">0</option>
-                                            <option value="1">1</option>
-                                            <option value="8">8</option>
-                                            <option value="10">10</option>
-                                            <option value="18">18</option>
-                                            <option value="20">20</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="mb-3">
-                                    <label class="form-label" for="productname">Toplam</label>
-                                    <hr/>
-                                    <div class="input-group m-2">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">₺</span>
-                                        </div>
-                                        <input id="totalTl" data-inputmask="'alias': 'numeric', 'groupSeparator': '.', 'radixPoint': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"
-                                               class="form-control input-mask text-left" placeholder="0" aria-describedby="validationTooltipUsernamePrepend">
-                                        <input id="hidden-totalTl" hidden asp-for="TotalTL" type="text"/>
+<br/>
 
-
-                                    </div>
-                                    <div class="input-group m-2">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">$</span>
-                                        </div>
-                                        <input id="totalDolar" class="form-control input-mask text-left " placeholder="0"
-                                               data-inputmask="'alias': 'numeric', 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                                        <input id="hidden-totalDolar" hidden asp-for="TotalDolar" type="text"/>
-
-
-                                    </div>
-                                    <div class="input-group m-2">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="validationTooltipUsernamePrepend">€</span>
-                                        </div>
-                                        <input id="totalEuro" class="form-control input-mask text-left" placeholder="0"
-                                               data-inputmask="'alias': 'numeric', 'groupSeparator': '.', 'radixPoint': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                                        <input id="hidden-totalEuro" hidden asp-for="TotalEuro" type="text"/>
-                                    </div>
-
-
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="mb-4">
-                                    <label class="form-label" title="Birden fazla döviz olduğu için arayüzde gösterilmek üzere birinin varsayılan olması gerekiyor." for="productname">Varsayılan</label>
-                                    <hr/>
-                                </div>
-
-                                <div class="form-check mb-4" style="margin-left: 12px!important;">
-                                    <input asp-for="IsTlDefault" class="form-check-input" type="checkbox" checked="" value="true" id="formRadios1" onclick="uncheckOthers(this)">
-
-                                </div>
-                                <div class="form-check mb-4" style="margin-left: 12px!important;">
-                                    <input asp-for="IsDolarDefault" class="form-check-input" type="checkbox" value="false" id="formRadios2" onclick="uncheckOthers(this)">
-
-                                </div>
-                                <div class="form-check mb-4" style="margin-left: 12px!important;">
-                                    <input asp-for="IsEuroDefault" class="form-check-input" type="checkbox" value="false" id="formRadios3" onclick="uncheckOthers(this)">
-
-                                </div>
-                                <br/>
-                            </div>
-                            <br/>
-                            <hr/>
-                            <br/>
-                            <div class="col-lg-12">
-                                <div class="card">
-                                    <br/>
-                                    <div class="card-body mb-4">
-                                        <h4 class="card-title">Resim Yükle</h4>
-
-                                        <div class="input-group">
-                                            <input type="file" name="formFile" class="form-control" id="customFile">
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-
-                        </div>
-
-
-                    </div>
-
+<div class="row">
+    <div class="col-lg-3">
+        <div class="mb-3">
+            <label class="form-label" for="productname">Satış</label>
+            <hr/>
+            <div class="input-group m-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="validationTooltipUsernamePrepend">₺</span>
                 </div>
+                <input onchange="updateTotal('tl')" data-role="input, input-mask" data-inputmask="'alias': 'currency', 'groupSeparator': '.', 'radixPoint': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"
+                       class="form-control input-mask text-left" id="input-currency-tl" placeholder="0">
+                <input id="hidden-currency-tl" hidden asp-for="SalesPriceTL" type="text"/>
+
+
+            </div>
+            <div class="input-group m-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="validationTooltipUsernamePrepend">$</span>
+                </div>
+                <input onchange="updateTotal('dolar')" id="input-currency-dolar" class="form-control input-mask text-left " placeholder="0"
+                       data-inputmask="'alias': 'currency', 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                <input id="hidden-currency-dolar" hidden asp-for="SalesPriceDolar" type="text"/>
+
+
+            </div>
+            <div class="input-group m-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="validationTooltipUsernamePrepend">€</span>
+                </div>
+                <input onchange="updateTotal('euro')" id="input-currency-euro" class="form-control input-mask text-left" placeholder="0"
+                       data-inputmask="'alias': 'currency', 'groupSeparator': '.', 'radixPoint': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                <input id="hidden-currency-euro" hidden asp-for="SalesPriceEuro" type="text"/>
+
 
             </div>
 
+
         </div>
     </div>
+    <div class="col-lg-3">
+        <div class="mb-3">
+            <label class="form-label" for="productname">KDV Oranı</label>
+            <hr/>
+            <div class="input-group m-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="validationTooltipUsernamePrepend">%</span>
+                </div>
+                <select
+                    asp-for="KdvTL"
+                    onchange="updateTotal('tl','kdv')"
+                    class="form-control input-mask text-left"
+                    id="kdv-select-tl"
+                    placeholder="0"
+                    aria-describedby="validationTooltipUsernamePrepend">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="8">8</option>
+                    <option value="10">10</option>
+                    <option value="18">18</option>
+                    <option value="20">20</option>
+                </select>
+            </div>
+            <div class="input-group m-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="validationTooltipUsernamePrepend">%</span>
+                </div>
+                <select
+                    asp-for="KdvDolar"
+                    onchange="updateTotal('dolar','kdv')"
+                    class="form-control input-mask text-left"
+                    id="kdv-select-dolar"
+                    placeholder="0"
+                    aria-describedby="validationTooltipUsernamePrepend">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="8">8</option>
+                    <option value="10">10</option>
+                    <option value="18">18</option>
+                    <option value="20">20</option>
+                </select>
+            </div>
+            <div class="input-group m-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="validationTooltipUsernamePrepend">%</span>
+                </div>
+                <select
+                    asp-for="KdvEuro"
+                    onchange="updateTotal('euro','kdv')"
+                    class="form-control input-mask text-left"
+                    id="kdv-select-euro"
+                    placeholder="0"
+                    aria-describedby="validationTooltipUsernamePrepend">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="8">8</option>
+                    <option value="10">10</option>
+                    <option value="18">18</option>
+                    <option value="20">20</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="mb-3">
+            <label class="form-label" for="productname">Toplam</label>
+            <hr/>
+            <div class="input-group m-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="validationTooltipUsernamePrepend">₺</span>
+                </div>
+                <input readonly id="totalTl" data-inputmask="'alias': 'numeric', 'groupSeparator': '.', 'radixPoint': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"
+                       class="form-control input-mask text-left" placeholder="0" aria-describedby="validationTooltipUsernamePrepend">
+                <input id="hidden-totalTl" hidden asp-for="TotalTL" type="text"/>
+
+
+            </div>
+            <div class="input-group m-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="validationTooltipUsernamePrepend">$</span>
+                </div>
+                <input readonly id="totalDolar" class="form-control input-mask text-left " placeholder="0"
+                       data-inputmask="'alias': 'numeric', 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                <input id="hidden-totalDolar" hidden asp-for="TotalDolar" type="text"/>
+
+
+            </div>
+            <div class="input-group m-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="validationTooltipUsernamePrepend">€</span>
+                </div>
+                <input readonly id="totalEuro" class="form-control input-mask text-left" placeholder="0"
+                       data-inputmask="'alias': 'numeric', 'groupSeparator': '.', 'radixPoint': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                <input id="hidden-totalEuro" hidden asp-for="TotalEuro" type="text"/>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="mb-4">
+            <label class="form-label" title="Birden fazla döviz olduğu için arayüzde gösterilmek üzere birinin varsayılan olması gerekiyor." for="productname">Varsayılan</label>
+            <hr/>
+        </div>
+
+        <div class="form-check mb-4" style="margin-left: 12px!important;">
+            <input asp-for="IsTlDefault" class="form-check-input" type="checkbox" checked="" value="true" id="IsTlDefault" onclick="uncheckOthers(this)">
+
+        </div>
+        <div class="form-check mb-4" style="margin-left: 12px!important;">
+            <input asp-for="IsDolarDefault" class="form-check-input" type="checkbox" value="false" id="IsDolarDefault" onclick="uncheckOthers(this)">
+
+        </div>
+        <div class="form-check mb-4" style="margin-left: 12px!important;">
+            <input asp-for="IsEuroDefault" class="form-check-input" type="checkbox" value="false" id="IsEuroDefault" onclick="uncheckOthers(this)">
+
+        </div>
+        <br/>
+    </div>
+    <br/>
+    <hr/>
+    <br/>
+    <div class="col-lg-12">
+        <div class="card">
+            <br/>
+            <div class="card-body mb-4">
+                <h4 class="card-title">Resim Yükle</h4>
+
+                <div class="input-group">
+                    <input type="file" name="formFile" class="form-control" id="customFile">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
 </div>
 <div class="col-lg-5">
     <div class="card">
@@ -380,7 +433,7 @@
                                             <i class="fas fa-arrows-alt-h"></i>
                                         </span>
                                     </div>
-                                    <input asp-for="Width" id="productname"  min="0" type="number" class="form-control" placeholder="Genişlik">
+                                    <input asp-for="Width" id="productname" min="0" type="number" class="form-control" placeholder="Genişlik">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="validationTooltipUsernamePrepend">cm</span>
                                     </div>
@@ -395,7 +448,7 @@
                                             <i class="fas fa-box"></i>
                                         </span>
                                     </div>
-                                    <input asp-for="Volume" id="productname"  min="0" type="number" class="form-control" placeholder="Hacim">
+                                    <input asp-for="Volume" id="productname" min="0" type="number" class="form-control" placeholder="Hacim">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="validationTooltipUsernamePrepend">m³</span>
                                     </div>
@@ -427,7 +480,7 @@
                                             <i class="fas fa-weight-hanging"></i>
                                         </span>
                                     </div>
-                                    <input asp-for="Weight" id="productname"  min="0" type="number" class="form-control" placeholder="Ağırlık">
+                                    <input asp-for="Weight" id="productname" min="0" type="number" class="form-control" placeholder="Ağırlık">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="validationTooltipUsernamePrepend">kg</span>
                                     </div>
@@ -443,7 +496,7 @@
                                             <i class="fas fa-compress-arrows-alt"></i>
                                         </span>
                                     </div>
-                                    <input asp-for="Depth" id="productname"  min="0" type="number" class="form-control" placeholder="Derinlik">
+                                    <input asp-for="Depth" id="productname" min="0" type="number" class="form-control" placeholder="Derinlik">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="validationTooltipUsernamePrepend">cm</span>
                                     </div>
@@ -459,7 +512,7 @@
                                             <i class="fab fa-dropbox"></i>
                                         </span>
                                     </div>
-                                    <input asp-for="Packet" id="productname"  min="0" type="number" class="form-control" placeholder="Paket">
+                                    <input asp-for="Packet" id="productname" min="0" type="number" class="form-control" placeholder="Paket">
 
 
                                 </div>
@@ -513,7 +566,9 @@
 </div>
 
 <script>
-    function updateTotal(currencyType) {
+
+
+    function updateTotal(currencyType,isKdv) {
         const salesPriceInput = document.getElementById(`input-currency-${currencyType}`);
         const kdvSelect = document.getElementById(`kdv-select-${currencyType}`);
         const totalInput = document.getElementById(`total${currencyType.charAt(0).toUpperCase() + currencyType.slice(1)}`);
@@ -524,16 +579,25 @@
         
         const salesPrice = parseFloat(hiddenPriceInput.value);
         const selectedKdv = parseFloat(kdvSelect.value);
-        const totalPrice = salesPrice * (1 + selectedKdv / 100);
-        totalInput.value = totalPrice;
+        
+        totalInput.value = salesPrice * (1 + selectedKdv / 100);
         hiddenTotalInput.value = toDecimal(totalInput.value, currencyType);
+        if (currencyType === 'tl' && isKdv !== 'kdv'){
+                    handleClickTl();
+            }if(currencyType === 'dolar' && isKdv !== 'kdv'){
+            handleClickDolar();
+
+            }if(currencyType === 'euro' && isKdv !== 'kdv'){
+            handleClickEuro();
+            }
+        
     }
     
     function attachEventListeners(currencyType) {
         const kdvSelect = document.getElementById(`kdv-select-${currencyType}`);
         const salesPriceInput = document.getElementById(`input-currency-${currencyType}`);
         
-        kdvSelect.addEventListener("change", () => updateTotal(currencyType));
+        kdvSelect.addEventListener("change", () => updateTotal(currencyType,"kdv"));
         salesPriceInput.addEventListener("change", () => updateTotal(currencyType));
     }
     
@@ -558,9 +622,197 @@ function toDecimal(value, type) {
             checkboxes[i].checked = (checkboxes[i] === checkbox);
         }
     }
-    
+document.getElementById("IsTlDefault").addEventListener("click", function() {
+    hideOtherSalesInput("tl");
+}); 
+    document.getElementById("IsDolarDefault").addEventListener("click", function() {
+          hideOtherSalesInput("dolar");
+      });
+document.getElementById("IsEuroDefault").addEventListener("click", function() {
+    hideOtherSalesInput("euro");
+});
     window.onload = initialize;
+window.onload = function() {
+    document.getElementById("IsTlDefault").click();
+};function handleClickTl() {
+
+                const salesPriceInputTl = document.getElementById(`input-currency-tl`);
+                const salesPriceInputDolar = document.getElementById(`input-currency-dolar`);
+                const salesPriceInputEuro = document.getElementById('input-currency-euro');
+                
+                const totalPriceDolar = document.getElementById('totalDolar');
+                const totalPriceEuro = document.getElementById('totalEuro');
+                
+                  var hiddenTotalPriceEuro = document.getElementById('hidden-totalEuro');
+                                                                var hiddenTotalPriceDolar = document.getElementById('hidden-totalDolar');
+                
+                const hiddenPriceInputTl = document.getElementById(`hidden-currency-tl`);
+                const hiddenPriceInputDolar = document.getElementById(`hidden-currency-dolar`);
+                const hiddenPriceInputEuro = document.getElementById(`hidden-currency-euro`);
+                
+                const currencyValueDolar = document.getElementById('hidden-dolar-currency').value.replace("₺","");
+                const currencyValueEuro = document.getElementById('hidden-euro-currency').value.replace("₺","");
+                
+                const tlValue =  toDecimal(salesPriceInputTl.value, "tl");
+                
+                var priceDolar = tlValue / parseFloat(currencyValueDolar.replace(",","."));
+                var priceEuro = tlValue / parseFloat(currencyValueEuro.replace(",","."));
+                
+                hiddenPriceInputDolar.value = priceDolar;
+                hiddenPriceInputEuro.value = priceEuro;
+                
+                salesPriceInputDolar.value = priceDolar;
+                salesPriceInputEuro.value = priceEuro;
+                
+                totalPriceDolar.value = priceDolar;
+                totalPriceEuro.value = priceEuro;
+                
+                hiddenTotalPriceDolar.value = priceDolar;
+                hiddenTotalPriceEuro.value = priceEuro;
+                
+               
+                
+                
+
+    }
+    function handleClickDolar() {
+   
+                     
+                    
+                    const salesPriceInputTl = document.getElementById(`input-currency-tl`);
+                    const salesPriceInputDolar = document.getElementById(`input-currency-dolar`);
+                    const salesPriceInputEuro = document.getElementById('input-currency-euro');
+                    
+                    const hiddenPriceInputTl = document.getElementById(`hidden-currency-tl`);
+                    const hiddenPriceInputDolar = document.getElementById(`hidden-currency-dolar`);
+                    const hiddenPriceInputEuro = document.getElementById(`hidden-currency-euro`);
+                    
+                    const totalPriceTl = document.getElementById('totalTl');
+                    const totalPriceEuro = document.getElementById('totalEuro');
+                    
+                      var hiddenTotalPriceTl = document.getElementById('hidden-totalTl');
+                                                                    var hiddenTotalPriceEuro = document.getElementById('hidden-totalEuro');
+                    
+                    
+                    const currencyValueDolar = document.getElementById('hidden-dolar-currency').value.replace("₺","");
+                    const currencyValueEuro = document.getElementById('hidden-euro-currency').value.replace("₺","");
+                    
+                    const dolarValue =  toDecimal(salesPriceInputDolar.value, "dolar");
+                    
+                    var priceTl = dolarValue * parseFloat(currencyValueDolar.replace(",","."));
+                    var priceEuro = priceTl / parseFloat(currencyValueEuro.replace(",","."));
+                    
+                    hiddenPriceInputTl.value = priceTl;
+                    hiddenPriceInputEuro.value = priceEuro;
+                    
+                    salesPriceInputTl.value = priceTl;
+                    salesPriceInputEuro.value = priceEuro;
+                    
+                    totalPriceTl.value = priceTl;
+                    totalPriceEuro.value = priceEuro;
+                    
+                    hiddenTotalPriceTl.value = priceTl;
+                    hiddenPriceInputDolar.value = priceEuro;
+                    
+                   
+                    
+                    
+    
+        }
+        function handleClickEuro() {
+            debugger;
+          
+                            const salesPriceInputTl = document.getElementById(`input-currency-tl`);
+                            const salesPriceInputDolar = document.getElementById(`input-currency-dolar`);
+                            const salesPriceInputEuro = document.getElementById('input-currency-euro');
+                            
+                            const hiddenPriceInputTl = document.getElementById(`hidden-currency-tl`);
+                            const hiddenPriceInputDolar = document.getElementById(`hidden-currency-dolar`);
+                            const hiddenPriceInputEuro = document.getElementById(`hidden-currency-euro`);
+                            
+                            const totalPriceTl = document.getElementById('totalTl');
+                                                const totalPriceDolar = document.getElementById('totalDolar');
+                                                
+                                                var hiddenTotalPriceTl = document.getElementById('hidden-totalTl');
+                                                var hiddenTotalPriceDolar = document.getElementById('hidden-totalDolar');
+                            
+                            
+                            const currencyValueDolar = document.getElementById('hidden-dolar-currency').value.replace("₺","");
+                            const currencyValueEuro = document.getElementById('hidden-euro-currency').value.replace("₺","");
+                            
+                            const euroValue =  toDecimal(salesPriceInputEuro.value, "euro");
+                            
+                            var priceTl = euroValue * parseFloat(currencyValueEuro.replace(",","."));
+                            var priceDolar = priceTl / parseFloat(currencyValueDolar.replace(",","."));
+                            
+                            hiddenPriceInputTl.value = priceTl;
+                            hiddenPriceInputDolar.value = priceDolar;
+                            
+                            salesPriceInputTl.value = priceTl;
+                            salesPriceInputDolar.value = priceDolar;
+                            
+                            totalPriceTl.value = priceTl;
+                            totalPriceDolar.value = priceDolar;
+                            
+                            hiddenTotalPriceTl.value = priceTl;
+                            hiddenTotalPriceDolar.value = priceDolar;
+                            
+                           
+                            
+                            
+            
+                }
+        function ClearAllInput(){
+                        const salesPriceInputTl = document.getElementById(`input-currency-tl`);
+                        const salesPriceInputDolar = document.getElementById(`input-currency-dolar`);
+                        const salesPriceInputEuro = document.getElementById('input-currency-euro');
+                        
+                        const TotalTl = document.getElementById(`totalTl`);
+                        const totalDolar = document.getElementById(`totalDolar`);
+                        const totalEuro = document.getElementById(`totalEuro`);
+                       
+                                                const kdvTl = document.getElementById(`kdv-select-tl`);
+                                               const kdvDolar = document.getElementById(`kdv-select-dolar`);
+                                               const kdvEuro = document.getElementById(`kdv-select-euro`);
+                        
+                        salesPriceInputTl.value = 0;
+                        salesPriceInputDolar.value = 0;
+                        salesPriceInputEuro.value = 0;
+                         TotalTl.value = 0;
+                         totalDolar.value = 0;
+                         totalEuro.value = 0;
+                        kdvTl.value = 0;
+                         kdvDolar.value = 0;
+                         kdvEuro.value = 0;
+        }
+        function currencyReload(){
+window.location.reload();
+                           
+            
+                }
+        function hideOtherSalesInput(price){
+    debugger;
+    if (price === 'tl'){
+         document.getElementById(`input-currency-tl`).readOnly = false;
+                document.getElementById("input-currency-dolar").readOnly = true;
+                document.getElementById("input-currency-euro").readOnly = true;
+    }
+    if (price === 'dolar'){
+         document.getElementById(`input-currency-tl`).readOnly = true;
+                document.getElementById("input-currency-dolar").readOnly = false;
+                document.getElementById("input-currency-euro").readOnly = true;
+            }    if (price === 'euro'){
+                      document.getElementById(`input-currency-tl`).readOnly = true;
+                             document.getElementById("input-currency-dolar").readOnly = true;
+                             document.getElementById("input-currency-euro").readOnly = false;
+                         }
+    
+        }
+        
+      
+        
 </script>
+
 <!-- twitter-bootstrap-wizard js -->
 <script src="~/assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
 
@@ -582,3 +834,8 @@ function toDecimal(value, type) {
 <script src="~/assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
 
 <script src="~/assets/js/pages/form-advanced.init.js"></script>
+
+<script src="~/assets/js/pages/form-xeditable.init.js"></script>
+<script src="~/assets/libs/moment/min/moment.min.js"></script>
+<script src="~/assets/libs/bootstrap-editable/js/index.js"></script>
+

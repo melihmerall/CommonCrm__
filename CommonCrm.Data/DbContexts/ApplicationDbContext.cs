@@ -8,6 +8,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommonCrm.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Attribute = CommonCrm.Data.Entities.Product.Attribute;
 
@@ -19,6 +20,8 @@ namespace CommonCrm.Data.DbContexts
 			: base(options)
 		{
 		}
+
+
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -41,7 +44,8 @@ namespace CommonCrm.Data.DbContexts
 		public DbSet<Attribute> Attributes { get; set; }
 		public DbSet<ProductUnit> ProductsUnit { get; set; }
 		public DbSet<Collection> Collections { get; set; }
-		// public DbSet<CategoryProduct> CategoryProducts { get; set; }
+		public DbSet<ExchangeRate> ExchangeRates { get; set; }
+ 		// public DbSet<CategoryProduct> CategoryProducts { get; set; }
 		// public DbSet<CollectionProduct> CollectionProducts { get; set; }
 
 	}

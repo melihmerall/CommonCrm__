@@ -7,4 +7,6 @@ public static class Constants
     public const string OwnerIdNull = "Kullanıcıya ait bir Sahiplik Kimliği tanımlanmamış. Lütfen sistem yöneticisi ile iletişime geçiniz.";
     public const string ProductSuccessCreated = "Ürün Başarı ile oluşturuldu.";
     public const string ProductNotFound = "Ürünle ilgili veriler getirilemedi.";
+    public const string SuccessAdded = "Ekleme Başarılı.";
+
 }

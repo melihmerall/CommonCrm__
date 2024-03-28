@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using CommonCrm.Data.DbContexts;
 using CommonCrm.Data.Entities.AppUser;
 using CommonCrm.Models.RoleVM;
 using Microsoft.AspNetCore.Identity;
@@ -8,12 +9,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CommonCrm.Controllers;
 
-public class RolesController : Controller
+public class RolesController : BaseController
 {
     private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public RolesController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager)
+    public RolesController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager,ApplicationDbContext context):base(userManager, context)
     {
         _roleManager = roleManager;
         _userManager = userManager;

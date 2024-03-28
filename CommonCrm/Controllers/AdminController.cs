@@ -1,6 +1,7 @@
 ﻿using CommonCrm.Business.DTOs;
 using CommonCrm.Business.Extensions;
 using CommonCrm.Business.Services;
+using CommonCrm.Data.DbContexts;
 using CommonCrm.Data.Entities.AppUser;
 using CommonCrm.Data.Entities.Product;
 using CommonCrm.Models.UserVM;
@@ -13,7 +14,7 @@ using Attribute = CommonCrm.Data.Entities.Product.Attribute;
 
 namespace CommonCrm.Controllers;
 
-public class AdminController : Controller
+public class AdminController : BaseController
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ProductService _productService;
@@ -21,7 +22,7 @@ public class AdminController : Controller
     private readonly ProductUnitService _productUnitService;
     private readonly CategoryService _categoryService;
 
-    public AdminController(UserManager<ApplicationUser> userManager, ProductService productService, AttributeService attributeService, ProductUnitService productUnitService, CategoryService categoryService)
+    public AdminController(UserManager<ApplicationUser> userManager, ProductService productService, AttributeService attributeService, ProductUnitService productUnitService, CategoryService categoryService, ApplicationDbContext context):base(userManager,context)
     {
         _userManager = userManager;
         _productService = productService;

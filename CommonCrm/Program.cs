@@ -1,12 +1,12 @@
-using System.Globalization;
-using CommonCrm.Business.Extensions;
+using CommonCrm.BackgroundServices;
 using CommonCrm.Business.Services;
 using CommonCrm.Data.DbContexts;
+using CommonCrm.Data.Entities;
 using CommonCrm.Data.Entities.AppUser;
-using CommonCrm.Data.Entities.Product;
-using CommonCrm.Data.Repositories;
+
 using CommonCrm.Data.Repositories.Abstract;
 using CommonCrm.Data.Repositories.Concrete;
+using CommonCrm.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -53,6 +53,8 @@ builder.Services.Configure<IdentityOptions>(options =>
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 
 builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<CurrencyBackgroundService>();
+
 builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<AttributeService>();
 builder.Services.AddScoped<ProductUnitService>();
@@ -86,14 +88,26 @@ builder.Services.ConfigureApplicationCookie(options =>
 	options.SlidingExpiration = true;
 	options.Cookie.Name = ".Crm.Identity.Token";
 	options.ExpireTimeSpan = TimeSpan.FromDays(1);
-
 });
 
+//cors
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("AllowAnyOriginPolicy",
+		builder =>
+		{
+			builder
+				.AllowAnyOrigin() // Tüm kaynaklardan gelen isteklere izin ver
+				.AllowAnyMethod() // Tüm HTTP metotlarına izin ver (GET, POST, PUT, DELETE, vb.)
+				.AllowAnyHeader(); // Tüm HTTP başlıklarına izin ver
+		});
+});
 
 builder.Services.AddScoped<IAuthorizationHandler, RoleAndClaimAuthorizationHandler>();
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-
+builder.Services.AddHttpClient();
+builder.Services.AddHostedService<CurrencyBackgroundService>();
+builder.Services.AddSession();
 var app = builder.Build();
 
 
@@ -107,12 +121,12 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseSession();
 app.UseRouting();
+app.UseCors("AllowAnyOriginPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller=Auth}/{action=Login}/{id?}");

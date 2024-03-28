@@ -16,6 +16,9 @@ public class CreateProductDto
         [Required(ErrorMessage = Constants.Required)]
         
         public string? Code { get; set; }
+        
+        public decimal? CurrencyDollar { get; set; }
+        public decimal? CurrencyEuro { get; set; }
 
         public int[]? CategoryIds { get; set; }
 
@@ -53,6 +56,8 @@ public class CreateProductDto
         public List<SelectListItem>? Units { get; set; }
         
         public string? ImagePath { get; set; }
+        
+        public ProductUnit ProductUnit { get; set; }
         
         //Attribute
         public int? Width { get; set; } //Genişlik cm

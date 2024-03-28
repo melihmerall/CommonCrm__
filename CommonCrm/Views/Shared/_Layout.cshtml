@@ -1,4 +1,39 @@
-﻿<!DOCTYPE html>
+﻿@using CommonCrm.Business.Extensions
+@using CommonCrm.BackgroundServices
+@using CommonCrm.Data.Entities
+@using Newtonsoft.Json
+
+@{
+    
+    var exchangeRatesdlr = CurrencyBackgroundService.SharedData._exchangeRates?.FirstOrDefault(x => x.CurrencyCode == "DLR");
+    var defaultCurrencyDollar = exchangeRatesdlr?.Rate.CurrencyFormatWithDollarSign();
+    var dollar = exchangeRatesdlr?.Rate.CurrencyFormatWithDollarSign();
+
+    var exchangeRateseur = CurrencyBackgroundService.SharedData._exchangeRates?.FirstOrDefault(x => x.CurrencyCode == "EUR");
+    var defaultCurrencyEuro = exchangeRateseur?.Rate.CurrencyFormatWithEuroSign();
+
+    var euro = exchangeRateseur?.Rate.CurrencyFormatWithEuroSign();
+
+    if (ViewBag.exchangeRates is List<ExchangeRate> exchangeRatesList)
+    {
+        List<ExchangeRate> exchangeRateList = new List<ExchangeRate>(exchangeRatesList);
+
+        foreach (var i in exchangeRateList)
+        {
+            if (i.CurrencyCode == "dolar")
+            {
+                dollar = i.Rate.CurrencyFormatWithDollarSign();
+            }
+
+            if (i.CurrencyCode == "euro")
+            {
+                euro = i.Rate.CurrencyFormatWithEuroSign();
+            }
+        }
+    }
+    
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -20,14 +55,16 @@
     <link href="~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css"/>
     <link href="~/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css"/>
     <link href="~/assets/libs/datatables.net-select-bs4/css//select.bootstrap4.min.css" rel="stylesheet" type="text/css"/>
+    <link href="~/assets/libs/bootstrap-editable/css/bootstrap-editable.css" rel="stylesheet" type="text/css"/>
+<link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
 
     <!-- Responsive datatable examples -->
     <link href="~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet"
           type="text/css"/>
-<link href="~/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css">
-<link href="~/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet">
-<link href="~/assets/libs/spectrum-colorpicker2/spectrum.min.css" rel="stylesheet" type="text/css">
-<link href="~/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
+    <link href="~/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css">
+    <link href="~/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <link href="~/assets/libs/spectrum-colorpicker2/spectrum.min.css" rel="stylesheet" type="text/css">
+    <link href="~/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
     <!-- select2 css -->
 
     <!-- dropzone css -->
@@ -45,57 +82,61 @@
 </head>
 <body data-sidebar="dark">
 <div id="layout-wrapper">
-    <header id="page-topbar">
-        <div class="navbar-header">
-            <div class="d-flex">
-                <!-- LOGO -->
-                <div class="navbar-brand-box">
-                    <a href="/" class="logo logo-dark">
-                        <span class="logo-sm">
-                            <img src="/assets/images/logos.png" alt="logo-sm-dark" height="100">
-                        </span>
-                        <span class="logo-lg">
-                            <img src="/assets/images/logos.png" alt="logo-dark" height="20">
-                        </span>
-                    </a>
+<header id="page-topbar">
+    <div class="navbar-header">
+        <div class="d-flex">
+            <!-- LOGO -->
+            <div class="navbar-brand-box">
+                <a href="/" class="logo logo-dark">
+                    <span class="logo-sm">
+                        <img src="/assets/images/logos.png" alt="logo-sm-dark" height="100">
+                    </span>
+                    <span class="logo-lg">
+                        <img src="/assets/images/logos.png" alt="logo-dark" height="20">
+                    </span>
+                </a>
 
-                    <a href="/" class="logo logo-light">
-                        <span class="logo-sm">
-                            <img src="/assets/images/logos.png" alt="logo-sm-light" height="100">
-                        </span>
-                        <span class="logo-lg">
-                            <img src="/assets/images/logos.png" alt="logo-light" height="100">
-                        </span>
-                    </a>
-                </div>
-
-                <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect"
-                        id="vertical-menu-btn">
-                    <i class="ri-menu-2-line align-middle"></i>
-                </button>
-
-                <!-- App Search-->
-
-
+                <a href="/" class="logo logo-light">
+                    <span class="logo-sm">
+                        <img src="/assets/images/logos.png" alt="logo-sm-light" height="100">
+                    </span>
+                    <span class="logo-lg">
+                        <img src="/assets/images/logos.png" alt="logo-light" height="100">
+                    </span>
+                </a>
             </div>
 
-            <div class="d-flex">
+            <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect"
+                    id="vertical-menu-btn">
+                <i class="ri-menu-2-line align-middle"></i>
+            </button>
 
-                <div class="dropdown d-inline-block d-lg-none ms-2">
-                    <button type="button" class="btn header-item noti-icon waves-effect"
-                            id="page-header-search-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false">
-                        <i class="ri-search-line"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
-                         aria-labelledby="page-header-search-dropdown">
+            <!-- App Search-->
 
 
-                    </div>
-                </div>
+        </div>
+
+        <div class="d-flex">
+<div class="float-start mt-3 m-lg-3">
+                <button id="defaultExchange" onclick="defaultExchange()" class="btn btn-info mt-1">Güncel Kur</button><br/>
+               
+            </div>
+
+            <div class="float-start mt-3 m-lg-3">
+                <h6>
+                    1 $ = <a id="inline-dolar" data-value="@dollar" data-title="Dolar kuru girin"></a>
 
 
-                @*
+                </h6>
+                <h6>
+                    1 € =
+                    <a id="inline-euro" data-value="@euro" data-type="text" data-pk="1"
+                       data-title="Euro kuru girin">
+                    </a>
+                </h6>
+            </div>
+ 
+            @*
                 <div class="dropdown d-none d-lg-inline-block ms-1">
                     <button type="button" class="btn header-item noti-icon waves-effect" data-bs-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
@@ -149,15 +190,12 @@
                 </div>
                 *@
 
-                <div class="dropdown d-none d-lg-inline-block ms-1">
-                    <button type="button" class="btn header-item noti-icon waves-effect" data-toggle="fullscreen">
-                        <i class="ri-fullscreen-line"></i>
-                    </button>
-                </div>
+          
 
-                @*Bildirimler için burayı kullanacagız.*@
 
-                @*
+            @*Bildirimler için burayı kullanacagız.*@
+
+            @*
                 <div class="dropdown d-inline-block">
                     <button type="button" class="btn header-item noti-icon waves-effect"
                             id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -248,145 +286,145 @@
                 </div>
                 *@
 
-                <div class="dropdown d-inline-block user-dropdown">
-                    <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img class="rounded-circle header-profile-user" src="/assets/images/users/avatar-2.jpg"
-                             alt="Header Avatar">
-                        <span class="d-none d-xl-inline-block ms-1">@User.Identity.Name</span>
-                        <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end">
-                        <!-- item-->
-                        <a class="dropdown-item" href="#"><i class="ri-user-line align-middle me-1"></i> Kullanıcı Profili</a>
+            <div class="dropdown d-inline-block user-dropdown">
+                <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img class="rounded-circle header-profile-user" src="/assets/images/users/avatar-2.jpg"
+                         alt="Header Avatar">
+                    <span class="d-none d-xl-inline-block ms-1">@User.Identity.Name</span>
+                    <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <!-- item-->
+                    <a class="dropdown-item" href="#"><i class="ri-user-line align-middle me-1"></i> Kullanıcı Profili</a>
 
 
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item text-danger" href="/Logout">
-                            <i
-                                class="ri-shut-down-line align-middle me-1 text-danger">
-                            </i> Çıkış Yap
-                        </a>
-                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-danger" href="/Logout">
+                        <i
+                            class="ri-shut-down-line align-middle me-1 text-danger">
+                        </i> Çıkış Yap
+                    </a>
                 </div>
-
-
             </div>
-        </div>
-    </header>
-
-    <!-- ========== Left Sidebar Start ========== -->
-    <div class="vertical-menu">
-
-        <div data-simplebar class="h-100">
-            <!--- Sidemenu -->
-            <div id="sidebar-menu">
-                <!-- Left Menu Start -->
-                <ul class="metismenu" id="side-menu" style="margin-left: -20px!important; margin-top: 15px!important;">
-                    <li class="menu-title">Menu</li>
-
-                    <li>
-                        <a target="_self" href="/panel/dashboard" class="">
-                            <i class="ri-dashboard-line"></i>
-                            <span>Anasayfa</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript: void(0);" class="has-arrow waves-effect">
-                            <i class="ri-store-2-line"></i>
-                            <span>Ürün Yönetimi</span>
-                        </a>
-                        <ul class="sub-menu" aria-expanded="false">
-                            <li>
-                                <a target="_self" href="/product/add">Ürün Ekle</a>
-                            </li>
-                            <li>
-                                <a target="_self" href="/product/list">Ürünleri Gör</a>
-                            </li>
-
-                        </ul>
-                    </li>
-
-                    <li class="menu-title">Yönetim</li>
-
-                    <li>
-                        <a href="javascript: void(0);" class="has-arrow waves-effect">
-                            <i class="ri-store-2-line"></i>
-                            <span>Kullanıcı Yönetimi</span>
-                        </a>
-                        <ul class="sub-menu" aria-expanded="false">
-                            <li>
-                                <a target="_self" href="/panel/user-add">Kullanıcı Ekle</a>
-                            </li>
-                            <li>
-                                <a target="_self" href="/panel/user-list">Kullanıcıları Gör</a>
-                            </li>
-
-                        </ul>
-                    </li>
-
-                    <li>
-                        <a href="javascript: void(0);" class="has-arrow waves-effect">
-                            <i class="ri-mail-send-line"></i>
-                            <span>Role & İzin Kontrolü</span>
-                        </a>
-                        <ul class="sub-menu" aria-expanded="false">
-                            <li>
-                                <a target="_self" href="/role/list">Rol Listesi</a>
-                            </li>
-                            <li>
-                                <a target="_self" href="/role/add">Rol Ekle</a>
-                            </li>
-                        </ul>
-                    </li>
 
 
-                </ul>
-            </div>
-            <!-- Sidebar -->
         </div>
     </div>
-    <!-- Left Sidebar End -->
+</header>
+
+<!-- ========== Left Sidebar Start ========== -->
+<div class="vertical-menu">
+
+    <div data-simplebar class="h-100">
+        <!--- Sidemenu -->
+        <div id="sidebar-menu">
+            <!-- Left Menu Start -->
+            <ul class="metismenu" id="side-menu" style="margin-left: -20px!important; margin-top: 15px!important;">
+                <li class="menu-title">Menu</li>
+
+                <li>
+                    <a target="_self" href="/panel/dashboard" class="">
+                        <i class="ri-dashboard-line"></i>
+                        <span>Anasayfa</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-store-2-line"></i>
+                        <span>Ürün Yönetimi</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a target="_self" href="/product/add">Ürün Ekle</a>
+                        </li>
+                        <li>
+                            <a target="_self" href="/product/list">Ürünleri Gör</a>
+                        </li>
+
+                    </ul>
+                </li>
+
+                <li class="menu-title">Yönetim</li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-store-2-line"></i>
+                        <span>Kullanıcı Yönetimi</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a target="_self" href="/panel/user-add">Kullanıcı Ekle</a>
+                        </li>
+                        <li>
+                            <a target="_self" href="/panel/user-list">Kullanıcıları Gör</a>
+                        </li>
+
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-mail-send-line"></i>
+                        <span>Role & İzin Kontrolü</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a target="_self" href="/role/list">Rol Listesi</a>
+                        </li>
+                        <li>
+                            <a target="_self" href="/role/add">Rol Ekle</a>
+                        </li>
+                    </ul>
+                </li>
 
 
-    <!-- ============================================================== -->
-    <!-- Start right Content here -->
-    <!-- ============================================================== -->
-    <div class="main-content" id="result">
-        @if (TempData["CustomMessage"] != null)
-        {
-            <div id="toast-container" class="toast-top-right">
-                <div class="toast toast-success" aria-live="assertive" style="display: block;">
-                    <div class="toast-message"> @TempData["CustomMessage"]</div>
-                </div>
-            </div>
-        }
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <div id="toast-container" class="toast-top-right">
-                <div class="toast toast-error" aria-live="assertive" style="display: block;">
-                    <div class="toast-message"> @TempData["ErrorMessage"]</div>
-                </div>
-            </div>
-        }
-        @RenderBody()
+            </ul>
+        </div>
+        <!-- Sidebar -->
     </div>
-    <!-- end main content-->
+</div>
+<!-- Left Sidebar End -->
 
-    <footer class="footer">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-6">
-                    <script>document.write(new Date().getFullYear())</script> © CRM.
-                </div>
-                <div class="col-sm-6">
-                    <div class="text-sm-end d-none d-sm-block">
-                        Tüm Hakları Saklıdır Hexaops.
-                    </div>
+
+<!-- ============================================================== -->
+<!-- Start right Content here -->
+<!-- ============================================================== -->
+<div class="main-content" id="result">
+    @if (TempData["CustomMessage"] != null)
+    {
+        <div id="toast-container" class="toast-top-right">
+            <div class="toast toast-success" aria-live="assertive" style="display: block;">
+                <div class="toast-message"> @TempData["CustomMessage"]</div>
+            </div>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div id="toast-container" class="toast-top-right">
+            <div class="toast toast-error" aria-live="assertive" style="display: block;">
+                <div class="toast-message"> @TempData["ErrorMessage"]</div>
+            </div>
+        </div>
+    }
+    @RenderBody()
+</div>
+<!-- end main content-->
+
+<footer class="footer">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <script>document.write(new Date().getFullYear())</script> © CRM.
+            </div>
+            <div class="col-sm-6">
+                <div class="text-sm-end d-none d-sm-block">
+                    Tüm Hakları Saklıdır Hexaops.
                 </div>
             </div>
         </div>
-    </footer>
+    </div>
+</footer>
 
 </div>
 <script>
@@ -396,11 +434,48 @@ function hideToast() {
 }
 
 setTimeout(hideToast, 4000);
+
+function defaultExchange() {
+    $.ajax({
+        url: '/Product/CurrencyRealValue',
+        type: 'POST',
+        success: function (response) {
+            var a = document.getElementById('inline-dolar');
+            a.innerHTML = '@defaultCurrencyDollar'; // defaultCurrencyDollar değeri null ise, Razor otomatik olarak bir string olarak gösterecektir
+
+            var b = document.getElementById('inline-euro');
+            b.innerHTML = '@defaultCurrencyEuro'; // defaultCurrencyEuro değeri null ise, Razor otomatik olarak bir string olarak gösterecektir
+
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: "Başarılı",
+                showConfirmButton: false,
+                timer: 1000 // 1 saniye
+            });
+
+            setTimeout(function(){
+                location.reload();
+            }, 2000); // 3 saniye sonra sayfayı yenile
+        },
+        error: function (xhr, status, error) {
+            // Hata durumunda yapılacak işlemler
+            console.error('Hata oluştu:', error);
+            Swal.fire({
+                title: 'Hata!',
+                text: 'Bir hata oluştu: ' + error,
+                icon: 'error'
+            });
+        }
+    });
+}
+
+
 </script>
 
 <!-- JAVASCRIPT -->
 <!-- JAVASCRIPT -->
-<script src="~/assets/libs/jquery/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="~/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="~/assets/libs/metismenu/metisMenu.min.js"></script>
 <script src="~/assets/libs/simplebar/simplebar.min.js"></script>
@@ -447,7 +522,10 @@ setTimeout(hideToast, 4000);
 
 <!-- Datatable init js -->
 <script src="~/assets/js/pages/datatables.init.js"></script>
+<script src="~/assets/libs/sweetalert2/sweetalert2.min.js"></script>
 
+<!-- Sweet alert init js-->
+<script src="~/assets/js/pages/sweet-alerts.init.js"></script>
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 
@@ -460,6 +538,9 @@ setTimeout(hideToast, 4000);
 
 <script src="~/assets/js/pages/form-advanced.init.js"></script>
 
+<script src="~/assets/js/pages/form-xeditable.init.js"></script>
+<script src="~/assets/libs/moment/min/moment.min.js"></script>
+<script src="~/assets/libs/bootstrap-editable/js/index.js"></script>
 
 @await RenderSectionAsync("Scripts", required: false)
 </body>

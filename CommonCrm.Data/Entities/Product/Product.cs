@@ -29,6 +29,8 @@ namespace CommonCrm.Data.Entities.Product
 		public int? KdvDolar { get; set; }
 		public decimal? TotalDolar { get; set; }
 		public bool IsDolarDefault { get; set; }
+		public decimal? CurrencyDollar { get; set; }
+		public decimal? CurrencyEuro { get; set; }
 
 		// Euro
 		public decimal? SalesPriceEuro { get; set; }
