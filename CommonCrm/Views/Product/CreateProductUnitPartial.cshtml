@@ -1,2 +1,54 @@
-﻿@model TModel
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model CommonCrm.Business.DTOs.CreateProductDto
+<div id="partialModal" class="modal fade" tabindex="-1" role="dialog">
 
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Birim Ekle</h5>
+            </div>
+            <div class="modal-body">
+                <p>Birim eklendikten sonra sayfa yenilenecektir.</p>
+            </div>
+            <form id="unitAddForm" method="post">
+                <div class="modal-body">
+                    <label class="form-label">Birim İsmi</label>
+                    <input required placeholder="Birim" asp-for="ProductUnit.Name" type="text" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                    <a onclick="saveProductUnit()" class="btn btn-success">Kaydet</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        $('#partialModal').on('click', '.btn-success', function(e){
+            e.preventDefault();
+            saveProductUnit(); // Fonksiyonu çağır
+        });
+    });
+
+    function saveProductUnit() {
+        var formData = $('#unitAddForm').serialize(); // Form verilerini al
+        debugger;
+        $.ajax({
+            url: '@Url.Action("SaveProductUnit", "Product")',
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                // Başarılı bir şekilde tamamlandığında yapılacak işlemler
+                
+                // Modalı kapat
+                $('#partialModal').modal('hide');
+                window.location.reload();
+            },
+            error: function(xhr, status, error) {
+                // Hata durumunda yapılacak işlemler
+            }
+        });
+    }
+</script>

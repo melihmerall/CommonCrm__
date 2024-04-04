@@ -161,6 +161,21 @@ namespace CommonCrm.Data.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("CommonCrm.Data.Entities.Product.CategoryProduct", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CategoryId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CategoryProducts");
+                });
+
             modelBuilder.Entity("CommonCrm.Data.Entities.Product.Collection", b =>
                 {
                     b.Property<int>("Id")
@@ -194,6 +209,21 @@ namespace CommonCrm.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Collections");
+                });
+
+            modelBuilder.Entity("CommonCrm.Data.Entities.Product.CollectionProduct", b =>
+                {
+                    b.Property<int>("CollectionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CollectionId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CollectionProducts");
                 });
 
             modelBuilder.Entity("CommonCrm.Data.Entities.Product.Product", b =>
@@ -262,6 +292,9 @@ namespace CommonCrm.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OfferDescription")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("OfferQuantity")
@@ -382,6 +415,44 @@ namespace CommonCrm.Data.Migrations
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("CommonCrm.Data.Entities.Product.CategoryProduct", b =>
+                {
+                    b.HasOne("CommonCrm.Data.Entities.Product.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CommonCrm.Data.Entities.Product.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("CommonCrm.Data.Entities.Product.CollectionProduct", b =>
+                {
+                    b.HasOne("CommonCrm.Data.Entities.Product.Collection", "Collection")
+                        .WithMany()
+                        .HasForeignKey("CollectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CommonCrm.Data.Entities.Product.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Collection");
 
                     b.Navigation("Product");
                 });

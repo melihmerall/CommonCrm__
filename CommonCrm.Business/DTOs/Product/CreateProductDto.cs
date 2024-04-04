@@ -21,6 +21,8 @@ public class CreateProductDto
         public decimal? CurrencyEuro { get; set; }
 
         public int[]? CategoryIds { get; set; }
+        
+        public int Id { get; set; }
 
         public int[]? CollectionIds { get; set; }
 
@@ -57,7 +59,9 @@ public class CreateProductDto
         
         public string? ImagePath { get; set; }
         
-        public ProductUnit ProductUnit { get; set; }
+        public ProductUnit? ProductUnit { get; set; }
+        public Category? Category { get; set; }
+        public Collection? Collection { get; set; }
         
         //Attribute
         public int? Width { get; set; } //Genişlik cm

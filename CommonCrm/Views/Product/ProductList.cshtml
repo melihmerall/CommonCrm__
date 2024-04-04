@@ -58,11 +58,11 @@
                                     </td>
                                     <td>@i.Name</td>
                                     <td>@i.Code</td>
-                                    <td>@i.Units?.ToOneLineStringJustNotNulls(emptyValue: "")</td>
-                                    <td>@i.Categories?.ToOneLineStringJustNotNulls(emptyValue: "")</td>
-                                    <td>@i.ProductCollections?.ToOneLineStringJustNotNulls(emptyValue: "")</td>
+                                    <td>@i.Unit?.Name</td>
+                                    <td>@i.Categories?.Select(x=>x.Name).ToOneLineStringJustNotNulls(emptyValue:"")</td>
+                                    <td>@i.ProductCollections?.Select(x=>x.Name).ToOneLineStringJustNotNulls(emptyValue: "")</td>
                                     <td>
-                                        @(i.IsTlDefault ? i.SalesPriceTL?.CurrencyFormatWithTlSign() : (i.IsDolarDefault ? i.SalesPriceDolar?.CurrencyFormatWithDollarSign() : i.SalesPriceEuro?.CurrencyFormatWithEuroSign()))
+                                        @(i.IsTlDefault ? i.TotalTL?.CurrencyFormatWithTlSign() : (i.IsDolarDefault ? i.TotalDolar?.CurrencyFormatWithDollarSign() : i.TotalEuro?.CurrencyFormatWithEuroSign()))
                                     </td>
                                     <td class="text-center">
                                         <a href="/product/@i.Id/update">

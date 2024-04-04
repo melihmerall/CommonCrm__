@@ -10,11 +10,15 @@ using CommonCrm.Data.Entities;
 using CommonCrm.Data.Entities.AppUser;
 using CommonCrm.Data.Entities.Product;
 using CommonCrm.Data.Entities.Product.Enums;
+using Humanizer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.VisualBasic;
+using Collection = CommonCrm.Data.Entities.Product.Collection;
 using Constants = CommonCrm.Business.Extensions.Utilities.Constants;
 
 namespace CommonCrm.Controllers
@@ -88,6 +92,10 @@ namespace CommonCrm.Controllers
             foreach (var product in products)
             {
                 var mappedProduct = product.MapTo<GetProductsDto>();
+                mappedProduct.ProductCollections = _context.CollectionProducts.Where(x => x.ProductId == product.Id)
+                    .Select(x => x.Collection).ToList();
+                mappedProduct.Categories = _context.CategoryProducts.Where(x => x.ProductId == product.Id)
+                    .Select(x => x.Category).ToList();
                 model.Add(mappedProduct);
             }
 
@@ -99,18 +107,27 @@ namespace CommonCrm.Controllers
         public async Task<IActionResult> CreateProduct()
         {
             ViewBag.PriceKdvEnumList = Enum.GetValues(typeof(PriceKdvEnum)).Cast<PriceKdvEnum>();
+            var currentUser = _userManager.GetUserAsync(User).Result;
+            if (currentUser == null)
+            {
+                TempData["ErrorMessage"] = Constants.WrongUserAuth;
+                return View();
+            }
 
             var model = new CreateProductDto();
 
             var productUnits = await _productUnitService.GetAll();
-            model.Units = GetSelectListItems(productUnits, "Name", "Id");
+            var units = productUnits.Where(x => x.OwnerId == currentUser.OwnerId).ToList();
+            model.Units = GetSelectListItems(units, "Name", "Id");
 
 
             var categories = await _categoryService.GetAll();
-            model.Categories = GetSelectListItems(categories, "Name", "Id");
+            var ownerCategories = categories.Where(x => x.OwnerId == currentUser.OwnerId).ToList();
+            model.Categories = GetSelectListItems(ownerCategories, "Name", "Id");
 
-            var productCollections = await _categoryService.GetAll();
-            model.ProductCollections = GetSelectListItems(categories, "Name", "Id");
+            var productCollections = await _context.Collections.ToListAsync();
+            var ownerCollections = productCollections.Where(x => x.OwnerId == currentUser.OwnerId);
+            model.ProductCollections = GetSelectListItems(ownerCollections, "Name", "Id");
 
 
             return View(model);
@@ -144,6 +161,34 @@ namespace CommonCrm.Controllers
             }
 
             var result = _productService.Create(product);
+
+            if (model.CategoryIds != null)
+                foreach (var i in model.CategoryIds)
+                {
+                    var productCategories = new CategoryProduct()
+                    {
+                        CategoryId = i,
+                        ProductId = product.Id
+                    };
+                    await _context.CategoryProducts.AddAsync(productCategories);
+                    await _context.SaveChangesAsync();
+                }
+
+            if (model.CollectionIds != null)
+            {
+                foreach (var i in model.CollectionIds)
+                {
+                    var productCollections = new CollectionProduct()
+                    {
+                        CollectionId = i,
+                        ProductId = product.Id
+                    };
+                    await _context.CollectionProducts.AddAsync(productCollections);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+
             if (result)
             {
                 TempData["CustomMessage"] = Constants.ProductSuccessCreated;
@@ -167,29 +212,40 @@ namespace CommonCrm.Controllers
                 return RedirectToAction("WrongOwner", "Auth", new { errorMessage = "Erişim Engellendi" });
             }
 
-            var model = new UpdateProductDto();
-            model.CurrentUser = currentUser;
-            model = entity.MapTo<UpdateProductDto>();
-
+            var model = new CreateProductDto();
+            model = entity.MapTo<CreateProductDto>();
+            model.Id = entity.Id;
             var productUnits = await _productUnitService.GetAll();
+            productUnits.Where(x => x.OwnerId == currentUser.OwnerId);
+            productUnits.Where(x => x.Id == entity.UnitId);
             model.Units = GetSelectListItems(productUnits, "Name", "Id");
 
             var categories = await _categoryService.GetAll();
+            categories.Where(x => x.OwnerId == currentUser.OwnerId);
+            var productCategories = await _context.CategoryProducts
+                .Where(x => x.ProductId == entity.Id)
+                .Select(x => x.CategoryId)
+                .ToListAsync();
+            model.CategoryIds = productCategories.ToArray();
             model.Categories = GetSelectListItems(categories, "Name", "Id");
 
-            var productCollections = await _categoryService.GetAll();
-            model.ProductCollections = GetSelectListItems(categories, "Name", "Id");
+            var collections = await _context.Collections.Where(x => x.OwnerId == currentUser.OwnerId).ToListAsync();
+            var productCollections = await _context.CollectionProducts
+                .Where(x => x.ProductId == entity.Id)
+                .Select(x => x.CollectionId)
+                .ToListAsync();
+            model.CollectionIds = productCollections.ToArray();
+            model.ProductCollections = GetSelectListItems(collections, "Name", "Id");
 
             return View(model);
         }
 
         [Route("/product/{id?}/update")]
         [HttpPost]
-        public async Task<IActionResult> UpdateProduct(UpdateProductDto model, IFormFile formFile)
+        public async Task<IActionResult> UpdateProduct(CreateProductDto model, IFormFile formFile)
         {
             var currentUser = _userManager.GetUserAsync(User).Result;
 
-            model.CurrentUser = currentUser;
             if (currentUser == null)
             {
                 TempData["ErrorMessage"] = Constants.WrongUserAuth;
@@ -202,8 +258,66 @@ namespace CommonCrm.Controllers
                 return View(model);
             }
 
-            var product = model.MapTo<Product>();
+
+            var product = _context.Products.FirstOrDefault(x => x.Id == model.Id && x.OwnerId == currentUser.OwnerId);
+            if (model.CategoryIds != null)
+                foreach (var i in model.CategoryIds)
+                {
+                    var productCategories = new CategoryProduct()
+                    {
+                        CategoryId = i,
+                        ProductId = product.Id
+                    };
+                    _context.CategoryProducts.Update(productCategories);
+                    await _context.SaveChangesAsync();
+                }
+
+            if (model.CollectionIds != null)
+            {
+                foreach (var i in model.CollectionIds)
+                {
+                    var productCollections = new CollectionProduct()
+                    {
+                        CollectionId = i,
+                        ProductId = product.Id
+                    };
+                    _context.CollectionProducts.Update(productCollections);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            product.Packet = model.Height;
             product.OwnerId = currentUser.OwnerId;
+            product.Code = model.Code;
+            product.Depth = model.Depth;
+            product.Height = model.Height;
+            product.Description = model.Description;
+            product.Packet = model.Packet;
+            product.Name = model.Name;
+            product.Unit = model.ProductUnit;
+            product.Volume = model.Volume;
+            product.Weight = model.Weight;
+            product.Width = model.Width;
+            product.CurrencyDollar = model.CurrencyDollar;
+            product.CurrencyEuro = model.CurrencyEuro;
+            product.EnglishDescription = model.EnglishDescription;
+            product.EnglishName = model.EnglishName;
+            product.KdvDolar = model.KdvDolar;
+            product.KdvEuro = model.KdvEuro;
+            product.KdvTL = model.KdvTL;
+            product.OfferDescription = model.OfferDescription;
+            product.OfferQuantity = model.OfferQuantity;
+            product.TotalDolar = model.TotalDolar;
+            product.TotalEuro = model.TotalEuro;
+            product.TotalTL = model.TotalTL;
+            product.SalesPriceEuro = model.SalesPriceEuro;
+            product.SalesPriceDolar = model.SalesPriceDolar;
+            product.SalesPriceTL = model.SalesPriceTL;
+            product.IsEuroDefault = model.IsEuroDefault;
+            product.IsDolarDefault = model.IsDolarDefault;
+            product.IsTlDefault = model.IsTlDefault;
+            product.ModifiedBy = currentUser.Name + " " + currentUser.Surname;
+            product.ModifiedDate = DateTime.Now;
             product.CreatedBy = (currentUser.Name + currentUser.Surname).ToOneLineStringJustNotNulls();
             if (formFile != null)
             {
@@ -212,14 +326,10 @@ namespace CommonCrm.Controllers
                 product.ImagePath = filePath;
             }
 
-            var result = _productService.Create(product);
-            if (result)
-            {
-                TempData["CustomMessage"] = Constants.ProductSuccessCreated;
-                return RedirectToAction("ProductList");
-            }
+            _productService.Update(product);
 
-            return View();
+            TempData["CustomMessage"] = Constants.ProductSuccessUpdated;
+            return RedirectToAction("ProductList");
         }
 
         #endregion
@@ -244,17 +354,36 @@ namespace CommonCrm.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateProductUnitPartial()
         {
-            return View();
+            return PartialView("CreateProductUnitPartial");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateCategoryPartial()
+        {
+            return PartialView("CreateCategoryPartial");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateCollectionPartial()
+        {
+            return PartialView("CreateCollectionPartial");
         }
 
         [HttpPost]
-        public IActionResult CreateProductUnitPartial(CreateProductDto entity)
+        public IActionResult SaveProductUnit(CreateProductDto entity)
         {
             var check = OwnerCheck();
             var user = GetCurrentUser();
+            if (entity.ProductUnit?.Name == null)
+            {
+                TempData["ErrorMessage"] = "Koleksiyon ismi boş olamaz.";
+                return Json(new { success = false, message = "Değişiklik izni yok." });
+            }
+
             if (check == false)
             {
                 TempData["ErrorMessage"] = Constants.WrongUserAuth;
+                return Json(new { success = false, message = "Değişiklik izni yok." });
             }
 
             try
@@ -266,13 +395,87 @@ namespace CommonCrm.Controllers
                 };
                 _productUnitService.Create(unit);
                 TempData["SuccessMessage"] = Constants.SuccessAdded;
+                return Json(new { success = true, message = "Değişiklik izni yok." });
             }
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = ex.Message;
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveCategoryPartial(CreateProductDto entity)
+        {
+            var check = OwnerCheck();
+            var user = GetCurrentUser();
+            if (entity.Category?.Name == null)
+            {
+                TempData["ErrorMessage"] = "Koleksiyon ismi boş olamaz.";
+                return Json(new { success = false, message = "Değişiklik izni yok." });
             }
 
-            return RedirectToAction("");
+            if (check == false)
+            {
+                TempData["ErrorMessage"] = Constants.WrongUserAuth;
+                return Json(new { success = false, message = "Değişiklik izni yok." });
+            }
+
+            try
+            {
+                var category = new Category
+                {
+                    Name = entity.Category?.Name,
+                    OwnerId = user.OwnerId
+                };
+                await _context.Categories.AddAsync(category);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = Constants.SuccessAdded;
+                return Json(new { success = true, message = "Ekleme Başarılı." });
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveCollectionPartial(CreateProductDto entity)
+        {
+            var check = OwnerCheck();
+            var user = GetCurrentUser();
+            if (entity.Collection?.Name == null)
+            {
+                TempData["ErrorMessage"] = "Koleksiyon ismi boş olamaz.";
+                return Json(new { success = false, message = "Değişiklik izni yok." });
+            }
+
+            {
+            }
+            if (check == false)
+            {
+                TempData["ErrorMessage"] = Constants.WrongUserAuth;
+                return Json(new { success = false, message = "Değişiklik izni yok." });
+            }
+
+            try
+            {
+                var collection = new Collection
+                {
+                    Name = entity.Collection.Name,
+                    OwnerId = user.OwnerId,
+                };
+                await _context.Collections.AddAsync(collection);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = Constants.SuccessAdded;
+                return Json(new { success = true, message = "Ekleme Başarılı." });
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message + "-Beklenmeyen bir hata oluştu.";
+                return Json(new { success = false, message = ex.Message });
+            }
         }
 
         public bool OwnerCheck()
@@ -319,7 +522,7 @@ namespace CommonCrm.Controllers
                 };
                 await _context.ExchangeRates.AddAsync(t);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             }
             else
             {
@@ -330,7 +533,7 @@ namespace CommonCrm.Controllers
 
                 _context.ExchangeRates.Update(currentRate);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             }
         }
 
@@ -347,6 +550,7 @@ namespace CommonCrm.Controllers
             {
                 return Json(new { success = false, message = "Değişiklik izni yok." });
             }
+
             if (currentRate.IsNullOrEmpty())
             {
                 var rateList = new List<ExchangeRate>()
@@ -369,8 +573,7 @@ namespace CommonCrm.Controllers
 
                 await _context.ExchangeRates.AddRangeAsync(rateList);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index","Home");
-
+                return RedirectToAction("Index", "Home");
             }
             else
             {
@@ -393,8 +596,8 @@ namespace CommonCrm.Controllers
 
                 await _context.SaveChangesAsync();
             }
-            
-            return RedirectToAction("Index","Home");
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

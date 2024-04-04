@@ -100,25 +100,38 @@
                             <div class="col-lg-6">
 
                                 <div class="mb-3">
-                                   
-                                    <label class="form-label" for="manufacturerbrand">
-                                        Birim
-                                    </label>
+
+
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <label class="form-label" for="manufacturerbrand">
+                                            Birim
+                                        </label>
+                                        <button type="button" class="btn btn-info btn-sm waves-effect waves-light text-end mb-2" onclick="openPartialModal()">Birim Ekle</button>
+                                    </div>
+
                                     <select data-placeholder="Birim Seç..." asp-for="UnitId" asp-items="@units" class="form-control select2">
+                                        <option value="">Birim Seç</option>
                                     </select>
+
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label" for="manufacturerbrand">
-                                        Kategori
-                                    </label>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <label class="form-label" for="manufacturerbrand">
+                                            Kategori
+                                        </label>
+                                        <button type="button" class="btn btn-info btn-sm waves-effect waves-light text-end mb-2" onclick="openPartialModalCategory()">Kategori Ekle</button>
+                                    </div>
                                     <select asp-for="CategoryIds" asp-items="@categories" class="select2 form-control select2-multiple" multiple="multiple"
                                             data-placeholder="Kategori Seç...">
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label" for="manufacturerbrand">
-                                        Koleksiyon
-                                    </label>
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <label class="form-label" for="manufacturerbrand">
+                                            Koleksiyon
+                                        </label>
+                                        <button type="button" class="btn btn-info btn-sm waves-effect waves-light text-end mb-2" onclick="openPartialModalCollection()">Koleksiyon Ekle</button>
+                                    </div>
                                     <select asp-for="CollectionIds" asp-items="@productCollection" class="select2 form-control select2-multiple" multiple="multiple"
                                             data-placeholder="Koleksiyon Seç...">
                                     </select>
@@ -164,8 +177,8 @@
     <div class="col-12">
         <div class="float-start">
             <h6>
-                
-                <input id="hidden-dolar-currency" asp-for="CurrencyDollar" value="@dollar.Replace("$","")" hidden/>
+
+                <input id="hidden-dolar-currency" asp-for="CurrencyDollar" value="@dollar.Replace("$", "")" hidden/>
 
             </h6>
 
@@ -559,6 +572,9 @@
 </div>
 
 </form>
+@await Html.PartialAsync("CreateProductUnitPartial")
+@await Html.PartialAsync("CreateCategoryPartial")
+@await Html.PartialAsync("CreateCollectionPartial")
 
 <!-- end row -->
 
@@ -566,7 +582,15 @@
 </div>
 
 <script>
-
+ function openPartialModal() {
+        $('#partialModal').modal('show'); // Modalı göster
+    }
+     function openPartialModalCategory() {
+            $('#partialModalCategory').modal('show'); // Modalı göster
+        }
+             function openPartialModalCollection() {
+                    $('#partialModalCollection').modal('show'); // Modalı göster
+                }
 
     function updateTotal(currencyType,isKdv) {
         const salesPriceInput = document.getElementById(`input-currency-${currencyType}`);
@@ -808,8 +832,9 @@ window.location.reload();
                          }
     
         }
+         
         
-      
+       
         
 </script>
 
@@ -823,8 +848,6 @@ window.location.reload();
 <!-- dropzone plugin -->
 <script src="~/assets/libs/dropzone/min/dropzone.min.js"></script>
 
-<!-- init js -->
-<script src="~/assets/js/pages/ecommerce-add-product.init.js"></script>
 
 <script src="~/assets/libs/select2/js/select2.min.js"></script>
 <script src="~/assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
@@ -838,4 +861,3 @@ window.location.reload();
 <script src="~/assets/js/pages/form-xeditable.init.js"></script>
 <script src="~/assets/libs/moment/min/moment.min.js"></script>
 <script src="~/assets/libs/bootstrap-editable/js/index.js"></script>
-

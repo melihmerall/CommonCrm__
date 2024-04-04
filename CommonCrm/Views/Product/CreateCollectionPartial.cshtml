@@ -1,2 +1,54 @@
-﻿@model TModel
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model CommonCrm.Business.DTOs.CreateProductDto
+<div id="partialModalCollection" class="modal fade" tabindex="-1" role="dialog">
 
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Koleksiyon Ekle</h5>
+            </div>
+            <div class="modal-body">
+                <p>Koleksiyon eklendikten sonra sayfa yenilenecektir.</p>
+            </div>
+            <form id="collectionAddForm" method="post">
+                <div class="modal-body">
+                    <label class="form-label">Koleksiyon İsmi</label>
+                    <input required="required" placeholder="koleksiyon" asp-for="Collection.Name" type="text" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                    <a onclick="saveCollection()" class="btn btn-success">Kaydet</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        $('#partialModalCollection').on('click', '.btn-success', function(e){
+            e.preventDefault();
+            saveCollection(); // Fonksiyonu çağır
+        });
+    });
+
+    function saveCollection() {
+        var formData = $('#collectionAddForm').serialize(); // Form verilerini al
+        debugger;
+        $.ajax({
+            url: '@Url.Action("SaveCollectionPartial", "Product")',
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                // Başarılı bir şekilde tamamlandığında yapılacak işlemler
+                
+                // Modalı kapat
+                $('#partialModalCollection').modal('hide');
+                window.location.reload();
+            },
+            error: function(xhr, status, error) {
+                // Hata durumunda yapılacak işlemler
+            }
+        });
+    }
+</script>

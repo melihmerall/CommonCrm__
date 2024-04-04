@@ -32,8 +32,11 @@ namespace CommonCrm.Data.DbContexts
 				.HasMany(p => p.Collections)
 				.WithMany(c => c.Products);
 			
-            // modelBuilder.Entity<CategoryProduct>().HasNoKey();
-            // modelBuilder.Entity<CollectionProduct>().HasNoKey();
+			modelBuilder.Entity<CategoryProduct>()
+				.HasKey(cp => new { cp.CategoryId, cp.ProductId });        
+			modelBuilder.Entity<CollectionProduct>()
+				.HasKey(cp => new { cp.CollectionId, cp.ProductId });   
+			// modelBuilder.Entity<CollectionProduct>().HasNoKey();
 
 
 
@@ -45,8 +48,8 @@ namespace CommonCrm.Data.DbContexts
 		public DbSet<ProductUnit> ProductsUnit { get; set; }
 		public DbSet<Collection> Collections { get; set; }
 		public DbSet<ExchangeRate> ExchangeRates { get; set; }
- 		// public DbSet<CategoryProduct> CategoryProducts { get; set; }
-		// public DbSet<CollectionProduct> CollectionProducts { get; set; }
+ 		public DbSet<CategoryProduct> CategoryProducts { get; set; }
+		 public DbSet<CollectionProduct> CollectionProducts { get; set; }
 
 	}
 	public class IdentityContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>

@@ -12,6 +12,9 @@ public class ProductRepository(ApplicationDbContext context) : Repository<Produc
     {
         return await context.Set<Product>()
             .Where(x => x.OwnerId == id)
-            .OrderByDescending(x => x.CreatedDate) // CreatedDate özelliğine göre azalan sıralama ile gelir. son eklenen veri en üstte...
+            .Include(x=>x.Collections)
+            .Include(x=>x.Categories)
+            .Include(x=>x.Unit)
+            .OrderByDescending(x => x.CreatedDate) 
             .ToListAsync() ?? throw new InvalidOperationException();    }
 }

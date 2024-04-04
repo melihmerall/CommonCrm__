@@ -39,6 +39,7 @@ namespace CommonCrm.Data.Entities.Product
 		public bool IsEuroDefault { get; set; }
 
         public int? OfferQuantity { get; set; } //
+        public string? OfferDescription { get; set; } //
 
         public string? Description { get; set; }
         public string? EnglishDescription { get; set; }

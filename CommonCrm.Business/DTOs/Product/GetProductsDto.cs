@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using CommonCrm.Data.Entities.Product;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CommonCrm.Business.DTOs;
@@ -43,9 +44,9 @@ public class GetProductsDto
     public string? EnglishDescription { get; set; }
     public string? ImagePath { get; set; }
         
-    public List<SelectListItem?> ProductCollections { get; set; }
-    public List<SelectListItem?> Categories { get; set; }
-    public List<SelectListItem>? Units { get; set; }
+    public List<Collection> ProductCollections { get; set; }
+    public List<Category> Categories { get; set; }
+    public ProductUnit Unit { get; set; }
         
     //Attribute
     public int? Width { get; set; } //Genişlik cm
