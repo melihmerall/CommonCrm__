@@ -54,8 +54,16 @@
                             {
                                 <tr>
                                     <td>
-                                        <img class="rounded avatar-sm" src="/Images/@i.ImagePath" alt="ürün resmi"/>
-                                    </td>
+                                            @if(i.ImagePath != null)
+                                            {
+                                                <img class="rounded avatar-sm" src="/Images/@i.ImagePath" alt="ürün resmi" />
+                                            }
+                                            else
+                                            {
+                                                <img class="rounded avatar-sm" src="/Images/default/images.jpeg" alt="ürün resmi" />
+
+                                            }
+                                        </td>
                                     <td>@i.Name</td>
                                     <td>@i.Code</td>
                                     <td>@i.Unit?.Name</td>
@@ -68,7 +76,7 @@
                                         <a href="/product/@i.Id/update">
                                             <i class="font-size-22 ri-edit-2-fill"></i>
                                         </a>
-                                        <a href="/">
+                                        <a href="/product/deleteproduct/@i.Id">
                                             <i class="font-size-22 ri-delete-bin-fill m-lg-3"></i>
                                         </a>
                                     </td>

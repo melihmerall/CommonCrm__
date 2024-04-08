@@ -23,9 +23,12 @@ public static class StringExtension
         return list?.Where(x => x != null).ToOneLineString(fn, separator, emptyValue,preFn);
     }
     public static string CurrencyFormatWithDollarSign(this decimal d) => d.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")).Replace("$", "$");
+    public static string CurrencyFormatWithTlSignForDollar(this decimal d) => d.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")).Replace("₺", "₺");
+
     public static string? CurrencyFormatWithTlSign(this decimal d) => d.ToString("C2", CultureInfo.CreateSpecificCulture("tr-TR")).Replace("\u20ba", "\u20ba");
     public static string CurrencyFormatWithEuroSign(this decimal d) => d.ToString("C2", CultureInfo.CreateSpecificCulture("eu-ES")).Replace("\u20ac", "\u20ac").Trim();
-    
+    public static string CurrencyFormatWithTlSignForEuro(this decimal d) => d.ToString("C2", CultureInfo.CreateSpecificCulture("eu-ES")).Replace("₺", "₺").Trim();
+
     public static bool IsNullOrEmpty<T>(this IEnumerable<T> l)
     {
         return l == null || !l.Any();
