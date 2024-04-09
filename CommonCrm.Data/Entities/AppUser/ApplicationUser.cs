@@ -10,7 +10,8 @@ namespace CommonCrm.Data.Entities.AppUser
 	public class ApplicationUser: IdentityUser
 	{
 		public string? Name { get; set; }
-		public string? Surname { get; set; }
+		public string? Zip { get; set; }
+        public string? Surname { get; set; }
 		public string? Title { get; set; }
 		public string? Address { get; set; }
 		public string? OfficialName { get; set; }
@@ -32,10 +33,12 @@ namespace CommonCrm.Data.Entities.AppUser
 		//
 		public string? TcNo { get; set; }
 
-		public string? CompanyTitle { get; set; }
+        public string? CompanyTitle { get; set; }
 		public string? ImagePath { get; set; }
 		public DateTime? BirthDate { get; set; }
 		public Gender Gender { get; set; }
+
+		public string? CreatedBy { get; set; }
 		public string? GenderText
 		{
 			get => Gender.ToString();

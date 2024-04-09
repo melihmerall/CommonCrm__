@@ -198,6 +198,17 @@ namespace CommonCrm.Controllers
             return View();
         }
 
+        public async Task Delete(int id)
+        {
+            var product = await _context.Products.FindAsync(id);
+            if (product != null)
+            {
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+
         [Route("/product/{id?}/update")]
         [HttpGet]
         public async Task<IActionResult> UpdateProduct([FromRoute] int id)

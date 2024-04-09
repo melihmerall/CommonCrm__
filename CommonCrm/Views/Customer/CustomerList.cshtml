@@ -1,0 +1,106 @@
+﻿@using CommonCrm.Data.Entities.AppUser
+@model List<ApplicationUser?> 
+
+@{
+    var data = Model.Count != 0 ? Model : new List<ApplicationUser?>();
+}
+@{
+    ViewData["Title"] = "CustomerList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Ürün Ekle</h4>
+
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item">
+                                <a href="/panel/dsahboard">Ürünler</a>
+                            </li>
+                            <li class="breadcrumb-item active">Ürün Listesi</li>
+                        </ol>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <h4 class="card-title">Müşteriler</h4>
+
+                        <table id="datatable-buttons" class="table table-striped table-bordered dt-responsive nowrap"
+                               style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>Tür</th>
+                                    <th>İsim</th>
+                                    <th>Yetkili</th>
+                                    <th>Ülke</th>
+                                    <th>Atanan</th>
+                                    <th>Ekleyen</th>
+                                    <th>Durum</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var i in data)
+                                {
+                                    var customer = "";
+                                    var active = "";
+
+                                    @if (i.IsCustomerCompany)
+                                    {
+                                        customer = "Şirket";
+                                    }else if (i.IsCustomerPerson)
+                                    {
+                                        customer = "Kişi";
+                                    }
+                                    if(i.IsActive)
+                                    {
+                                        active = "Aktif";
+                                    }
+                                    else
+                                    {
+                                        active = "Pasif";
+                                    }
+                                    <tr>
+
+                                        <td>@customer</td>
+                                        <td>@i.Name @i.Surname @i.Title</td>
+                                        <td>@i.CreatedBy</td>
+                                        <td>@i.Country</td>
+                                        <td>@i.CreatedBy</td>
+                                        <td>
+                                            @i.CreatedBy
+                                        </td>
+                                        <td>@active</td>
+                                        <td class="text-center">
+                                            <a href="/product/@i.Id/update">
+                                                <i class="font-size-22 ri-edit-2-fill"></i>
+                                            </a>
+                                            <a href="/">
+                                                <i class="font-size-22 ri-delete-bin-fill m-lg-3">
+
+                                                </i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div>
+</div>
