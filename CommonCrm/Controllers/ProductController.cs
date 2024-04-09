@@ -227,18 +227,17 @@ namespace CommonCrm.Controllers
             model = entity.MapTo<CreateProductDto>();
             model.Id = entity.Id;
             var productUnits = await _productUnitService.GetAll();
-            productUnits.Where(x => x.OwnerId == currentUser.OwnerId);
-            productUnits.Where(x => x.Id == entity.UnitId);
-            model.Units = GetSelectListItems(productUnits, "Name", "Id");
+            var filteredUnits = productUnits.Where(x => x.OwnerId == currentUser.OwnerId);
+            model.Units = GetSelectListItems(filteredUnits, "Name", "Id");
 
             var categories = await _categoryService.GetAll();
-            categories.Where(x => x.OwnerId == currentUser.OwnerId);
+            var filtederCategories = categories.Where(x => x.OwnerId == currentUser.OwnerId);
             var productCategories = await _context.CategoryProducts
                 .Where(x => x.ProductId == entity.Id)
                 .Select(x => x.CategoryId)
                 .ToListAsync();
             model.CategoryIds = productCategories.ToArray();
-            model.Categories = GetSelectListItems(categories, "Name", "Id");
+            model.Categories = GetSelectListItems(filtederCategories, "Name", "Id");
 
             var collections = await _context.Collections.Where(x => x.OwnerId == currentUser.OwnerId).ToListAsync();
             var productCollections = await _context.CollectionProducts
@@ -255,7 +254,7 @@ namespace CommonCrm.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateProduct(CreateProductDto model, IFormFile formFile)
         {
-            var currentUser = _userManager.GetUserAsync(User).Result;
+            var currentUser = await _userManager.GetUserAsync(User);
 
             if (currentUser == null)
             {
@@ -269,34 +268,130 @@ namespace CommonCrm.Controllers
                 return View(model);
             }
 
-
             var product = _context.Products.FirstOrDefault(x => x.Id == model.Id && x.OwnerId == currentUser.OwnerId);
-            if (model.CategoryIds != null)
-                foreach (var i in model.CategoryIds)
-                {
-                    var productCategories = new CategoryProduct()
-                    {
-                        CategoryId = i,
-                        ProductId = product.Id
-                    };
-                    _context.CategoryProducts.Update(productCategories);
-                    await _context.SaveChangesAsync();
-                }
 
+            if (product == null)
+            {
+                // Ürün bulunamadı hatası
+                TempData["ErrorMessage"] = Constants.ProductNotFound;
+                return View(model);
+            }
+
+            // Kategorilerin güncellenmesi
+            if (model.CategoryIds != null)
+            {
+                await UpdateCategories(product, model.CategoryIds);
+            }
+            else
+            {
+                // Tüm kategorileri kaldır
+                await RemoveAllCategories(product);
+            }
+
+            // Koleksiyonların güncellenmesi
             if (model.CollectionIds != null)
             {
-                foreach (var i in model.CollectionIds)
+                await UpdateCollections(product, model.CollectionIds);
+            }
+            else
+            {
+                // Tüm koleksiyonları kaldır
+                await RemoveAllCollections(product);
+            }
+
+            // Diğer ürün özelliklerinin güncellenmesi
+            UpdateProductProperties(product, model, currentUser);
+
+            // Resim yükleme işlemi
+            if (formFile != null)
+            {
+                var subPath = "products";
+                var filePath = await formFile.SaveToWwwRootAsync(_webHostEnvironment, model.Name, subPath);
+                product.ImagePath = filePath;
+            }
+
+            _productService.Update(product);
+
+            TempData["CustomMessage"] = Constants.ProductSuccessUpdated;
+            return RedirectToAction("ProductList");
+        }
+
+        private async Task UpdateCategories(Product product, int[]? selectedCategoryIds)
+        {
+            // Ürünün mevcut kategorilerini veritabanından al
+            var existingCategories = await _context.CategoryProducts
+                .Where(cp => cp.ProductId == product.Id)
+                .ToListAsync();
+
+            // Seçilen kategorilerden herhangi biri, ürünün mevcut kategorileri arasında değilse, bu kategoriyi siliyorum
+            foreach (var existingCategory in existingCategories)
+            {
+                if (!selectedCategoryIds.Contains(existingCategory.CategoryId))
                 {
-                    var productCollections = new CollectionProduct()
-                    {
-                        CollectionId = i,
-                        ProductId = product.Id
-                    };
-                    _context.CollectionProducts.Update(productCollections);
-                    await _context.SaveChangesAsync();
+                    _context.CategoryProducts.Remove(existingCategory);
                 }
             }
 
+            // Seçilen kategorilerden herhangi biri, ürünün mevcut kategorileri arasında yoksa, yeni kategoriyi ekliyorum
+            foreach (var categoryId in selectedCategoryIds)
+            {
+                if (!existingCategories.Any(ec => ec.CategoryId == categoryId))
+                {
+                    var newCategoryProduct = new CategoryProduct()
+                    {
+                        CategoryId = categoryId,
+                        ProductId = product.Id
+                    };
+                    _context.CategoryProducts.Add(newCategoryProduct);
+                }
+            }
+        }
+
+        private async Task RemoveAllCategories(Product product)
+        {
+            // Ürünün tüm kategorilerini veritabanından kaldır
+            var categoriesToRemove = await _context.CategoryProducts
+                .Where(cp => cp.ProductId == product.Id)
+                .ToListAsync();
+
+            _context.CategoryProducts.RemoveRange(categoriesToRemove);
+        }
+
+        private async Task UpdateCollections(Product product, int[]? selectedCollectionIds)
+        {
+            // Ürünün mevcut koleksiyonlarını veritabanından al
+            var existingCollections = await _context.CollectionProducts
+                .Where(cp => cp.ProductId == product.Id)
+                .ToListAsync();
+
+            // Seçilen koleksiyonlardan herhangi biri, ürünün mevcut koleksiyonları arasında değilse, bu koleksiyonu ekler
+            foreach (var collectionId in selectedCollectionIds)
+            {
+                if (!existingCollections.Any(ec => ec.CollectionId == collectionId))
+                {
+                    var newCollectionProduct = new CollectionProduct()
+                    {
+                        CollectionId = collectionId,
+                        ProductId = product.Id
+                    };
+                    _context.CollectionProducts.Add(newCollectionProduct);
+                }
+            }
+        }
+
+        private async Task RemoveAllCollections(Product product)
+        {
+            // Ürünün tüm koleksiyonlarını veritabanından kaldır
+            var collectionsToRemove = await _context.CollectionProducts
+                .Where(cp => cp.ProductId == product.Id)
+                .ToListAsync();
+
+            _context.CollectionProducts.RemoveRange(collectionsToRemove);
+        }
+
+        private void UpdateProductProperties(Product product, CreateProductDto model, ApplicationUser currentUser)
+        {
+            // Diğer ürün özelliklerinin güncellenmesi
             product.Packet = model.Height;
             product.OwnerId = currentUser.OwnerId;
             product.Code = model.Code;
@@ -305,7 +400,7 @@ namespace CommonCrm.Controllers
             product.Description = model.Description;
             product.Packet = model.Packet;
             product.Name = model.Name;
-            product.Unit = model.ProductUnit;
+            product.UnitId = model.UnitId;
             product.Volume = model.Volume;
             product.Weight = model.Weight;
             product.Width = model.Width;
@@ -330,19 +425,16 @@ namespace CommonCrm.Controllers
             product.ModifiedBy = currentUser.Name + " " + currentUser.Surname;
             product.ModifiedDate = DateTime.Now;
             product.CreatedBy = (currentUser.Name + currentUser.Surname).ToOneLineStringJustNotNulls();
-            if (formFile != null)
-            {
-                var subPath = "products";
-                var filePath = await formFile.SaveToWwwRootAsync(_webHostEnvironment, model.Name, subPath);
-                product.ImagePath = filePath;
-            }
-
-            _productService.Update(product);
-
-            TempData["CustomMessage"] = Constants.ProductSuccessUpdated;
-            return RedirectToAction("ProductList");
         }
 
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            var product = _productService.GetById(id).Result;
+            _productService.Delete(product);
+            TempData["CustomMessage"] = Constants.SuccessDeleted;
+
+            return RedirectToAction("ProductList");
+        }
         #endregion
 
         #region Product Unit Process
