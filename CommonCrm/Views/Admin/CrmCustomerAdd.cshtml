@@ -1,8 +1,123 @@
-﻿@model CommonCrm.Models.UserVM.CreateUserViewModel
+﻿@using CommonCrm.Data.Entities.AppUser
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model CommonCrm.Models.UserVM.CreateCrmUserViewModel
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-@{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
-}
+<div class="page-content">
+    <div class="container-fluid">
 
-<h2>title</h2>
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Crm Müşterisi Ekle</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <form asp-controller="Admin" asp-action="CrmCustomerAdd" method="post">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                            <div class="row">
+                                <div class="col-lg-6">
+
+                                    <div class="mb-3">
+                                        <label>İsim</label>
+                                        <input asp-for="Name" type="text" class="form-control" required placeholder="İsim"/>
+                                        <span asp-validation-for="Name" class="text-danger"></span>
+
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Soyisim</label>
+                                        <input asp-for="Surmame" type="text" class="form-control" required placeholder="Soyisim"/>
+                                        <span asp-validation-for="Surmame" class="text-danger"></span>
+
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Email</label>
+                                        <input asp-for="Email" type="email" class="form-control" required placeholder="Email"/>
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Telefon Numarası</label>
+                                        <input asp-for="PhoneNumber" type="text" class="form-control" required placeholder="Telefon numarası"/>
+                                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Kimlik No</label>
+                                        <input asp-for="TcNo" type="text" class="form-control" required placeholder="Tc No"/>
+                                        <span asp-validation-for="TcNo" class="text-danger"></span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Şirket Adı</label>
+                                        <input asp-for="CompanyTitle" type="text" class="form-control" required placeholder="Şirket Adı"/>
+                                        <span asp-validation-for="CompanyTitle" class="text-danger"></span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Alınan Ücret</label>
+                                        <input asp-for="PaidPrice" type="text" class="form-control" required placeholder="123.15 Tl"/>
+                                        <span asp-validation-for="PaidPrice" class="text-danger"></span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Adres</label>
+                                        <input asp-for="Address" type="text" class="form-control" required placeholder="Adres"/>
+                                        <span asp-validation-for="Address" class="text-danger"></span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Şifre</label>
+                                        <div>
+                                            <input asp-for="Password" type="password" id="pass2" class="form-control" required
+                                                   placeholder="Password"/>
+                                            <span asp-validation-for="Password" class="text-danger"></span>
+
+                                        </div>
+                                        <div class="mt-2">
+                                            <input asp-for="ConfirmPassword" type="password" class="form-control" required data-parsley-equalto="#pass2"
+                                                   placeholder="Şifreyi doğrula"/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Kullanıcı Açıklaması</label>
+                                        <input asp-for="Description" type="text" class="form-control"  placeholder="Açıklama"/>
+                                        <span asp-validation-for="Description" class="text-danger"></span>
+
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label asp-for="Gender">Cinsiyet</label>
+                                        <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control"></select>
+                                    </div>
+                                </div>
+                                <br/>
+
+                                <div class="mb-1 mt-4">
+                                    <div>
+                                        <button type="submit" class="btn btn-primary waves-effect waves-light me-1">
+                                            Crm Müşteri Ekle
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+
+                    </div>
+
+
+                </div>
+            </div>
+            <!-- end select2 -->
+
+        </div>
+
+
+    </div>
+</div>
+<script src="~/assets/libs/parsleyjs/parsley.min.js"></script>
+
+<script src="~/assets/js/pages/form-validation.init.js"></script>

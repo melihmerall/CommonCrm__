@@ -3,7 +3,7 @@ using CommonCrm.Data.Entities.AppUser;
 
 namespace CommonCrm.Models.UserVM;
 
-public class CreateUserViewModel
+public class CreateCrmUserViewModel
 {
 
     [Required(ErrorMessage = "Boş olamaz.")]
@@ -34,6 +34,9 @@ public class CreateUserViewModel
     public string PhoneNumber { get; set; }
     public string? LocationFromCompany { get; set; }
     public string? TcNo { get; set; }
+    
+    public string? PaidPrice { get; set; }
+    public string? CompanyTitle { get; set; }
 
 
 }

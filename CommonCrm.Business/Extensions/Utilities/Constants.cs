@@ -9,6 +9,7 @@ public static class Constants
     public const string ProductSuccessUpdated = "Ürün Başarı ile güncellendi.";
     public const string ProductNotFound = "Ürünle ilgili veriler getirilemedi.";
     public const string SuccessAdded = "Ekleme Başarılı.";
+    public const string SuccessUpdated = "Güncelleme Başarılı.";
     public const string SuccessDeleted = "Silme Başarılı.";
 
 }

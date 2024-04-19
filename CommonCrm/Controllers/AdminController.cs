@@ -1,5 +1,6 @@
 ﻿using CommonCrm.Business.DTOs;
 using CommonCrm.Business.Extensions;
+using CommonCrm.Business.Extensions.Utilities;
 using CommonCrm.Business.Services;
 using CommonCrm.Data.DbContexts;
 using CommonCrm.Data.Entities.AppUser;
@@ -70,10 +71,20 @@ public class AdminController : BaseController
     [HttpPost]
     public async Task<IActionResult> CreateUser(CreateUserViewModel model)
     {
+        var currentUser = _userManager.GetUserAsync(User).Result;
+        if (currentUser == null)
+        {
+            TempData["ErrorMessage"] = Constants.WrongUserAuth;
+            return RedirectToAction("Index", "Home");
+        }        
+        
         if (ModelState.IsValid)
         {
+            var rnd = new Random().Next(1,100000);
             var user = model.MapTo<ApplicationUser>();
-            user.OwnerId = Guid.NewGuid();
+            user.OwnerId = currentUser.OwnerId;
+            user.UserName = $"{rnd}{user.Name}{user.Surname}";
+            user.IsActive = true;
 
             var userMail = _userManager?.FindByEmailAsync(model?.Email).Result;
             if(userMail != null)
@@ -113,11 +124,87 @@ public class AdminController : BaseController
     [Route("/panel/user-list")]
     public async Task<IActionResult> UserList()
     {
-        var users = await _userManager.Users.ToListAsync();
+        var currentUser = _userManager.GetUserAsync(User).Result;
+        var users = await _userManager.Users.Where(x=>x.IsCustomerCompany != true && x.IsCustomerPerson != true && x.IsCrmOwner != true && x.OwnerId == currentUser.OwnerId).ToListAsync();
         return View(users);
     }
-    #endregion
+    [HttpGet]
+    [Route("/panel/crmuser-list")]
+    public async Task<IActionResult> CrmUserList()
+    {
+        var currentUser = _userManager.GetUserAsync(User).Result;
+        var users = await _userManager.Users.Where(x=>x.IsOwner == true).ToListAsync();
+        return View(users);
+    }
+    
+    public async Task<IActionResult> DeleteUser(string id)
+    {
+        var user = _userManager.FindByIdAsync(id).Result;
+        if (user == null)
+        {
+            TempData["CustomMessage"] = "User not find.";
 
+        }
+        await _userManager.DeleteAsync(user);
+        await _context.SaveChangesAsync();
+        TempData["CustomMessage"] = Constants.SuccessDeleted;
+        return RedirectToAction("UserList");
+
+    }
+    #endregion
+    [HttpGet]
+    [Route("/panel/crmuser-add")]
+    public async Task<IActionResult> CrmCustomerAdd()
+    {
+        return View();
+    }
+    [Route("/panel/crmuser-add")]
+    [HttpPost]
+    public async Task<IActionResult> CrmCustomerAdd(CreateCrmUserViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var rnd = new Random().Next(1,100000);
+            var user = model.MapTo<ApplicationUser>();
+            user.OwnerId = new Guid();
+            user.UserName = $"{rnd}{user.Name}{user.Surname}";
+            user.IsActive = true;
+            user.IsOwner = true;
+
+            var userMail = _userManager?.FindByEmailAsync(model?.Email).Result;
+            if(userMail != null)
+            {
+                TempData["ErrorMessage"] = $"Hata! Geçersiz mail adresi.";
+                return View(model) ;
+
+            }
+            var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded)
+            {
+                
+                return RedirectToAction("CrmUserList", "Admin"); 
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+        }
+        else
+        {
+            foreach (var modelError in ModelState.Values)
+            {
+                foreach (var error in modelError.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.ErrorMessage);
+
+                }
+            }
+        }
+
+        return View(model);
+    }
 
     #region Attribute Process
     [Route("/attribute/add")]

@@ -9,7 +9,7 @@
 <div class="page-content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-6 person">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                         <h4 class="mb-sm-0">Bireysel</h4>
@@ -110,7 +110,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-6 company">
                 <div class="col-6">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                         <h4 class="mb-sm-0">Şirket</h4>
@@ -206,3 +206,31 @@
     </div>
 </div>
 <!-- end row -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var personForm = document.querySelector('.person form');
+        var companyForm = document.querySelector('.company form');
+
+        var personInputs = personForm.querySelectorAll('input');
+        personInputs.forEach(function(input) {
+            input.addEventListener('input', function() {
+                if (input.value.trim() !== '') {
+                    companyForm.style.display = 'none';
+                } else {
+                    companyForm.style.display = 'block';
+                }
+            });
+        });
+
+        var companyInputs = companyForm.querySelectorAll('input');
+        companyInputs.forEach(function(input) {
+            input.addEventListener('input', function() {
+                if (input.value.trim() !== '') {
+                    personForm.style.display = 'none';
+                } else {
+                    personForm.style.display = 'block';
+                }
+            });
+        });
+    });
+</script>

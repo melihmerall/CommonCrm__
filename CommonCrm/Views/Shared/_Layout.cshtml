@@ -1,10 +1,10 @@
-﻿@using CommonCrm.Business.Extensions
+﻿@using System.Text.RegularExpressions
+@using CommonCrm.Business.Extensions
 @using CommonCrm.BackgroundServices
 @using CommonCrm.Data.Entities
 @using Newtonsoft.Json
 
 @{
-    
     var exchangeRatesdlr = CurrencyBackgroundService.SharedData._exchangeRates?.FirstOrDefault(x => x.CurrencyCode == "DLR");
     var defaultCurrencyDollar = exchangeRatesdlr?.Rate.CurrencyFormatWithDollarSign();
     var dollar = exchangeRatesdlr?.Rate.CurrencyFormatWithDollarSign();
@@ -31,7 +31,9 @@
             }
         }
     }
-    
+    string userName = User.Identity.Name;
+    string userNameWithoutNumbers = Regex.Replace(userName, @"\d", ""); // Sayıları boş karakterle değiştirir
+
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -56,7 +58,7 @@
     <link href="~/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css"/>
     <link href="~/assets/libs/datatables.net-select-bs4/css//select.bootstrap4.min.css" rel="stylesheet" type="text/css"/>
     <link href="~/assets/libs/bootstrap-editable/css/bootstrap-editable.css" rel="stylesheet" type="text/css"/>
-<link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css"/>
 
     <!-- Responsive datatable examples -->
     <link href="~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet"
@@ -117,9 +119,9 @@
         </div>
 
         <div class="d-flex">
-<div class="float-start mt-3 m-lg-3">
+            <div class="float-start mt-3 m-lg-3">
                 <button id="defaultExchange" onclick="defaultExchange()" class="btn btn-info mt-1">Güncel Kur</button><br/>
-               
+
             </div>
 
             <div class="float-start mt-3 m-lg-3">
@@ -135,7 +137,7 @@
                     </a>
                 </h6>
             </div>
- 
+
             @*
                 <div class="dropdown d-none d-lg-inline-block ms-1">
                     <button type="button" class="btn header-item noti-icon waves-effect" data-bs-toggle="dropdown"
@@ -190,7 +192,7 @@
                 </div>
                 *@
 
-          
+
 
 
             @*Bildirimler için burayı kullanacagız.*@
@@ -291,7 +293,7 @@
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <img class="rounded-circle header-profile-user" src="/assets/images/users/avatar-2.jpg"
                          alt="Header Avatar">
-                    <span class="d-none d-xl-inline-block ms-1">@User.Identity.Name</span>
+                    <span class="d-none d-xl-inline-block ms-1">@userNameWithoutNumbers</span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
@@ -321,78 +323,102 @@
         <div id="sidebar-menu">
             <!-- Left Menu Start -->
             <ul class="metismenu" id="side-menu" style="margin-left: -20px!important; margin-top: 15px!important;">
-                <li class="menu-title">Menu</li>
+                @if (@userNameWithoutNumbers != "crmOwner")
+                {
+                    <li class="menu-title">Menu</li>
 
-                <li>
-                    <a target="_self" href="/panel/dashboard" class="">
-                        <i class="ri-dashboard-line"></i>
-                        <span>Anasayfa</span>
-                    </a>
-                </li>
+                    <li>
+                        <a target="_self" href="/panel/dashboard" class="">
+                            <i class="ri-dashboard-line"></i>
+                            <span>Anasayfa</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="ri-store-2-line"></i>
+                            <span>Ürün Yönetimi</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li>
+                                <a target="_self" href="/product/add">Ürün Ekle</a>
+                            </li>
+                            <li>
+                                <a target="_self" href="/product/list">Ürünleri Gör</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="ri-user-2-line"></i>
+                            <span>Müşteriler</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li>
+                                <a target="_self" href="/customer/add">Müşteri Ekle</a>
+                            </li>
+
+                            <li>
+                                <a target="_self" href="/customer/list">Müşterileri Gör</a>
+                            </li>
+
+
+                        </ul>
+                    </li>
+                    <li class="menu-title">Yönetim</li>
+
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="ri-store-2-line"></i>
+                            <span>Kullanıcı Yönetimi</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li>
+                                <a target="_self" href="/panel/user-add">Kullanıcı Ekle</a>
+                            </li>
+                            <li>
+                                <a target="_self" href="/panel/user-list">Kullanıcıları Gör</a>
+                            </li>
+                            @if (@userNameWithoutNumbers == "crmOwner")
+                            {
+                                <li>
+                                    <a target="_self" href="/panel/user-list">CRM Müşterisi Ekle</a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+
+
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="ri-mail-send-line"></i>
+                            <span>Role & İzin Kontrolü</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li>
+                                <a target="_self" href="/role/list">Rol Listesi</a>
+                            </li>
+                            <li>
+                                <a target="_self" href="/role/add">Rol Ekle</a>
+                            </li>
+                        </ul>
+                    </li>
+                }else{
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-store-2-line"></i>
-                        <span>Ürün Yönetimi</span>
+                        <span>CRM Yönetimi</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li>
-                            <a target="_self" href="/product/add">Ürün Ekle</a>
+                            <a target="_self" href="/panel/crmuser-add">Müşteri Ekle</a>
                         </li>
                         <li>
-                            <a target="_self" href="/product/list">Ürünleri Gör</a>
-                        </li>
-
-                    </ul>
-                </li>
-                <!--EMİR BUYUKCEYLAN DENEMESİ--></>
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-user-2-line"></i>
-                        <span>Müşteriler</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li>
-                            <a target="_self" href="/customer/add">Müşteri Ekle</a>
-                        </li>
-                        <li>
-                            <a target="_self" href="/customer/list">Müşterileri Gör</a>
+                            <a target="_self" href="/panel/crmuser-list">Müşterileri Gör</a>
                         </li>
                     </ul>
                 </li>
-                 <!--EMİR BUYUKCEYLAN DENEMESİ--></>
-                <li class="menu-title">Yönetim</li>
-
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-store-2-line"></i>
-                        <span>Kullanıcı Yönetimi</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li>
-                            <a target="_self" href="/panel/user-add">Kullanıcı Ekle</a>
-                        </li>
-                        <li>
-                            <a target="_self" href="/panel/user-list">Kullanıcıları Gör</a>
-                        </li>
-
-                    </ul>
-                </li>
-
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="ri-mail-send-line"></i>
-                        <span>Role & İzin Kontrolü</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li>
-                            <a target="_self" href="/role/list">Rol Listesi</a>
-                        </li>
-                        <li>
-                            <a target="_self" href="/role/add">Rol Ekle</a>
-                        </li>
-                    </ul>
-                </li>
-
+                }
 
             </ul>
         </div>

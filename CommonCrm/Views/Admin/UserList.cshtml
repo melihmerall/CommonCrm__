@@ -43,12 +43,9 @@
                                style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead>
                             <tr>
-                                <th>User Db Id </th>
                                 <th>Kullanıcı Adı</th>
                                 <th>Email</th>
                                 <th>Aktif mi?</th>
-                                <th>Müşteri mi?</th>
-                                <th>Şirket mi?</th>
                                 <th></th>
                                 <th></th>
 
@@ -60,18 +57,13 @@
                             @foreach (var i in Model)
                             {
                                 var isActive = (@i.IsActive) ? "Aktif" : "Değil";
-                                var isCustomer = (@i.IsCustomerCompany) ? "Evet" : "Hayır";
-                                var isCompany = (@i.IsCustomerPerson) ? "Evet" : "Hayır";
 
                                 <tr>
-                                    <td>@i.Id</td>
                                     <td>@i.Title @i.UserName</td>
                                     <td>@i.Email</td>
                                     <td>@isActive</td>
-                                    <td>@isCustomer</td>
-                                    <td>@isCompany</td>
                                     <td><a href="/"><i class="ri-edit-2-fill"></i></a></td>
-                                    <td><a href="/"><i class="ri-delete-bin-fill"></i></a></td>
+                                    <td><a href="/admin/deleteuser/@i.Id"><i class="ri-delete-bin-fill"></i></a></td>
                                 </tr>
                             }
 

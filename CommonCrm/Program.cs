@@ -106,7 +106,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddScoped<IAuthorizationHandler, RoleAndClaimAuthorizationHandler>();
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddHttpClient();
-builder.Services.AddHostedService<CurrencyBackgroundService>();
+//builder.Services.AddHostedService<CurrencyBackgroundService>();
 builder.Services.AddSession();
 var app = builder.Build();
 

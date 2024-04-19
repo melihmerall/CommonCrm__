@@ -39,6 +39,11 @@ namespace CommonCrm.Data.Entities.AppUser
 		public Gender Gender { get; set; }
 
 		public string? CreatedBy { get; set; }
+		
+		public bool IsCrmOwner { get; set; }
+		
+		public string? LocationFromCompany { get; set; }
+		public string? PaidPrice { get; set; }
 		public string? GenderText
 		{
 			get => Gender.ToString();

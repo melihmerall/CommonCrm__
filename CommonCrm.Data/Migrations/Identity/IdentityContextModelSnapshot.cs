@@ -80,7 +80,6 @@ namespace CommonCrm.Data.Migrations.Identity
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
@@ -108,6 +107,9 @@ namespace CommonCrm.Data.Migrations.Identity
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsCrmOwner")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsCustomerCompany")
                         .HasColumnType("bit");
 
@@ -116,6 +118,9 @@ namespace CommonCrm.Data.Migrations.Identity
 
                     b.Property<bool>("IsOwner")
                         .HasColumnType("bit");
+
+                    b.Property<string>("LocationFromCompany")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -142,6 +147,9 @@ namespace CommonCrm.Data.Migrations.Identity
 
                     b.Property<Guid?>("OwnerId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PaidPrice")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -179,6 +187,9 @@ namespace CommonCrm.Data.Migrations.Identity
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Zip")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
