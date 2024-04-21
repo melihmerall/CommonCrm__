@@ -1,0 +1,401 @@
+﻿@using CommonCrm.Data.Entities.AppUser
+@model ApplicationUser
+
+@{
+    ViewData["Title"] = "OfferAdd";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 person">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0">Kimlik</h4>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <form class="needs-validation" method="post" novalidate>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Baslik" class="form-label">Başlık</label>
+                                        <input type="text" class="form-control" id="Baslik" asp-for="Name" placeholder="Başlık" required>
+                                        <div class="invalid-feedback">
+                                            Lütfen geçerli bir Başlık girin.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Kod" class="form-label">Kod</label>
+                                        <input type="text" class="form-control" id="Kod" asp-for="Surname" placeholder="Kod" required>
+                                        <div class="invalid-feedback">
+                                            Lütfen geçerli bir Kod girin.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Duzenleme" class="form-label">Düzenleme</label>
+                                        <input type="text" class="form-control" id="Duzenleme" asp-for="TcNo" placeholder="Düzenleme" required>
+                                        <div class="invalid-feedback">
+                                            Lütfen geçerli bir değer girin.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Sonlanma" class="form-label">Sonlanma</label>
+                                        <input type="text" class="form-control" id="Sonlanma" asp-for="PhoneNumber" placeholder="Sonlanma" required>
+                                        <div class="invalid-feedback">
+                                            Lütfen geçerli bir değer girin.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Gecerlilik" class="form-label">Geçerlilik</label>
+                                        <input type="text" class="form-control" id="Gecerlilik" asp-for="Email" placeholder="Geçerlilik" required>
+                                        <div class="invalid-feedback">
+                                            Lütfen geçerli bir değer girin.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Doviz" class="form-label">Döviz</label>
+                                        <input type="text" class="form-control" id="Doviz" asp-for="Country" placeholder="Döviz" required>
+                                        <div class="invalid-feedback">
+                                            Lütfen geçerli bir Döviz miktarı girin.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="Döviz Türü" class="form-label">Döviz Türü</label>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="usd" value="option1">
+                                        <label class="form-check-label" for="inlineRadio1">USD</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="eur" value="option2">
+                                        <label class="form-check-label" for="inlineRadio2">EUR</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="try" value="option3">
+                                        <label class="form-check-label" for="inlineRadio3">TRY</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 person">
+                <div class="col-6">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0">müşteri</h4>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <form class="needs-validation" method="post" novalidate>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Müşteriler</label>
+                                        <select class="form-control select2">
+                                            <option>Seçiniz</option>
+                                                <option value="AK">Alaska</option>
+                                                <option value="HI">Hawaii</option>
+                                                <option value="CA">California</option>
+                                                <option value="NV">Nevada</option>
+                                                <option value="OR">Oregon</option>
+                                                <option value="WA">Washington</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Tür" class="form-label">Tür</label>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="kisi" value="option1">
+                                            <label class="form-check-label" for="inlineRadio1">Kişi</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="sirket" value="option2">
+                                            <label class="form-check-label" for="inlineRadio2">Şirket</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="İsim" class="form-label">İsim</label>
+                                        <input type="text" class="form-control" id="İsim" asp-for="Name" placeholder="İsim" required>
+                                        <div class="invalid-feedback">
+                                            Lütfen İsim alanını boş bırakmayın.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Soyisim" class="form-label">Soyisim</label>
+                                        <input type="text" class="form-control" id="Soyisim" asp-for="Surname" placeholder="Soyisim" required>
+                                        <div class="invalid-feedback">
+                                            Lütfen Soyisim alanını boş bırakmayın.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="KimlikNo" class="form-label">Kimlik No</label>
+                                        <input type="text" class="form-control" id="KimlikNo" asp-for="TcNo" placeholder="Kimlik No" required>
+                                        <div class="invalid-feedback">
+                                            Lütfen geçerli bir Kimlik No girin.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Telefon" class="form-label">Telefon No</label>
+                                        <input type="text" class="form-control" id="Telefon No" asp-for="PhoneNumber" placeholder="Telefon No" required>
+                                        <div class="invalid-feedback">
+                                            Lütfen geçerli bir Telefon No girin.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Eposta" class="form-label">E-posta</label>
+                                        <input type="text" class="form-control" id="Eposta" asp-for="Email" placeholder="E-posta" required>
+                                        <div class="invalid-feedback">
+                                            Lütfen geçerli bir E-posta girin.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Adres" class="form-label">Adres</label>
+                                        <input type="text" class="form-control" id="Adres" asp-for="Address" placeholder="Adres" required>
+                                        <div class="invalid-feedback">
+                                            Lütfen geçerli bir Adres girin.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Ulke" class="form-label">Ülke</label>
+                                        <input type="text" class="form-control" id="Ulke" asp-for="Country" placeholder="Ülke" required>
+                                        <div class="invalid-feedback">
+                                            Lütfen geçerli bir Ülke girin.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Sehir" class="form-label">Şehir</label>
+                                        <input type="text" class="form-control" id="Sehir" asp-for="City" placeholder="Şehir" required>
+                                        <div class="invalid-feedback">
+                                            Lütfen geçerli bir Şehir girin.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 person">
+                <div class="col-6">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0">Ürünler</h4>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <form class="needs-validation" method="post" novalidate>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                  <div class="table-responsive">
+                                    <table class="table table-bordered mb-0">
+                                      <thead>
+                                      <tr>
+                                      <th>#</th>
+                                      <th>İsim</th>
+                                      <th>Miktar</th>
+                                      <th>Birim</th>
+                                      <th>Birim Fiyat</th>
+                                      <th>İndirim</th>
+                                      <th>KDV</th>
+                                      <th>Satır Toplam</th>
+                                      </tr>
+                                      </thead>
+                                          <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                    <td>
+                                                            <select class="form-control select2">
+                                                                <option ></option>
+                                                                <option value="">Denemee</option>
+                                                            </select>
+                                                    </td>
+                                                    <td><input type="text" class="form-control" id="Miktar" asp-for="Name" placeholder="Miktar" required></td>
+                                                    <td><input type="text" class="form-control" id="Birim" asp-for="Name" placeholder="Birim" required></td>
+                                                    <td><input type="text" class="form-control" id="Birim Fiyatı" asp-for="Name" placeholder="Birim Fiyatı" required></td>
+                                                    <td><input type="text" class="form-control" id="İndirim" asp-for="Name" placeholder="İndirim" required></td>
+                                                    <td>
+                                                        <select class="form-control select2">
+                                                            <option value="">0</option>
+                                                            <option value="">1</option>
+                                                            <option value="">8</option>
+                                                            <option value="">10</option>
+                                                            <option value="">18</option>
+                                                            <option value="">20</option>
+
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="text" class="form-control" id="Satır Toplam" asp-for="Name" placeholder="Satır Toplam" required></td>
+                                            </tr>
+                                          </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 person">
+                <div class="col-6">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0">Açıklama</h4>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <form class="needs-validation" method="post" novalidate>
+                            <div class="mt-3">
+                                <textarea id="textarea" class="form-control" maxlength="500" rows="3"
+                                          placeholder="Ek bilgiler, şartlar,koşullar, ..."></textarea>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 person">
+                <div class="col-6">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0">Şartlar</h4>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <form class="needs-validation" method="post" novalidate>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Termin Suresi" class="form-label">Termin Süresi</label>
+                                        <input type="text" class="form-control" id="Termin Suresi" asp-for="Name" placeholder="20 gün" required>
+                                        <div class="invalid-feedback">
+                                            Lütfen İsim alanını boş bırakmayın.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Nakliye Maliyeti" class="form-label">Nakliye Maliyeti</label>
+                                        <input type="text" class="form-control" id="Nakliye Maliyeti" asp-for="Surname" placeholder="Alıcı Öder" required>
+                                        <div class="invalid-feedback">
+                                            Lütfen Soyisim alanını boş bırakmayın.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Incoterms" class="form-label">Incoterms</label>
+                                        <input type="text" class="form-control" id="Incoterms" asp-for="TcNo" placeholder="Incoterms" required>
+                                        <div class="invalid-feedback">
+                                            Lütfen geçerli bir Kimlik No girin.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Odeme Sartlari" class="form-label">Odeme Sartlari</label>
+                                        <input type="text" class="form-control" id="Odeme Sartlari" asp-for="PhoneNumber" placeholder="Nakit,%20 önden,%80 teslimde" required>
+                                        <div class="invalid-feedback">
+                                            Lütfen geçerli bir Telefon No girin.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="Yukumluluk" class="form-label">Yükümlülük</label>
+                                        <input type="text" class="form-control" id="Yukumluluk" asp-for="Email" placeholder="" required>
+                                        <div class="invalid-feedback">
+                                            Lütfen geçerli bir E-posta girin.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 person">
+                <div class="card">
+                    <div class="card-body">
+                        <form class="needs-validation" method="post" novalidate>
+                            <div class="row">
+                                <div class="col-md-10"></div> <!-- Boşluk bırakmak için -->
+                                <div class="col-md-2">
+                                    <button class="btn btn-success waves-effect waves-light float-end" type="submit">Kaydet</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end row -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var personForm = document.querySelector('.person form');
+        var companyForm = document.querySelector('.company form');
+
+        var personInputs = personForm.querySelectorAll('input');
+        personInputs.forEach(function (input) {
+            input.addEventListener('input', function () {
+                if (input.value.trim() !== '') {
+                    companyForm.style.display = 'none';
+                } else {
+                    companyForm.style.display = 'block';
+                }
+            });
+        });
+
+        var companyInputs = companyForm.querySelectorAll('input');
+        companyInputs.forEach(function (input) {
+            input.addEventListener('input', function () {
+                if (input.value.trim() !== '') {
+                    personForm.style.display = 'none';
+                } else {
+                    personForm.style.display = 'block';
+                }
+            });
+        });
+    });
+</script>
