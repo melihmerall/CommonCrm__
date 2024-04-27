@@ -35,7 +35,18 @@ namespace CommonCrm.Controllers
 
             return View(offers);
         }
+        /*
+        [Route("/offer/settings")]
+        [HttpGet]
+        public IActionResult OfferSettings()
+        {
+            var currentUser = _userManager.GetUserAsync(User).Result;
+            var offers = _userManager.Users
+                ?.Where(x => x.OwnerId == currentUser.OwnerId && (x.IsCustomerPerson || x.IsCustomerCompany)).ToList();
 
+            return View(offers);
+        }
+        */
         [Route("/offer/requests")]
         [HttpGet]
         public IActionResult OfferRequests()

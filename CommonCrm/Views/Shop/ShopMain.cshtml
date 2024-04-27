@@ -1,0 +1,249 @@
+﻿@using CommonCrm.Data.Entities.AppUser
+@model List<ApplicationUser?>
+
+@{
+    var data = Model.Count != 0 ? Model : new List<ApplicationUser?>();
+}
+@{
+    ViewData["Title"] = "ShopMain";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Mağaza</h4>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item">
+                                <a href="/panel/dsahboard">Mağaza</a>
+                            </li>
+                            <li class="breadcrumb-item active">Ana Sayfa</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+                <div class="col-3">
+                <label class="form-label">Ürünler</label>
+                <div class="bg-light rounded border px-3 py-2 d-flex justify-content-between align-items-center">
+                    <span>Ürünler</span>
+                    <span class="text-right">3</span>
+                </div>
+                </div>
+
+            <div class="col-3">
+                <label class="form-label">Kategoriler</label>
+                <select class="form-control select2">
+                    <option>Kategori Yok</option>
+                </select>
+            </div>
+
+            <div class="col-3">
+                <label class="form-label">Koleksiyonlar</label>
+                <select class="form-control select2">
+                    <option>Deneme</option>
+                </select>
+            </div>
+
+            <style>
+                .category:hover, .collection:hover {
+                    text-decoration: underline;
+                    cursor: pointer;
+                }
+            </style>
+
+            <div class="col-3">
+                <label class="form-label">Grupla:</label>
+                <div class="bg-light rounded border px-3 py-2 d-flex justify-content-end align-items-center">
+                    <span class="category" id="category" onclick="selectCategory()">Kategori</span>
+                    <span style="margin: 0 5px;">|</span>
+                    <span class="collection" id="collection" onclick="selectCollection()">Koleksiyon</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <p></p>
+
+    <div class="container-fluid">
+        <div class="col-lg-12 person">
+            <div class="col-6">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Ürünler</h4>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <form class="needs-validation" method="post" novalidate>
+                            <div class="row">
+                                <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div>
+                                                <ul class="list-inline my-3 ecommerce-sortby-list">
+                                                    <li class="list-inline-item">
+                                                        <span class="fw-medium font-family-secondary">
+                                                            Sırala:
+                                                        </span>
+                                                    </li>
+                                                    <li class="list-inline-item active"><a href="#">Popüler</a></li>
+                                                    <li class="list-inline-item"><a href="#">En Yeni</a></li>
+                                                    <li class="list-inline-item"><a href="#">İndirim</a></li>
+                                                </ul>
+
+                                                <div class="row g-0">
+                                                    <div class="col-xl-4 col-sm-6">
+                                                        <div class="product-box">
+                                                            <div class="product-img">
+                                                                <div class="product-ribbon badge bg-warning">
+                                                                    Trending
+                                                                </div>
+                                                                <div class="product-like">
+                                                                    <a href="#">
+                                                                        <i class="mdi mdi-heart-outline"></i>
+                                                                    </a>
+                                                                </div>
+                                                            <img src="asd/CommonCrm__/assets/images/products/img-1.png" alt="img-1"
+                                                                     class="img-fluid mx-auto d-block">
+                                                            </div>
+
+                                                            <div class="text-center">
+                                                            <p class="font-size-12 mb-1">Deneme</p>
+                                                                <h5 class="font-size-15">
+                                                                    <a href="#" class="text-reset">
+                                                                    Deneme
+                                                                    </a>
+                                                                </h5>
+
+                                                                <h5 class="mt-3 mb-0">$240</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xl-4 col-sm-6">
+                                                        <div class="product-box">
+                                                            <div class="product-img">
+                                                                <div class="product-like">
+                                                                    <a href="#">
+                                                                        <i class="mdi mdi-heart text-danger"></i>
+                                                                    </a>
+                                                                </div>
+                                                            <img src="asd/CommonCrm__/assets/images/products/img-2.png" alt="img-2"
+                                                                     class="img-fluid mx-auto d-block">
+                                                            </div>
+
+                                                            <div class="text-center">
+                                                                <p class="font-size-12 mb-1">Deneme</p>
+                                                                <h5 class="font-size-15">
+                                                                    <a href="#" class="text-reset">
+                                                                    Deneme
+                                                                    </a>
+                                                                </h5>
+
+                                                                <h5 class="mt-3 mb-0">$242</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-4 col-sm-6">
+                                                        <div class="product-box">
+                                                            <div class="product-img">
+                                                                <div class="product-ribbon badge bg-primary">
+                                                                    - 22 %
+                                                                </div>
+                                                                <div class="product-like">
+                                                                    <a href="#">
+                                                                        <i class="mdi mdi-heart-outline"></i>
+                                                                    </a>
+                                                                </div>
+                                                            <img src="asd/CommonCrm__/assets/images/products/img-2.png" alt="img-2"
+                                                                     class="img-fluid mx-auto d-block">
+
+                                                            </div>
+
+                                                            <div class="text-center">
+                                                            <p class="font-size-12 mb-1">Deneme</p>
+                                                                <h5 class="font-size-15">
+                                                                    <a href="#" class="text-reset">
+                                                                    Deneme
+                                                                    </a>
+                                                                </h5>
+
+                                                                <h5 class="mt-3 mb-0">
+                                                                    <span class="text-muted me-2"><del>$240</del></span>$225
+                                                                </h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row mt-4">
+                                                    <div class="col-sm-6">
+                                                        <div>
+                                                            <p class="mb-sm-0 mt-2">
+                                                                Page <span class="fw-bold">2</span> Of <span class="fw-bold">113</span>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="float-sm-end">
+                                                            <ul class="pagination pagination-rounded mb-sm-0">
+                                                                <li class="page-item disabled">
+                                                                    <a href="#" class="page-link"><i class="mdi mdi-chevron-left"></i></a>
+                                                                </li>
+                                                                <li class="page-item">
+                                                                    <a href="#" class="page-link">1</a>
+                                                                </li>
+                                                                <li class="page-item active">
+                                                                    <a href="#" class="page-link">2</a>
+                                                                </li>
+                                                                <li class="page-item">
+                                                                    <a href="#" class="page-link">3</a>
+                                                                </li>
+                                                                <li class="page-item">
+                                                                    <a href="#" class="page-link">4</a>
+                                                                </li>
+                                                                <li class="page-item">
+                                                                    <a href="#" class="page-link">5</a>
+                                                                </li>
+                                                                <li class="page-item">
+                                                                    <a href="#" class="page-link"><i class="mdi mdi-chevron-end"></i></a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                             </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="col-lg-12 person">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form class="needs-validation" method="post" novalidate>
+                            <button type="submit" class="btn btn-success float-end">Fiyat Teklifi İste</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
