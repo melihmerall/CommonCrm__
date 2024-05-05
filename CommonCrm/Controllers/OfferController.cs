@@ -1,10 +1,14 @@
+using CommonCrm.Business.DTOs;
 using CommonCrm.Business.Extensions;
 using CommonCrm.Business.Extensions.Utilities;
 using CommonCrm.Business.Services;
 using CommonCrm.Data.DbContexts;
 using CommonCrm.Data.Entities.AppUser;
+using CommonCrm.Data.Entities.Offer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace CommonCrm.Controllers
 {
@@ -14,7 +18,56 @@ namespace CommonCrm.Controllers
         private readonly ApplicationDbContext _context;
         private readonly AttributeService _attributeService;
 
+        #region Special Methods
 
+        private List<SelectListItem?> GetSelectListItems(IEnumerable<object> entities, string textPropertyName,
+            string valuePropertyName)
+        {
+            return entities
+                .Select(entity =>
+                {
+                    var textProperty = entity.GetType().GetProperty(textPropertyName);
+                    var valueProperty = entity.GetType().GetProperty(valuePropertyName);
+
+                    if (textProperty != null && valueProperty != null)
+                    {
+                        return new SelectListItem
+                        {
+                            Text = textProperty.GetValue(entity)?.ToString(),
+                            Value = valueProperty.GetValue(entity)?.ToString()
+                        };
+                    }
+
+                    return null;
+                })
+                .Where(item => item != null)
+                .ToList();
+        }
+        public List<SelectListItem> GetSelectListItems(IEnumerable<object> users, string primaryPropertyName, string secondaryPropertyName, string idPropertyName)
+        {
+            List<SelectListItem> selectListItems = new List<SelectListItem>();
+
+            foreach (var user in users)
+            {
+                // Öncelikle "Name" özelliğini kontrol edin
+                var primaryPropertyValue = user.GetType().GetProperty(primaryPropertyName)?.GetValue(user, null);
+
+                // Eğer "Name" özelliği null veya boş ise, "OfficialName" özelliğini kullanın
+                if (primaryPropertyValue == null || string.IsNullOrWhiteSpace(primaryPropertyValue.ToString()))
+                {
+                    primaryPropertyValue = user.GetType().GetProperty(secondaryPropertyName)?.GetValue(user, null);
+                }
+
+                // ID özelliğini alın
+                var id = user.GetType().GetProperty(idPropertyName)?.GetValue(user, null);
+
+                // SelectListItems listesine ekleme
+                selectListItems.Add(new SelectListItem { Value = id.ToString(), Text = primaryPropertyValue.ToString() });
+            }
+
+            return selectListItems;
+        }
+        #endregion
         public OfferController(UserManager<ApplicationUser> userManager, ApplicationDbContext context,
             IdentityContext identityContext, AttributeService attributeService)
         {
@@ -24,14 +77,32 @@ namespace CommonCrm.Controllers
             _attributeService = attributeService;
             _attributeService = attributeService;
         }
+        public async Task<IActionResult> DeleteOffer(int id)
+        {
+            var offer = _context.Offers.FirstOrDefaultAsync(x=>x.Id == id).Result;
+            if (offer != null)
+            {
+                _context.Remove(offer);
+                await _context.SaveChangesAsync();
+                TempData["CustomMessage"] = Constants.SuccessDeleted;
 
+                return RedirectToAction("OfferList");
+
+            }
+
+            TempData["ErrorMessage"] = Constants.UnSuccessDeleted;
+
+            return RedirectToAction("OfferList");
+        }
         [Route("/offer/list")]
         [HttpGet]
         public IActionResult OfferList()
         {
             var currentUser = _userManager.GetUserAsync(User).Result;
-            var offers = _userManager.Users
-                ?.Where(x => x.OwnerId == currentUser.OwnerId && (x.IsCustomerPerson || x.IsCustomerCompany)).ToList();
+            var offers = _context.Offers.Where(x => x.OwnerId == currentUser.OwnerId)
+                .Include(x=>x.AppUser)
+                .Include(x => x.OffersProducts)
+                .ToList();
 
             return View(offers);
         }
@@ -60,47 +131,85 @@ namespace CommonCrm.Controllers
 
         [Route("/offer/add")]
         [HttpGet]
-        public IActionResult OfferAdd()
+        public async Task<IActionResult> OfferAdd()
         {
-            return View();
-        }
+            var currentUser = _userManager.GetUserAsync(User).Result;
+            var model = new CreateOfferDto();
+            model.Products =  await _context.Products.Where(x => x.OwnerId == currentUser.OwnerId).ToListAsync();
+            model.AppUsers =  await _userManager.Users.Where(x => x.OwnerId == currentUser.OwnerId && (x.IsCustomerPerson || x.IsCustomerCompany) && x.IsCrmOwner == false).ToListAsync();
+            model.AppUsersSelectListItems = GetSelectListItems(model.AppUsers, "Name", "Title", "Id");
+            model.ProductsSelectListItems = GetSelectListItems(model.Products, "Name","Id");
 
+            return View(model);
+        }
+        [HttpGet]
+        [Route("/Offer/GetUser/{id?}")]
+        public IActionResult GetUser(Guid id)
+        {
+            if (id == null || id.ToString() == "00000000-0000-0000-0000-000000000000")
+            {
+                return NotFound(); 
+            }
+            var user =  _userManager.FindByIdAsync(id.ToString()).Result; // Kullanıcıyı veritabanından id'ye göre bulun
+
+            if (user == null)
+            {
+                return NotFound(); 
+            }
+
+            return Ok(user); 
+        }
         [Route("/offer/add")]
         [HttpPost]
-        public async Task<IActionResult> OfferAdd(ApplicationUser model)
+        public async Task<IActionResult> OfferAdd(CreateOfferDto model)
         {
             var currentUser = _userManager.GetUserAsync(User).Result;
             Random random = new Random();
-            var randomnumber = random.Next(0, 10000);
+            var randomnumber = random.Next(0, 1000000);
 
+            var customer = _userManager.FindByEmailAsync(model.AppUser?.Email).Result;
+
+            if (customer == null)
+            {
+                model.AppUser.OwnerId = currentUser.OwnerId;
+                model.AppUser.CreatedBy = currentUser.Name + " " + currentUser.Surname;
+                
+                if (model.AppUser.Name != null)
+                {
+                    model.AppUser.UserName = model.AppUser.Name + model.AppUser.Surname + randomnumber;
+
+                    model.AppUser.IsCustomerPerson = true;
+                }
+
+                if (model.AppUser.OfficialName != null)
+                {
+                    model.AppUser.UserName = model.AppUser.OfficialName + model.AppUser.OfficialSurname + randomnumber;
+
+                    model.AppUser.IsCustomerCompany = true;
+                }
+
+                model.AppUser.IsActive = true;
+
+                await _userManager.CreateAsync(model.AppUser);
+                TempData["CustomMessage"] = Constants.CustomerAddedSuccess;
+
+            }
+            
             if (ModelState.IsValid)
             {
-                model.OwnerId = currentUser.OwnerId;
-                model.CreatedBy = currentUser.Name + " " + currentUser.Surname;
-                model.UserName = model.Name + model.Surname + randomnumber;
-                if (model.OfficialName != null)
-                {
-                    model.IsCustomerCompany = true;
-                }
+                // Mapping  model to offer.
+                var offer = model.MapTo<Offer>();
+                offer.OwnerId = currentUser.OwnerId;
+                offer.CreatedBy = currentUser.Name + " " + currentUser.Surname;
+                offer.OffersProducts = model.OfferProducts;
 
-                if (model.Name != null)
-                {
-                    model.IsCustomerPerson = true;
-                }
-
-                model.IsActive = true;
-
-                var result = await _userManager.CreateAsync(model);
-
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("OfferList", "Offer");
-                }
-
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
+                await _context.Offers.AddAsync(offer);
+                await _context.SaveChangesAsync();
+                
+                TempData["CustomMessage"] = Constants.OfferSuccess;
+                return RedirectToAction("OfferList", "Offer");
+                
+                    
             }
             else
             {
@@ -109,7 +218,11 @@ namespace CommonCrm.Controllers
                     foreach (var error in modelError.Errors)
                     {
                         ModelState.AddModelError(string.Empty, error.ErrorMessage);
+                        TempData["ErrorMessage"] = error.ErrorMessage;
+
                     }
+                    return View(model);
+
                 }
             }
 
@@ -118,57 +231,78 @@ namespace CommonCrm.Controllers
 
         [Route("/offer/{id}/update")]
         [HttpGet]
-        public async Task<IActionResult> OfferUpdate(string id)
+        public async Task<IActionResult> OfferUpdate(int id)
         {
-            var user = await _userManager.FindByIdAsync(id);
-
-            return View(user);
+            var currentUser = _userManager.GetUserAsync(User).Result;
+            var model = new CreateOfferDto();
+            model.Products =  await _context.Products.Where(x => x.OwnerId == currentUser.OwnerId).ToListAsync();
+            model.AppUsers =  await _userManager.Users.Where(x => x.OwnerId == currentUser.OwnerId && (x.IsCustomerPerson || x.IsCustomerCompany) && x.IsCrmOwner == false).ToListAsync();
+            model.AppUsersSelectListItems = GetSelectListItems(model.AppUsers, "Name", "Title", "Id");
+            model.ProductsSelectListItems = GetSelectListItems(model.Products, "Name","Id");
+            model.Offer = _context.Offers.Include(x=>x.AppUser).Include(x=>x.OffersProducts).FirstOrDefault(x => x.Id == id && x.OwnerId == currentUser.OwnerId);
+            model.OfferProducts = model.Offer.OffersProducts;
+            model.Offer.TotalPrice = 0;
+            model.Offer.DiscountPrice = 0;
+            
+            return View(model);
         }
 
         [Route("/offer/{id}/update")]
         [HttpPost]
-        public async Task<IActionResult> OfferUpdate(ApplicationUser model)
+        public async Task<IActionResult> OfferUpdate(CreateOfferDto model)
         {
+            var currentUser = _userManager.GetUserAsync(User).Result;
+            var customer = _userManager.FindByEmailAsync(model.AppUser?.Email).Result;
+            
+            //
+            var offerProductsToDelete = await _context.OfferProducts
+                .Where(x => x.OwnerId == currentUser.OwnerId && x.OfferId == model.Offer.Id).ToListAsync();
+            
+
+            _context.OfferProducts.RemoveRange(offerProductsToDelete);
+            await _context.SaveChangesAsync();
+            //
+            var offer = _context.Offers.FirstOrDefault(x => x.Id == model.Offer.Id && x.OwnerId == currentUser.OwnerId);
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByIdAsync(model.Id);
-                if (model.OfficialName != null)
-                {
-                    user.Title = model.Title;
-                    user.PhoneNumber = model.PhoneNumber;
-                    user.Email = model.Email;
-                    user.Country = model.Country;
-                    user.City = model.City;
-                    user.OfficialName = model.OfficialName;
-                    user.OfficialSurname = model.OfficialSurname;
-                }
+                model.Offer.AppUser = customer;
 
-                if (model.Name != null)
+                // TODO: Mapping  model to offer.
+                offer.ModifiedBy = currentUser.Name + " " + currentUser.Surname;
+                offer.ModifiedDate = DateTime.Now;
+                offer.OwnerId = currentUser.OwnerId;
+                offer.CreatedBy = currentUser.Name + " " + currentUser.Surname;
+                offer.OffersProducts = model.OfferProducts;
+                offer.Gecerlilik = model.Offer.Gecerlilik;
+                offer.OfferStartDate = model.Offer.OfferStartDate;
+                offer.OfferEndDate = model.Offer.OfferEndDate;
+                offer.Incoterms = model.Offer.Incoterms;
+                offer.Yukumluluk = model.Offer.Yukumluluk;
+                offer.OfferCode = model.Offer.OfferCode;
+                offer.NakliyeMaliyeti = model.Offer.NakliyeMaliyeti;
+                offer.OdemeSartlari = model.Offer.OdemeSartlari;
+                offer.OfferDescription = model.Offer.OfferDescription;
+                offer.TerminDuration = model.Offer.TerminDuration;
+                offer.OfferTitle = model.Offer.OfferTitle;
+                
+                if (!model.OfferProducts.IsNullOrEmpty())
                 {
-                    user.Name = model.Name;
-                    user.Surname = model.Surname;
-                    user.TcNo = model.TcNo;
-                    user.PhoneNumber = model.PhoneNumber;
-                    user.Email = model.Email;
-                    user.Country = model.Country;
-                    user.City = model.City;
-                    user.PostCode = model.PostCode;
+                    foreach (var offerProduct in model.OfferProducts)
+                    {
+                        offerProduct.OfferId = model.Offer.Id;
+                        offerProduct.OwnerId = currentUser.OwnerId;
+                    }
+                    await _context.OfferProducts.AddRangeAsync(model.OfferProducts);
+                    await _context.SaveChangesAsync();
                 }
+                
 
-                var result = await _userManager.UpdateAsync(user);
+                _context.Offers.Update(offer);
                 await _context.SaveChangesAsync();
-                if (result.Succeeded)
-                {
-                    TempData["CustomMessage"] = Constants.SuccessUpdated;
-                    return RedirectToAction("OfferList", "Offer");
-
-                }
-
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                    TempData["ErrorMessage"] = $"{error.Description}";
-                }
+                
+                TempData["CustomMessage"] = "Teklif güncellendi.";
+                return RedirectToAction("OfferList", "Offer");
+                    
             }
             else
             {
@@ -177,9 +311,11 @@ namespace CommonCrm.Controllers
                     foreach (var error in modelError.Errors)
                     {
                         ModelState.AddModelError(string.Empty, error.ErrorMessage);
-                        TempData["ErrorMessage"] = $"{error.ErrorMessage}";
+                        TempData["ErrorMessage"] = error.ErrorMessage;
 
                     }
+                    return View(model);
+
                 }
             }
 
@@ -192,20 +328,6 @@ namespace CommonCrm.Controllers
         {
             return View();
         }
-
-        public async Task<IActionResult> DeleteOffer(string id)
-        {
-            var offer = _userManager.FindByIdAsync(id).Result;
-            if (offer == null)
-            {
-                TempData["CustomMessage"] = "User not find.";
-
-            }
-            await _userManager.DeleteAsync(offer);
-            await _context.SaveChangesAsync();
-            TempData["CustomMessage"] = Constants.SuccessDeleted;
-            return RedirectToAction("OfferList");
-
-        }
+        
     }
 }

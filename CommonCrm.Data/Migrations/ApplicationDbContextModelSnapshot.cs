@@ -105,6 +105,9 @@ namespace CommonCrm.Data.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsCrmOwner")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsCustomerCompany")
                         .HasColumnType("bit");
 
@@ -113,6 +116,12 @@ namespace CommonCrm.Data.Migrations
 
                     b.Property<bool>("IsOwner")
                         .HasColumnType("bit");
+
+                    b.Property<bool?>("IsPersonnel")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LocationFromCompany")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -137,6 +146,9 @@ namespace CommonCrm.Data.Migrations
 
                     b.Property<Guid?>("OwnerId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PaidPrice")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -179,7 +191,7 @@ namespace CommonCrm.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("ApplicationUser");
                 });
 
             modelBuilder.Entity("CommonCrm.Data.Entities.ExchangeRate", b =>
@@ -218,6 +230,148 @@ namespace CommonCrm.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ExchangeRates");
+                });
+
+            modelBuilder.Entity("CommonCrm.Data.Entities.Offer.Offer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("CurrencyDollar")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CurrencyEuro")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CurrencyTl")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal?>("DiscountPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("Gecerlilik")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Incoterms")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NakliyeMaliyeti")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OdemeSartlari")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OfferCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OfferDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OfferEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("OfferStartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OfferTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("OwnerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TerminDuration")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Yukumluluk")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Offers");
+                });
+
+            modelBuilder.Entity("CommonCrm.Data.Entities.Offer.OfferProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DiscountPercent")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("DiscountPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OfferId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("OwnerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("ProductQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductUnit")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("ProductUnitPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("kdv")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OfferId");
+
+                    b.ToTable("OfferProducts");
                 });
 
             modelBuilder.Entity("CommonCrm.Data.Entities.Product.Attribute", b =>
@@ -427,6 +581,9 @@ namespace CommonCrm.Data.Migrations
                     b.Property<string>("OfferDescription")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("OfferId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("OfferQuantity")
                         .HasColumnType("int");
 
@@ -467,6 +624,8 @@ namespace CommonCrm.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OfferId");
 
                     b.HasIndex("UnitId");
 
@@ -538,6 +697,24 @@ namespace CommonCrm.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("CommonCrm.Data.Entities.Offer.Offer", b =>
+                {
+                    b.HasOne("CommonCrm.Data.Entities.AppUser.ApplicationUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId");
+
+                    b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("CommonCrm.Data.Entities.Offer.OfferProduct", b =>
+                {
+                    b.HasOne("CommonCrm.Data.Entities.Offer.Offer", null)
+                        .WithMany("OffersProducts")
+                        .HasForeignKey("OfferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("CommonCrm.Data.Entities.Product.Attribute", b =>
                 {
                     b.HasOne("CommonCrm.Data.Entities.Product.Product", "Product")
@@ -589,11 +766,22 @@ namespace CommonCrm.Data.Migrations
 
             modelBuilder.Entity("CommonCrm.Data.Entities.Product.Product", b =>
                 {
+                    b.HasOne("CommonCrm.Data.Entities.Offer.Offer", null)
+                        .WithMany("Products")
+                        .HasForeignKey("OfferId");
+
                     b.HasOne("CommonCrm.Data.Entities.Product.ProductUnit", "Unit")
                         .WithMany()
                         .HasForeignKey("UnitId");
 
                     b.Navigation("Unit");
+                });
+
+            modelBuilder.Entity("CommonCrm.Data.Entities.Offer.Offer", b =>
+                {
+                    b.Navigation("OffersProducts");
+
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

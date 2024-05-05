@@ -1,7 +1,6 @@
 using CommonCrm.BackgroundServices;
 using CommonCrm.Business.Services;
 using CommonCrm.Data.DbContexts;
-using CommonCrm.Data.Entities;
 using CommonCrm.Data.Entities.AppUser;
 
 using CommonCrm.Data.Repositories.Abstract;
@@ -9,10 +8,8 @@ using CommonCrm.Data.Repositories.Concrete;
 using CommonCrm.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using NuGet.Protocol.Core.Types;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +21,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddDbContext<IdentityContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.EnableRetryOnFailure()));
+
+
 
 //automapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -106,7 +105,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddScoped<IAuthorizationHandler, RoleAndClaimAuthorizationHandler>();
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddHttpClient();
-//builder.Services.AddHostedService<CurrencyBackgroundService>();
+builder.Services.AddHostedService<CurrencyBackgroundService>();
 builder.Services.AddSession();
 var app = builder.Build();
 

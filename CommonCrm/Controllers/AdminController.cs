@@ -83,8 +83,11 @@ public class AdminController : BaseController
             var rnd = new Random().Next(1,100000);
             var user = model.MapTo<ApplicationUser>();
             user.OwnerId = currentUser.OwnerId;
+
             user.UserName = $"{rnd}{user.Name}{user.Surname}";
             user.IsActive = true;
+            user.IsPersonnel = true;
+            
 
             var userMail = _userManager?.FindByEmailAsync(model?.Email).Result;
             if(userMail != null)
@@ -125,7 +128,7 @@ public class AdminController : BaseController
     public async Task<IActionResult> UserList()
     {
         var currentUser = _userManager.GetUserAsync(User).Result;
-        var users = await _userManager.Users.Where(x=>x.IsCustomerCompany != true && x.IsCustomerPerson != true && x.IsCrmOwner != true && x.OwnerId == currentUser.OwnerId).ToListAsync();
+        var users = await _userManager.Users.Where(x=>x.IsCustomerCompany != true && x.IsCustomerPerson != true && x.IsCrmOwner != true && x.OwnerId == currentUser.OwnerId && x.IsPersonnel == true).ToListAsync();
         return View(users);
     }
     [HttpGet]
@@ -148,7 +151,7 @@ public class AdminController : BaseController
         await _userManager.DeleteAsync(user);
         await _context.SaveChangesAsync();
         TempData["CustomMessage"] = Constants.SuccessDeleted;
-        return RedirectToAction("UserList");
+        return RedirectToAction("CrmUserList");
 
     }
     #endregion
@@ -166,7 +169,7 @@ public class AdminController : BaseController
         {
             var rnd = new Random().Next(1,100000);
             var user = model.MapTo<ApplicationUser>();
-            user.OwnerId = new Guid();
+            user.OwnerId = Guid.NewGuid();
             user.UserName = $"{rnd}{user.Name}{user.Surname}";
             user.IsActive = true;
             user.IsOwner = true;

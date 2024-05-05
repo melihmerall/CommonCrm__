@@ -17,7 +17,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-                    <a onclick="saveProductUnit()" class="btn btn-success">Kaydet</a>
+                    <a  class="btn btn-success unit">Kaydet</a>
                 </div>
             </form>
 
@@ -26,22 +26,22 @@
 </div>
 <script>
     $(document).ready(function(){
-        $('#partialModal').on('click', '.btn-success', function(e){
-            e.preventDefault();
+        $('#partialModal').on('click', '.unit', function(e){
+            //e.preventDefault();
             saveProductUnit(); // Fonksiyonu çağır
         });
     });
 
     function saveProductUnit() {
         var formData = $('#unitAddForm').serialize(); // Form verilerini al
-        debugger;
         $.ajax({
             url: '@Url.Action("SaveProductUnit", "Product")',
             type: 'POST',
             data: formData,
             success: function(response) {
-                // Başarılı bir şekilde tamamlandığında yapılacak işlemler
-                
+                debugger;
+
+                if (response === "Ekleme Başarılı."){}
                 // Modalı kapat
                 $('#partialModal').modal('hide');
                 window.location.reload();

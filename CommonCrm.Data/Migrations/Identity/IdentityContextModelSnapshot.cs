@@ -119,6 +119,9 @@ namespace CommonCrm.Data.Migrations.Identity
                     b.Property<bool>("IsOwner")
                         .HasColumnType("bit");
 
+                    b.Property<bool?>("IsPersonnel")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LocationFromCompany")
                         .HasColumnType("nvarchar(max)");
 

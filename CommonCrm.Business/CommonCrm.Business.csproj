@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <Folder Include="BackgroundTasks\" />
+    <Folder Include="DTOs\Offer\" />
     <Folder Include="Extensions\Middleware\" />
   </ItemGroup>
 

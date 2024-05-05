@@ -34,9 +34,14 @@ namespace CommonCrm.Controllers
 			var model = new LayoutViewModel();
 			
 			var currentUser = _userManager.GetUserAsync(User);
-			var exchangeRates = _context.ExchangeRates.Where(x => x.OwnerId == currentUser.Result.OwnerId).ToList();
-			model.ExchangeRates = exchangeRates;
-			return View(model);
+			if(currentUser.Result != null)
+			{
+                var exchangeRates = _context.ExchangeRates.Where(x => x.OwnerId == currentUser.Result.OwnerId).ToList();
+                model.ExchangeRates = exchangeRates;
+
+
+            }
+            return View(model);
 		}
 
     }

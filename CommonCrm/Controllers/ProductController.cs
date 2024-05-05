@@ -88,7 +88,8 @@ namespace CommonCrm.Controllers
             }
 
             var model = new List<GetProductsDto>();
-            var products = _productService.GetByOwnerId(currentUser.OwnerId).Result;
+            //var products = _productService.GetByOwnerId(currentUser.OwnerId).Result;
+            var products =  _context.Products.Where(x => x.OwnerId == currentUser.OwnerId).ToList();
             foreach (var product in products)
             {
                 var mappedProduct = product.MapTo<GetProductsDto>();
@@ -479,7 +480,7 @@ namespace CommonCrm.Controllers
             var user = GetCurrentUser();
             if (entity.ProductUnit?.Name == null)
             {
-                TempData["ErrorMessage"] = "Koleksiyon ismi boş olamaz.";
+                TempData["ErrorMessage"] = "Birim ismi boş olamaz.";
                 return Json(new { success = false, message = "Değişiklik izni yok." });
             }
 
@@ -489,22 +490,16 @@ namespace CommonCrm.Controllers
                 return Json(new { success = false, message = "Değişiklik izni yok." });
             }
 
-            try
-            {
+
                 var unit = new ProductUnit
                 {
                     Name = entity.ProductUnit.Name,
                     OwnerId = user.OwnerId
                 };
-                _productUnitService.Create(unit);
+                _context.ProductsUnit.AddAsync(unit);
+            _context.SaveChangesAsync();
                 TempData["SuccessMessage"] = Constants.SuccessAdded;
-                return Json(new { success = true, message = "Değişiklik izni yok." });
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = ex.Message;
-                return Json(new { success = false, message = ex.Message });
-            }
+                return Json(new { success = true, message = "Ekleme Başarılı." });
         }
 
         [HttpPost]

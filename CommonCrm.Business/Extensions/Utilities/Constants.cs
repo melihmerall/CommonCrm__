@@ -11,5 +11,8 @@ public static class Constants
     public const string SuccessAdded = "Ekleme Başarılı.";
     public const string SuccessUpdated = "Güncelleme Başarılı.";
     public const string SuccessDeleted = "Silme Başarılı.";
+    public const string UnSuccessDeleted = "Silme Başarısız.";
+    public const string CustomerAddedSuccess = "Müşteri Başarı ile Eklendi.";
+    public const string OfferSuccess = "Teklif Başarı ile Eklendi.";
 
 }

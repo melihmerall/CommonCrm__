@@ -1,8 +1,802 @@
-﻿@model CommonCrm.Data.Entities.AppUser.ApplicationUser
+﻿@using CommonCrm.Business.Extensions
+@using CommonCrm.Data.Entities.AppUser
+@model CommonCrm.Business.DTOs.CreateOfferDto
 
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    ViewData["Title"] = "OfferAdd";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var data = Model.Offer.AppUser;
 }
 
-<h2>title</h2>
+<div class="page-content">
+<div class="container-fluid">
+<form class="needs-validation" asp-action="OfferUpdate" asp-controller="Offer" method="post">
+
+<div class="row">
+
+<div class="col-lg-6 person">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Kimlik</h4>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="Baslik" class="form-label">Başlık</label>
+                        <input type="text" class="form-control" id="Baslik" asp-for="Offer.OfferTitle" placeholder="Başlık" required>
+                        <input hidden="" class="form-control" asp-for="Offer.Id"  >
+
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Başlık girin.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="Kod" class="form-label">Kod</label>
+                        <input type="text" class="form-control" id="Kod" asp-for="Offer.OfferCode" placeholder="Kod" required>
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Kod girin.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="Duzenleme" class="form-label">Düzenleme</label>
+                        <input type="date" class="form-control" id="Duzenleme" asp-for="Offer.OfferStartDate" value="@DateTime.Now.AddDays(0).ToString("yyyy-MM-dd")" placeholder="Düzenleme">
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir değer girin.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="Sonlanma" class="form-label">Sonlanma</label>
+                        <input type="date" class="form-control" value="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")" id="Sonlanma" asp-for="Offer.OfferEndDate" placeholder="Sonlanma">
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir değer girin.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="Gecerlilik" class="form-label">Geçerlilik</label>
+                        <input type="text" class="form-control" id="Gecerlilik" asp-for="Offer.Gecerlilik" readonly="" placeholder="Geçerlilik">
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir değer girin.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            @* <div class="col-md-6"> *@
+            @*     <div class="mb-3"> *@
+            @*         <label for="Döviz Türü" class="form-label">Döviz Türü</label> *@
+            @*         <div class="form-check form-check-inline"> *@
+            @*             <input class="form-check-input" type="radio" asp-for="CurrencyDollar" id="usd" value="option1"> *@
+            @*             <label class="form-check-label" for="inlineRadio1">USD</label> *@
+            @*         </div> *@
+            @*         <div class="form-check form-check-inline"> *@
+            @*             <input class="form-check-input" type="radio" asp-for="CurrencyEuro" id="eur" value="option2"> *@
+            @*             <label class="form-check-label" for="inlineRadio2">EUR</label> *@
+            @*         </div> *@
+            @*         <div class="form-check form-check-inline"> *@
+            @*             <input class="form-check-input" type="radio" asp-for="CurrencyTl" id="try" value="option3"> *@
+            @*             <label class="form-check-label" for="inlineRadio3">TRY</label> *@
+            @*         </div> *@
+            @*     </div> *@
+            @* </div> *@
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-6 person">
+    <div class="col-6">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">müşteri</h4>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Müşteriler</label>
+                        <select class="form-control select2" id="musteriSelect" asp-items="Model.AppUsersSelectListItems">
+                            <option value="0">Seçiniz</option>
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" id="turDiv">
+                    <div class="mb-3">
+                        <label for="Tür" class="form-label">Tür</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="kisi" value="option1">
+                            <label class="form-check-label" for="inlineRadio1">Kişi</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="sirket" value="option2">
+                            <label class="form-check-label" for="inlineRadio2">Şirket</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="customerDiv">
+                <div class="col-md-6" id="isimDiv">
+                    <div class="mb-3">
+                        <label for="İsim" class="form-label">İsim</label>
+                        <input type="text" class="form-control" id="İsim" asp-for="AppUser.Name" placeholder="İsim">
+                        <div class="invalid-feedback">
+                            Lütfen İsim alanını boş bırakmayın.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" id="soyisimDiv">
+                    <div class="mb-3">
+                        <label for="Soyisim" class="form-label">Soyisim</label>
+                        <input type="text" class="form-control" id="Soyisim" asp-for="AppUser.Surname" placeholder="Soyisim">
+                        <div class="invalid-feedback">
+                            Lütfen Soyisim alanını boş bırakmayın.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" id="KimlikNoDiv">
+                    <div class="mb-3">
+                        <label for="KimlikNo" class="form-label">Kimlik No</label>
+                        <input type="text" class="form-control" id="KimlikNo" asp-for="AppUser.TcNo" placeholder="Kimlik No">
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Kimlik No girin.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" id="telefonDiv">
+                    <div class="mb-3">
+                        <label for="Telefon" class="form-label">Telefon No</label>
+                        <input type="text" class="form-control" id="TelefonNo" asp-for="AppUser.PhoneNumber" placeholder="Telefon No">
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Telefon No girin.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" id="epostadiv">
+                    <div class="mb-3">
+                        <label for="Eposta" class="form-label">E-posta</label>
+                        <input type="text" class="form-control" id="Eposta" asp-for="AppUser.Email" placeholder="E-posta">
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir E-posta girin.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="Adres" class="form-label">Adres</label>
+                        <input type="text" class="form-control" id="Adres" asp-for="AppUser.Address" placeholder="Adres">
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Adres girin.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="Ulke" class="form-label">Ülke</label>
+                        <input type="text" class="form-control" id="Ulke" asp-for="AppUser.Country" placeholder="Ülke">
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Ülke girin.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="Sehir" class="form-label">Şehir</label>
+                        <input type="text" class="form-control" id="Sehir" asp-for="AppUser.City" placeholder="Şehir">
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Şehir girin.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6" id="Unvandiv">
+                    <div class="mb-3">
+                        <label for="Sehir" class="form-label">Ünvan</label>
+                        <input type="text" class="form-control" id="Unvan" asp-for="AppUser.Title" placeholder="ünvan">
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Şehir girin.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6" id="yetkiliIsımDiv">
+                    <div class="mb-3">
+                        <label for="Sehir" class="form-label">Yetkili İsim</label>
+                        <input type="text" class="form-control" id="YetkiliIsim" asp-for="AppUser.OfficialName" placeholder="yetkili isim">
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Şehir girin.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" id="yetkiliSoyisimDiv">
+                    <div class="mb-3">
+                        <label for="Sehir" class="form-label">Yetkili Soyisim</label>
+                        <input type="text" class="form-control" id="YetkiliSoyisim" asp-for="AppUser.OfficialSurname" placeholder="yetkili soyisim">
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Şehir girin.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12 person">
+    <div class="col-6">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Ürünler</h4>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-0">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>İsim</th>
+                                <th>Miktar</th>
+                                <th>Birim</th>
+                                <th>Birim Fiyat</th>
+                                <th>İndirim</th>
+                                <th>KDV</th>
+                                <th>Satır Toplam</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tableBody">
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <br/>
+                    <div class="col-12">
+                        <div class="col-8 ">
+                            <button id="addRowButton" type="button" class="btn btn-secondary">Satır Ekle</button>
+
+                        </div>
+                        <div class="col-2 float-end">
+                            <h5 class="d-inline-block">Genel Toplam: </h5>
+                            <input type="decimal" class="form-control d-inline-block" id="totalPrice" asp-for="Offer.TotalPrice"/>
+                        </div>
+                        <div class="col-2 float-end">
+                            <h5 class="d-inline-block">Toplam Indirim: </h5>
+                            <input type="text" class="form-control d-inline-block" id="TotalDiscountPrice" asp-for="Offer.DiscountPrice"/>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-12 person">
+    <div class="col-6">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Açıklama</h4>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="mt-3">
+                <textarea id="textarea" asp-for="Offer.OfferDescription" class="form-control" maxlength="500" rows="3"
+                                          placeholder="Ek bilgiler, şartlar,koşullar, ..."></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12 person">
+    <div class="col-6">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Şartlar</h4>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="Termin Suresi" class="form-label">Termin Süresi</label>
+                        <input type="text" class="form-control" id="Termin Suresi" asp-for="Offer.TerminDuration" placeholder="20 gün">
+                        <div class="invalid-feedback">
+                            Lütfen İsim alanını boş bırakmayın.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="Nakliye Maliyeti" class="form-label">Nakliye Maliyeti</label>
+                        <input type="text" class="form-control" id="Nakliye Maliyeti" asp-for="Offer.NakliyeMaliyeti" placeholder="Alıcı Öder">
+                        <div class="invalid-feedback">
+                            Lütfen Soyisim alanını boş bırakmayın.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="Incoterms" class="form-label">Incoterms</label>
+                        <input type="text" class="form-control" id="Incoterms" asp-for="Offer.Incoterms" placeholder="Incoterms">
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Kimlik No girin.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="Odeme Sartlari" class="form-label">Odeme Sartlari</label>
+                        <input type="text" class="form-control" id="OdemeSartlari" asp-for="Offer.OdemeSartlari" placeholder="Nakit,%20 önden,%80 teslimde">
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Telefon No girin.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="Yukumluluk" class="form-label">Yükümlülük</label>
+                        <input type="text" class="form-control" id="Yukumluluk" asp-for="Offer.Yukumluluk" placeholder="">
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir E-posta girin.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="col-lg-12 person">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-10"></div>
+                <div class="col-md-2">
+                    <button class="btn btn-success waves-effect waves-light float-end" type="submit">Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</form>
+
+</div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var personForm = document.querySelector('.person form');
+        var companyForm = document.querySelector('.company form');
+
+        var personInputs = personForm.querySelectorAll('input');
+        personInputs.forEach(function (input) {
+            input.addEventListener('input', function () {
+                if (input.value.trim() !== '') {
+                    companyForm.style.display = 'none';
+                } else {
+                    companyForm.style.display = 'block';
+                }
+            });
+        });
+
+        var companyInputs = companyForm.querySelectorAll('input');
+        companyInputs.forEach(function (input) {
+            input.addEventListener('input', function () {
+                if (input.value.trim() !== '') {
+                    personForm.style.display = 'none';
+                } else {
+                    personForm.style.display = 'block';
+                }
+            });
+        });
+    });
+    document.getElementById("addRowButton").addEventListener("click", function() {
+        var tableBody = document.getElementById("tableBody");
+        var rowCount = tableBody.getElementsByTagName("tr").length + 1;
+        var buttonId = 'deleteButton_' + rowCount;
+
+        var newRow = document.createElement("tr");
+        newRow.id = rowCount;
+        newRow.innerHTML = `<th scope="row">${rowCount}</th>
+                        <td>
+                            <select class="form-control select2" name="SelectedProduct[${rowCount - 1}]">
+                                @foreach (var item in Model.ProductsSelectListItems)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control" value="0" name="offerProducts[${rowCount - 1}].ProductQuantity" placeholder="Miktar" >
+                            
+                        </td>
+                        <td>
+                            <input type="number" value="0" class="form-control" name="offerProducts[${rowCount - 1}].ProductUnit" placeholder="Birim" >
+                        </td>
+                        <td>
+                            <input type="decimal" value="0" class="form-control" name="offerProducts[${rowCount - 1}].ProductUnitPrice" placeholder="Birim Fiyatı" >
+                        </td>
+                        <td>
+                            <input type="number" value="0" class="form-control" name="offerProducts[${rowCount - 1}].DiscountPrice" placeholder="İndirim" >
+                        </td>
+                        <td>
+                            <select class="form-control select2" name="offerProducts[${rowCount - 1}].KDV">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="8">8</option>
+                                <option value="10">10</option>
+                                <option value="18">18</option>
+                                <option value="20">20</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" value="0" class="form-control" name="offerProducts[${rowCount - 1}].TotalPrice" placeholder="Satır Toplam" >
+                        </td>
+                        <td>
+                        <button type="button" class="btn btn-danger delete-row-button" onclick="deleteRow(this.parentNode.parentNode)">Sil</button> 
+                         </td>
+                        `;
+                        
+
+        tableBody.appendChild(newRow);
+debugger;
+        document.getElementById(rowCount).addEventListener('click', function() {
+            var row = this.parentNode.parentNode; 
+        });
+    });
+    function deleteRow(row) {
+        row.parentNode.removeChild(row); 
+        updateGeneralTotal();
+        updateTotalDiscount();
+    }
+    var duzenlemeInput = document.getElementById("Duzenleme");
+    var sonlanmaInput = document.getElementById("Sonlanma");
+    var gecerlilikInput = document.getElementById("Gecerlilik");
+
+    duzenlemeInput.addEventListener("change", hesaplaGecerlilik);
+    sonlanmaInput.addEventListener("change", hesaplaGecerlilik);
+
+    function hesaplaGecerlilik() {
+        var duzenlemeTarih = new Date(duzenlemeInput.value);
+        var sonlanmaTarih = new Date(sonlanmaInput.value);
+
+        var gecerlilikGunSayisi = Math.ceil((sonlanmaTarih - duzenlemeTarih) / (1000 * 60 * 60 * 24));
+
+        gecerlilikInput.value = gecerlilikGunSayisi;
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+        hesaplaGecerlilik();
+            });
+            
+
+
+
+    
+</script>
+<script>
+
+    $(window).on('load', function() {
+        $('#musteriSelect').val('0').change();
+        var data = @Html.Raw(Json.Serialize(Model.Offer.AppUser));
+        if (data != null){
+            if(data.isCustomerPerson === true)
+            {
+                debugger;
+                $('#customerDiv').show();
+
+                $('#İsim').val(data.name).prop('readonly', true);
+                $('#Soyisim').val(data.surname).prop('readonly', true);
+                $('#KimlikNo').val(data.tcNo).prop('readonly', true);
+                $('#TelefonNo').val(data.phoneNumber).prop('readonly', true);
+                $('#Eposta').val(data.email).prop('readonly', true);
+                $('#Adres').val(data.address).prop('readonly', true);
+                $('#Ulke').val(data.country).prop('readonly', true);
+                $('#Sehir').val(data.city).prop('readonly', true);
+                $('#kisi').prop('checked', true).prop('readonly', true);
+                $('#sirket').prop('checked', false).prop('readonly', true);
+                $('#musteriSelect').prop('disabled', true);
+
+                $('#yetkiliIsımDiv').hide();
+                $('#yetkiliSoyisimDiv').hide();
+                $('#Unvandiv').hide();
+                $('#isimDiv').show();
+                $('#soyisimDiv').show();
+                $('#KimlikNoDiv').show();
+                $('#kisi').prop('disabled', true);
+                $('#sirket').prop('disabled', true);
+
+            }else{
+                $('#customerDiv').show();
+                 
+                $('#isimDiv').hide();
+                $('#soyisimDiv').hide();
+                $('#KimlikNoDiv').hide();
+                $('#yetkiliIsımDiv').show();
+                $('#yetkiliSoyisimDiv').show();
+                $('#Unvandiv').show();
+                $('#musteriSelect').prop('disabled', true);
+                $('#Unvan').val(data.title).prop('readonly', true);
+                $('#TelefonNo').val(data.phoneNumber).prop('readonly', true);
+                $('#Eposta').val(data.email).prop('readonly', true);
+                $('#Adres').val(data.address).prop('readonly', true);
+                $('#Ulke').val(data.country).prop('readonly', true);
+                $('#Sehir').val(data.city).prop('readonly', true);
+                $('#YetkiliIsim').val(data.officialName).prop('readonly', true);
+                $('#YetkiliSoyisim').val(data.officialSurname).prop('readonly', true);
+                $('#sirket').prop('checked', true).prop('readonly', true);
+                $('#kisi').prop('checked', false).prop('readonly', true);
+
+                $('#kisi').prop('disabled', true);
+                $('#sirket').prop('disabled', true);
+            }
+        }
+
+
+debugger;
+    var productRowCount = @Html.Raw(Json.Serialize(Model.Offer.OffersProducts.Count));
+    var products = @Html.Raw(Json.Serialize(Model.Offer.OffersProducts));
+
+        // Eğer modelden gelen ürünler varsa satırları ekle
+        if (productRowCount > 0) {
+            addProductRows(products);
+        }
+    });
+    function addProductRows(c) {
+        for (var index = 0; index < c.length; index++) {
+            var tableBody = document.getElementById("tableBody");
+            var rowCount = tableBody.getElementsByTagName("tr").length + 1;
+            var i = c[index];
+
+            var newRow = document.createElement("tr");
+            newRow.id = rowCount;
+
+            newRow.innerHTML = `<th scope="row">${rowCount}</th>
+                    <td>
+                        <select class="form-control select2" name="SelectedProduct[${rowCount - 1}]">
+                            @foreach (var item in Model.ProductsSelectListItems)
+            {
+            <option value="@item.Value">@item.Text</option>
+            }
+                        </select>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" value="${i.productQuantity}" name="offerProducts[${rowCount - 1}].ProductQuantity" placeholder="Miktar" >
+                    </td>
+                    <td>
+                        <input type="number" value="${i.productUnit}" class="form-control" name="offerProducts[${rowCount - 1}].ProductUnit" placeholder="Birim" >
+                    </td>
+                    <td>
+                        <input type="decimal" value="${i.productUnitPrice}" class="form-control" name="offerProducts[${rowCount - 1}].ProductUnitPrice" placeholder="Birim Fiyatı" >
+                    </td>
+                    <td>
+                        <input type="number" value="${i.discountPrice}" class="form-control" name="offerProducts[${rowCount - 1}].DiscountPrice" placeholder="İndirim" >
+                    </td>
+                    <td>
+                        <select class="form-control select2" value="${i.kdv}" name="offerProducts[${rowCount - 1}].KDV">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="8">8</option>
+                            <option value="10">10</option>
+                            <option value="18">18</option>
+                            <option value="20">20</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" value="${i.totalPrice}" class="form-control" name="offerProducts[${rowCount - 1}].TotalPrice" placeholder="Satır Toplam" readonly>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger delete-row-button" onclick="deleteRow(this.parentNode.parentNode)">Sil</button> 
+                    </td>`;
+
+            tableBody.appendChild(newRow);
+
+            updateRowTotal(newRow);
+        }
+
+        updateGeneralTotal();
+        updateTotalDiscount();
+    }
+
+    var tableBody = document.getElementById("tableBody");
+
+    tableBody.addEventListener('change', function(event) {
+        var target = event.target;
+
+        if (target.tagName === 'INPUT' || target.tagName === 'SELECT') {
+            var row = target.closest('tr');
+            updateRowTotal(row);
+            updateGeneralTotal();
+            updateTotalDiscount();
+        }
+    });
+
+    function updateRowTotal(row) {
+        var quantity = parseFloat(row.querySelector('input[name$=".ProductQuantity"]').value) || 0;
+        var unitPrice = parseFloat(row.querySelector('input[name$=".ProductUnitPrice"]').value) || 0;
+        var discount = parseFloat(row.querySelector('input[name$=".DiscountPrice"]').value) || 0;
+        var kdv = parseFloat(row.querySelector('select[name$=".KDV"]').value) || 0;
+
+        var totalPrice = (quantity * unitPrice) - discount;
+        var kdvAmount = totalPrice * (kdv / 100);
+        var rowTotal = totalPrice + kdvAmount;
+
+        row.querySelector('input[name$=".TotalPrice"]').value = rowTotal.toFixed(2);
+    }
+
+    function updateGeneralTotal() {
+        var tableRows = document.querySelectorAll('#tableBody tr');
+        var total = 0;
+        tableRows.forEach(function(row) {
+            var rowTotalInput = row.querySelector('input[name$=".TotalPrice"]');
+            total += parseFloat(rowTotalInput.value) || 0;
+        });
+
+        var generalTotalInput = document.getElementById('totalPrice');
+        generalTotalInput.value = total.toFixed(2);
+    }
+
+    function updateTotalDiscount() {
+        var tableRows = document.querySelectorAll('#tableBody tr');
+        var totalDiscount = 0;
+
+        tableRows.forEach(function(row) {
+            var discountInput = row.querySelector('input[name$=".DiscountPrice"]');
+            totalDiscount += parseFloat(discountInput.value) || 0;
+        });
+
+        var totalDiscountInput = document.getElementById('TotalDiscountPrice');
+        totalDiscountInput.value = totalDiscount.toFixed(2);
+    }
+    $(document).ready(function () {
+
+        $('#musteriSelect').change(function () {
+            var musteriId = $(this).val();
+            debugger;
+            if (musteriId === '0'){
+            
+                $('#sirket').prop('checked', false).prop('readonly', true);
+                $('#kisi').prop('checked', false).prop('readonly', true);
+                $('#kisi').prop('disabled', false);
+                $('#sirket').prop('disabled', false);
+                $('#customerDiv').hide();
+            
+            }else{
+                // AJAX isteği yapılıyor
+                $.ajax({
+                    url: '/Offer/GetUser/' + musteriId,
+                    type: 'GET',
+                    success: function (data) {
+                        // Başarılı olduğunda gelen verileri kullanarak ilgili alanlara değerleri atıyoruz
+                        debugger;
+                        if(data.isCustomerPerson === true)
+                        {
+                        debugger;
+                            $('#customerDiv').show();
+
+                            $('#İsim').val(data.name).prop('readonly', true);
+                            $('#Soyisim').val(data.surname).prop('readonly', true);
+                            $('#KimlikNo').val(data.tcNo).prop('readonly', true);
+                            $('#TelefonNo').val(data.phoneNumber).prop('readonly', true);
+                            $('#Eposta').val(data.email).prop('readonly', true);
+                            $('#Adres').val(data.address).prop('readonly', true);
+                            $('#Ulke').val(data.country).prop('readonly', true);
+                            $('#Sehir').val(data.city).prop('readonly', true);
+                            $('#kisi').prop('checked', true).prop('readonly', true);
+                            $('#sirket').prop('checked', false).prop('readonly', true);
+
+                            $('#yetkiliIsımDiv').hide();
+                            $('#yetkiliSoyisimDiv').hide();
+                            $('#Unvandiv').hide();
+                            $('#isimDiv').show();
+                            $('#soyisimDiv').show();
+                            $('#KimlikNoDiv').show();
+                            $('#kisi').prop('disabled', true);
+                            $('#sirket').prop('disabled', true);
+
+                        }else{
+                            $('#customerDiv').show();
+
+                            $('#isimDiv').hide();
+                            $('#soyisimDiv').hide();
+                            $('#KimlikNoDiv').hide();
+                            $('#yetkiliIsımDiv').show();
+                            $('#yetkiliSoyisimDiv').show();
+                            $('#Unvandiv').show();
+
+                            $('#Unvan').val(data.title).prop('readonly', true);
+                            $('#TelefonNo').val(data.phoneNumber).prop('readonly', true);
+                            $('#Eposta').val(data.email).prop('readonly', true);
+                            $('#Adres').val(data.address).prop('readonly', true);
+                            $('#Ulke').val(data.country).prop('readonly', true);
+                            $('#Sehir').val(data.city).prop('readonly', true);
+                            $('#YetkiliIsim').val(data.officialName).prop('readonly', true);
+                            $('#YetkiliSoyisim').val(data.officialSurname).prop('readonly', true);
+                            $('#sirket').prop('checked', true).prop('readonly', true);
+                            $('#kisi').prop('checked', false).prop('readonly', true);
+
+                            $('#kisi').prop('disabled', true);
+                            $('#sirket').prop('disabled', true);
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            }
+            
+        });
+        $('#kisi').change(function () {
+            if ($(this).is(':checked')) {
+                $('#customerDiv').show();
+
+                $('#kisi').prop('disabled', false);
+                $('#sirket').prop('disabled', false);
+                $('#yetkiliIsımDiv').hide();
+                $('#yetkiliSoyisimDiv').hide();
+                $('#Unvandiv').hide();
+
+                $('#isimDiv').show();
+                $('#soyisimDiv').show();
+                $('#KimlikNoDiv').show();
+
+                $('#İsim').val(null).prop('readonly', false);
+                $('#Soyisim').val(null).prop('readonly', false);
+                $('#KimlikNo').val(null).prop('readonly', false);
+                $('#TelefonNo').val(null).prop('readonly', false);
+                $('#Eposta').val(null).prop('readonly', false);
+                $('#Adres').val(null).prop('readonly', false);
+                $('#Ulke').val(null).prop('readonly', false);
+                $('#Sehir').val(null).prop('readonly', false);
+                $('#Unvan').val(null).prop('readonly', false);
+                $('#YetkiliIsim').val(null).prop('readonly', false);
+                $('#YetkiliSoyisim').val(null).prop('readonly', false);
+                
+                
+            }
+        });
+
+        $('#sirket').change(function () {
+            if ($(this).is(':checked')) {
+                $('#customerDiv').show();
+                $('#kisi').prop('disabled', false);
+                $('#sirket').prop('disabled', false);
+                $('#isimDiv').hide();
+                $('#soyisimDiv').hide();
+                $('#KimlikNoDiv').hide();
+
+                $('#yetkiliIsımDiv').show();
+                $('#yetkiliSoyisimDiv').show();
+
+
+                $('#İsim').val(null).prop('readonly', false);
+                $('#Soyisim').val(null).prop('readonly', false);
+                $('#KimlikNo').val(null).prop('readonly', false);
+                $('#TelefonNo').val(null).prop('readonly', false);
+                $('#Eposta').val(null).prop('readonly', false);
+                $('#Adres').val(null).prop('readonly', false);
+                $('#Ulke').val(null).prop('readonly', false);
+                $('#Sehir').val(null).prop('readonly', false);
+                $('#Unvan').val(null).prop('readonly', false);
+                $('#YetkiliIsim').val(null).prop('readonly', false);
+                $('#YetkiliSoyisim').val(null).prop('readonly', false);
+            }
+        });    });
+</script>

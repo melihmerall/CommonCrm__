@@ -1,8 +1,9 @@
 ﻿@using CommonCrm.Data.Entities.AppUser
-@model List<ApplicationUser?>
+@using CommonCrm.Data.Entities.Offer
+@model List<CommonCrm.Data.Entities.Offer.Offer>
 
 @{
-    var data = Model.Count != 0 ? Model : new List<ApplicationUser?>();
+        var data = Model.Count != 0 ? Model : new List<Offer>();
 }
 @{
     ViewData["Title"] = "OfferList";
@@ -40,14 +41,13 @@
                                style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead>
                                 <tr>
-                                    <th>Başlık</th>
                                     <th>Müşteri</th>
+                                    <th>Teklif</th>
                                     <th>Düzenleyen</th>
                                     <th>Toplam Miktar</th>
                                     <th>İndirim</th>
-                                    <th>Durum</th>
-                                    <th>Düzenlenme Tarihi</th>
-                                    <th>Oluşturulma</th>
+                                    <th>Düzenleme</th>
+                                    <th>Oluşturma</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -56,40 +56,22 @@
                                 {
                                     var customer = "";
                                     var active = "";
-
-                                    @if (i.IsCustomerCompany)
-                                    {
-                                        customer = "Şirket";
-                                    }
-                                    else if (i.IsCustomerPerson)
-                                    {
-                                        customer = "Kişi";
-                                    }
-                                    if (i.IsActive)
-                                    {
-                                        active = "Aktif";
-                                    }
-                                    else
-                                    {
-                                        active = "Pasif";
-                                    }
+                                    
+                                   
                                     <tr>
 
-                                        <td>@customer</td>
-                                        <td>@i.Name @i.Surname @i.Title</td>
-                                        <td>@i.Name</td>
-                                        <td>@i.Name</td>
-                                        <td>@i.Name</td>
-                                        <td>
-                                            @i.Name
-                                        </td>
-                                        <td>@i.Name</td>
-                                        <td>@active</td>
+                                        <td>@i.AppUser.Name @i.AppUser.Title</td>
+                                        <td>@i.OfferTitle </td>
+                                        <td>@i.CreatedBy</td>
+                                        <td>@i.OffersProducts?.Sum(x=>x.TotalPrice)</td>
+                                        <td>@i.OffersProducts.Sum(x=>x.DiscountPrice)</td>
+                                        <td>@i.OfferStartDate.ToString("yyyy MMMM dd")</td>
+                                        <td>@i.CreatedDate.ToString("yyyy MMMM dd")</td>
                                         <td class="text-center">
-                                            <a href="/customer/@i.Id/update">
+                                            <a href="/offer/@i.Id/update">
                                                 <i class="font-size-22 ri-edit-2-fill"></i>
                                             </a>
-                                            <a href="/customer/deletecustomer/@i.Id">
+                                            <a href="/offer/deleteoffer/@i.Id">
                                                 <i class="font-size-22 ri-delete-bin-fill m-lg-3">
 
                                                 </i>

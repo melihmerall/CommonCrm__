@@ -20,6 +20,7 @@ namespace CommonCrm.Data.Entities.AppUser
 		public string? City { get; set; }
 		public string? Description { get; set; }
 		public bool IsActive { get; set; }
+		public bool? IsPersonnel { get; set; }
 		public bool IsCustomerPerson { get; set; }
 		public bool IsCustomerCompany { get; set; }
 		//

@@ -40,7 +40,7 @@ public class CurrencyBackgroundService : BackgroundService
                 Console.WriteLine($"Hata oluştu: {ex.Message}");
             }
 
-            await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
+            await Task.Delay(TimeSpan.FromHours(4), stoppingToken);
         }
     }
 

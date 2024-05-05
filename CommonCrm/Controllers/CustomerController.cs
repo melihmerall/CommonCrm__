@@ -49,21 +49,33 @@ namespace CommonCrm.Controllers
         {
             var currentUser = _userManager.GetUserAsync(User).Result;
             Random random = new Random();
-            var randomnumber = random.Next(0, 10000);
+            var randomnumber = random.Next(0, 1000000);
+            var userMail = _userManager?.FindByEmailAsync(model?.Email).Result;
+            if(userMail != null)
+            {
+                TempData["ErrorMessage"] = $"Hata! E-Posta Adresi Kullanılıyor.";
+                return View(model) ;
 
+            }
             if (ModelState.IsValid)
             {
                 model.OwnerId = currentUser.OwnerId;
                 model.CreatedBy = currentUser.Name + " " + currentUser.Surname;
-                model.UserName = model.Name + model.Surname + randomnumber;
-                if (model.OfficialName != null)
-                {
-                    model.IsCustomerCompany = true;
-                }
-
+                
                 if (model.Name != null)
                 {
+                    model.UserName = model.Name + model.Surname + randomnumber;
+                    model.UserName = RemoveTurkishCharacters(model.UserName);
+
                     model.IsCustomerPerson = true;
+                }
+
+                if (model.OfficialName != null)
+                {
+                    model.UserName = model.OfficialName + model.OfficialSurname + randomnumber;
+                    model.UserName = RemoveTurkishCharacters(model.UserName);
+
+                    model.IsCustomerCompany = true;
                 }
 
                 model.IsActive = true;
@@ -93,7 +105,20 @@ namespace CommonCrm.Controllers
 
             return View(model);
         }
-        
+        public static string RemoveTurkishCharacters(string input)
+        {
+            // Türkçe karakterlerin İngilizce karşılıkları
+            string[] turkishChars = { "Ğ", "ğ", "Ü", "ü", "Ş", "ş", "İ", "ı", "Ö", "ö", "Ç", "ç", " ", "ı", "İ" };
+            string[] englishChars = { "G", "g", "U", "u", "S", "s", "I", "i", "O", "o", "C", "c", "", "i", "i" };
+
+            // Türkçe karakterleri ve boşlukları değiştirme
+            for (int i = 0; i < turkishChars.Length; i++)
+            {
+                input = input.Replace(turkishChars[i], englishChars[i]);
+            }
+
+            return input;
+        }
         [Route("/customer/{id}/update")]
         [HttpGet]
         public async Task<IActionResult> CustomerUpdate(string id)

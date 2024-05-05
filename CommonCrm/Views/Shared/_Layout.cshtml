@@ -31,8 +31,13 @@
             }
         }
     }
-    string userName = User.Identity.Name;
-    string userNameWithoutNumbers = Regex.Replace(userName, @"\d", ""); // Sayıları boş karakterle değiştirir
+    string userName = User?.Identity?.Name;
+    string userNameWithoutNumbers = "";
+    if(userName != null)
+    {
+        userNameWithoutNumbers = Regex.Replace(userName, @"\d", ""); // Sayıları boş karakterle değiştirir
+
+    }
 
 }
 <!DOCTYPE html>
@@ -81,6 +86,8 @@
     <!-- Responsive datatable examples -->
     <link href="~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet"
           type="text/css"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body data-sidebar="dark">
 <div id="layout-wrapper">
@@ -91,19 +98,19 @@
             <div class="navbar-brand-box">
                 <a href="/" class="logo logo-dark">
                     <span class="logo-sm">
-                        <img src="/assets/images/logos.png" alt="logo-sm-dark" height="100">
+                        @* <img src="/assets/images/logos.png" alt="logo-sm-dark" height="100"> *@
                     </span>
                     <span class="logo-lg">
-                        <img src="/assets/images/logos.png" alt="logo-dark" height="20">
+                        @* <img src="/assets/images/logos.png" alt="logo-dark" height="20"> *@
                     </span>
                 </a>
 
                 <a href="/" class="logo logo-light">
                     <span class="logo-sm">
-                        <img src="/assets/images/logos.png" alt="logo-sm-light" height="100">
+                        @* <img src="/assets/images/logos.png" alt="logo-sm-light" height="100"> *@
                     </span>
                     <span class="logo-lg">
-                        <img src="/assets/images/logos.png" alt="logo-light" height="100">
+                        @* <img src="/assets/images/logos.png" alt="logo-light" height="100"> *@
                     </span>
                 </a>
             </div>
@@ -291,14 +298,14 @@
             <div class="dropdown d-inline-block user-dropdown">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user" src="/assets/images/users/avatar-2.jpg"
+                    <img class="rounded-circle header-profile-user" src="/Images/default/user.png"
                          alt="Header Avatar">
                     <span class="d-none d-xl-inline-block ms-1">@userNameWithoutNumbers</span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
-                    <a class="dropdown-item" href="#"><i class="ri-user-line align-middle me-1"></i> Kullanıcı Profili</a>
+                    @* <a class="dropdown-item" href="#"><i class="ri-user-line align-middle me-1"></i> Kullanıcı Profili</a> *@
 
 
                     <div class="dropdown-divider"></div>
@@ -379,12 +386,12 @@
                          <li>
                             <a target="_self" href="/offer/list">Teklifleri Gör</a>
                          </li>
-                          <li>
-                            <a target="_self" href="/offer/requests">Teklif Talepleri</a>
-                           </li>
-                           <li>
-                                <a target="_self" href="/shop/main">Mağazayı Gör</a>
-                          </li>
+                          @* <li> *@
+                          @*   <a target="_self" href="/offer/requests">Teklif Talepleri</a> *@
+                          @*  </li> *@
+                          @*  <li> *@
+                          @*       <a target="_self" href="/shop/main">Mağazayı Gör</a> *@
+                          @* </li> *@
 
                         </ul>
                       </li>
@@ -413,20 +420,20 @@
                     </li>
 
 
-                    <li>
-                        <a href="javascript: void(0);" class="has-arrow waves-effect">
-                            <i class="ri-mail-send-line"></i>
-                            <span>Role & İzin Kontrolü</span>
-                        </a>
-                        <ul class="sub-menu" aria-expanded="false">
-                            <li>
-                                <a target="_self" href="/role/list">Rol Listesi</a>
-                            </li>
-                            <li>
-                                <a target="_self" href="/role/add">Rol Ekle</a>
-                            </li>
-                        </ul>
-                    </li>
+                    @* <li> *@
+                    @*     <a href="javascript: void(0);" class="has-arrow waves-effect"> *@
+                    @*         <i class="ri-mail-send-line"></i> *@
+                    @*         <span>Role & İzin Kontrolü</span> *@
+                    @*     </a> *@
+                    @*     <ul class="sub-menu" aria-expanded="false"> *@
+                    @*         <li> *@
+                    @*             <a target="_self" href="/role/list">Rol Listesi</a> *@
+                    @*         </li> *@
+                    @*         <li> *@
+                    @*             <a target="_self" href="/role/add">Rol Ekle</a> *@
+                    @*         </li> *@
+                    @*     </ul> *@
+                    @* </li> *@
                 }else{
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">

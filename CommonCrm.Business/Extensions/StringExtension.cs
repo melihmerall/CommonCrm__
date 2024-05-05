@@ -33,7 +33,18 @@ public static class StringExtension
     {
         return l == null || !l.Any();
     }
+    public static string RemoveTurkishCharacters(string input)
+    {
+        string[] turkishChars = { "Ğ", "ğ", "Ü", "ü", "Ş", "ş", "İ", "ı", "Ö", "ö", "Ç", "ç", " ", "ı", "İ" };
+        string[] englishChars = { "G", "g", "U", "u", "S", "s", "I", "i", "O", "o", "C", "c", "", "i", "i" };
 
+        for (int i = 0; i < turkishChars.Length; i++)
+        {
+            input = input.Replace(turkishChars[i], englishChars[i]);
+        }
+
+        return input;
+    }
 
 
 }
