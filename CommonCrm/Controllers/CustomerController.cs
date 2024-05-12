@@ -1,10 +1,16 @@
-﻿using CommonCrm.Business.Extensions;
+﻿using System.Globalization;
+using AutoMapper;
+using CommonCrm.Business.Extensions;
 using CommonCrm.Business.Extensions.Utilities;
 using CommonCrm.Business.Services;
 using CommonCrm.Data.DbContexts;
+using CommonCrm.Data.Entities;
 using CommonCrm.Data.Entities.AppUser;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace CommonCrm.Controllers
 {
@@ -25,6 +31,86 @@ namespace CommonCrm.Controllers
             _attributeService = attributeService;
         }
 
+        // public async Task<List<Tuple<string, string>>> GetCountry()
+        // {
+        //     List<Tuple<string, string>> countriesWithNames = new List<Tuple<string, string>>();
+        //
+        //     HttpClient client = new HttpClient();
+        //     HttpResponseMessage response =
+        //         await client.GetAsync($"https://countriesnow.space/api/v0.1/countries/iso");
+        //     response.EnsureSuccessStatusCode();
+        //     string responseBody = await response.Content.ReadAsStringAsync();
+        //
+        //     dynamic countryData = JsonConvert.DeserializeObject(responseBody);
+        //
+        //     // foreach (var country in countryData.data)
+        //     // {
+        //     //     string countryName = country.name.ToString();
+        //     //     string iso3 = country.iso3.ToString();
+        //     //
+        //     //     foreach (var state in country.states)
+        //     //     {
+        //     //         string stateName = state.name.ToString();
+        //     //         string stateCode = state.state_code.ToString();
+        //     //
+        //     //         // Veritabanına ekleme işlemi
+        //     //         var countryState = new CountryStates
+        //     //         {
+        //     //             CountryName = countryName,
+        //     //             ISO3 = iso3,
+        //     //             StateName = stateName,
+        //     //             StateCode = stateCode
+        //     //         };
+        //     //
+        //     //         _context.CountryStates.Add(countryState);
+        //     //     }
+        //     // }
+        //     foreach (var country in countryData.data)
+        //     {
+        //         string countryName = country.name.ToString();
+        //         string iso2 = country.Iso2.ToString();
+        //         string iso3 = country.Iso3.ToString();
+        //
+        //         // Yeni ülke oluşturma
+        //         var newCountry = new Country
+        //         {
+        //             Name = countryName,
+        //             Iso2 = iso2,
+        //             Iso3 = iso3
+        //         };
+        //
+        //         // Oluşturulan ülkeyi veritabanına ekleme
+        //         _context.Countries.Add(newCountry);
+        //     }
+        //
+        //     _context.SaveChanges();
+        //     return countriesWithNames;
+        // }
+
+        private List<SelectListItem?> GetSelectListItems(IEnumerable<object> entities, string textPropertyName,
+            string valuePropertyName)
+        {
+            return entities
+                .Select(entity =>
+                {
+                    var textProperty = entity.GetType().GetProperty(textPropertyName);
+                    var valueProperty = entity.GetType().GetProperty(valuePropertyName);
+
+                    if (textProperty != null && valueProperty != null)
+                    {
+                        return new SelectListItem
+                        {
+                            Text = textProperty.GetValue(entity)?.ToString(),
+                            Value = valueProperty.GetValue(entity)?.ToString()
+                        };
+                    }
+
+                    return null;
+                })
+                .Where(item => item != null)
+                .ToList();
+        }
+
         [Route("/customer/list")]
         [HttpGet]
         public IActionResult CustomerList()
@@ -38,11 +124,25 @@ namespace CommonCrm.Controllers
 
         [Route("/customer/add")]
         [HttpGet]
-        public IActionResult CustomerAdd()
+        public async Task<IActionResult> CustomerAdd()
         {
+            // Şehir listesini al
+            var countries = await _context.Countries.ToListAsync();
+            // SelectListItem listesine dönüştür
+            List<SelectListItem> selectListItemsCountry = countries.Select(country => new SelectListItem
+            {
+                Text = country.Name,
+                Value = country.Name
+            }).ToList();
+            ViewBag.CountryList = selectListItemsCountry;
             return View();
         }
-
+        [HttpGet]
+        public async Task<IActionResult> GetCities(string countryName)
+        {
+            var cities = await _context.CountryStates.Where(c => c.CountryName == countryName).ToListAsync();
+            return Json(cities);
+        }
         [Route("/customer/add")]
         [HttpPost]
         public async Task<IActionResult> CustomerAdd(ApplicationUser model)
@@ -51,17 +151,17 @@ namespace CommonCrm.Controllers
             Random random = new Random();
             var randomnumber = random.Next(0, 1000000);
             var userMail = _userManager?.FindByEmailAsync(model?.Email).Result;
-            if(userMail != null)
+            if (userMail != null)
             {
                 TempData["ErrorMessage"] = $"Hata! E-Posta Adresi Kullanılıyor.";
-                return View(model) ;
-
+                return View(model);
             }
+
             if (ModelState.IsValid)
             {
                 model.OwnerId = currentUser.OwnerId;
                 model.CreatedBy = currentUser.Name + " " + currentUser.Surname;
-                
+
                 if (model.Name != null)
                 {
                     model.UserName = model.Name + model.Surname + randomnumber;
@@ -105,6 +205,7 @@ namespace CommonCrm.Controllers
 
             return View(model);
         }
+
         public static string RemoveTurkishCharacters(string input)
         {
             // Türkçe karakterlerin İngilizce karşılıkları
@@ -119,12 +220,24 @@ namespace CommonCrm.Controllers
 
             return input;
         }
+
         [Route("/customer/{id}/update")]
         [HttpGet]
         public async Task<IActionResult> CustomerUpdate(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
+            // Şehir listesini al
+            var countries = await _context.Countries.ToListAsync();
+            // SelectListItem listesine dönüştür
+            List<SelectListItem> selectListItemsCountry = countries.Select(country => new SelectListItem
+            {
+                Text = country.Name,
+                Value = country.Name
+            }).ToList();
             
+            
+            
+            ViewBag.CountryList = selectListItemsCountry;
             return View(user);
         }
 
@@ -164,7 +277,6 @@ namespace CommonCrm.Controllers
                 {
                     TempData["CustomMessage"] = Constants.SuccessUpdated;
                     return RedirectToAction("CustomerList", "Customer");
-                    
                 }
 
                 foreach (var error in result.Errors)
@@ -181,7 +293,6 @@ namespace CommonCrm.Controllers
                     {
                         ModelState.AddModelError(string.Empty, error.ErrorMessage);
                         TempData["ErrorMessage"] = $"{error.ErrorMessage}";
-
                     }
                 }
             }
@@ -202,13 +313,12 @@ namespace CommonCrm.Controllers
             if (customer == null)
             {
                 TempData["CustomMessage"] = "User not find.";
-
             }
+
             await _userManager.DeleteAsync(customer);
             await _context.SaveChangesAsync();
             TempData["CustomMessage"] = Constants.SuccessDeleted;
             return RedirectToAction("CustomerList");
-
         }
     }
 }

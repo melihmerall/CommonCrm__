@@ -43,7 +43,7 @@
                                     <th>Tür</th>
                                     <th>İsim</th>
                                     <th>Yetkili</th>
-                                    <th>Ülke</th>
+                                    <th>Ülke/Şehir</th>
                                     <th>Atanan</th>
                                     <th>Ekleyen</th>
                                     <th>Durum</th>
@@ -76,7 +76,7 @@
                                         <td>@customer</td>
                                         <td>@i.Name @i.Surname @i.Title</td>
                                         <td>@i.CreatedBy</td>
-                                        <td>@i.Country</td>
+                                        <td>@i.Country, @i.City.Replace("Province","")</td>
                                         <td>@i.CreatedBy</td>
                                         <td>
                                             @i.CreatedBy

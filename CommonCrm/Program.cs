@@ -1,3 +1,4 @@
+using System.Globalization;
 using CommonCrm.BackgroundServices;
 using CommonCrm.Business.Services;
 using CommonCrm.Data.DbContexts;
@@ -78,7 +79,9 @@ builder.Services.AddAuthorization(options =>
 	});
 	
 });
-
+var cultureInfo = new CultureInfo("en-US");
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 builder.Services.ConfigureApplicationCookie(options =>
 {
 	options.Cookie.HttpOnly = true;

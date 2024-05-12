@@ -40,6 +40,7 @@ namespace CommonCrm.Data.Entities.Product
 
         public int? OfferQuantity { get; set; } //
         public string? OfferDescription { get; set; } //
+        public string? OfferDescriptionEnglish { get; set; }
 
         public string? Description { get; set; }
         public string? EnglishDescription { get; set; }

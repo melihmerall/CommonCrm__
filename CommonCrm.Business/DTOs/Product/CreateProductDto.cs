@@ -49,6 +49,7 @@ public class CreateProductDto
 
         public int? OfferQuantity { get; set; } = 1;
         public string? OfferDescription { get; set; }
+        public string? OfferDescriptionEnglish { get; set; }
         public string? Description { get; set; }
         public string? EnglishDescription { get; set; }
 

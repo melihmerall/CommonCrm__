@@ -89,7 +89,7 @@ namespace CommonCrm.Controllers
 
             var model = new List<GetProductsDto>();
             //var products = _productService.GetByOwnerId(currentUser.OwnerId).Result;
-            var products =  _context.Products.Where(x => x.OwnerId == currentUser.OwnerId).ToList();
+            var products =  _context.Products.Where(x => x.OwnerId == currentUser.OwnerId).Include(x=>x.Unit).ToList();
             foreach (var product in products)
             {
                 var mappedProduct = product.MapTo<GetProductsDto>();
@@ -413,6 +413,7 @@ namespace CommonCrm.Controllers
             product.KdvEuro = model.KdvEuro;
             product.KdvTL = model.KdvTL;
             product.OfferDescription = model.OfferDescription;
+            product.OfferDescriptionEnglish = model.OfferDescriptionEnglish;
             product.OfferQuantity = model.OfferQuantity;
             product.TotalDolar = model.TotalDolar;
             product.TotalEuro = model.TotalEuro;

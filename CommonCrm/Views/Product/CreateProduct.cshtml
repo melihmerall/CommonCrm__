@@ -198,7 +198,7 @@
                                         <br />
 
                                         <div class="row">
-                                            <div class="col-lg-3">
+                                            <div class="col-lg-4">
                                                 <div class="mb-3">
                                                     <label class="form-label" for="productname">Satış</label>
                                                     <hr />
@@ -236,7 +236,7 @@
 
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3">
+                                            <div class="col-lg-2">
                                                 <div class="mb-3">
                                                     <label class="form-label" for="productname">KDV Oranı</label>
                                                     <hr />
@@ -406,6 +406,10 @@
                                                 <div class="mb-3">
                                                     <label class="form-label" for="productdesc">Satır Açıklaması</label>
                                                     <textarea placeholder="Teklif satırı için açıklama" asp-for="OfferDescription" class="form-control" id="productdesc" rows="5"></textarea>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="productdesc">Satır Açıklaması - İngilizce</label>
+                                                    <textarea placeholder="Description" asp-for="OfferDescriptionEnglish" class="form-control" id="productdesc" rows="5"></textarea>
                                                 </div>
 
                                             </div>
@@ -586,7 +590,13 @@
     function openPartialModalCollection() {
         $('#partialModalCollection').modal('show'); // Modalı göster
     }
-
+    document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault(); // Enter tuşunun varsayılan davranışını engeller
+            }
+        });
+    });
     function updateTotal(currencyType, isKdv) {
         const salesPriceInput = document.getElementById(`input-currency-${currencyType}`);
         const kdvSelect = document.getElementById(`kdv-select-${currencyType}`);

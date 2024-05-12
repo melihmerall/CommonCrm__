@@ -5,234 +5,262 @@
     ViewData["Title"] = "CustomerAdd";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<form class="needs-validation" method="post" novalidate>
 
 <div class="page-content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-6 person">
-                <div class="col-12">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0">Bireysel</h4>
+<div class="container-fluid">
+<div class="row">
+<div class="col-lg-6 person">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Bireysel</h4>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="FirstName" class="form-label">İsim</label>
+                        <input type="text" class="form-control" id="FirstName" asp-for="Name" placeholder="İsim" required>
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir isim girin.
+                        </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-body">
-                        <form class="needs-validation" method="post" novalidate>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="FirstName" class="form-label">İsim</label>
-                                        <input type="text" class="form-control" id="FirstName" asp-for="Name" placeholder="İsim" required>
-                                        <div class="invalid-feedback">
-                                            Lütfen geçerli bir isim girin.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="LastName" class="form-label">Soyisim</label>
-                                        <input type="text" class="form-control" id="LastName" asp-for="Surname" placeholder="Soyisim" required>
-                                        <div class="invalid-feedback">
-                                            Lütfen geçerli bir Soyisim girin.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="Kimlik No" class="form-label">Kimlik No</label>
-                                        <input type="text" class="form-control" id="TcNo" asp-for="TcNo" placeholder="Kimlik No" required>
-                                        <div class="invalid-feedback">
-                                            Lütfen 11 haneli geçerli Kimlik Numaranızı girin.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="City" class="form-label">Telefon</label>
-                                        <input type="text" class="form-control" id="PhoneNumber" asp-for="PhoneNumber" placeholder="Telefon" required>
-                                        <div class="invalid-feedback">
-                                            Lütfen geçerli bir Telefon Numarası girin.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="Email" class="form-label">E-Posta</label>
-                                        <input type="text" class="form-control" id="Email" asp-for="Email" placeholder="E-posta" required>
-                                        <div class="invalid-feedback">
-                                            Lütfen geçerli bir E-posta girin.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="Country" class="form-label">Ülke</label>
-                                        <input type="text" class="form-control" id="Country" asp-for="Country" placeholder="Ülke" required>
-                                        <div class="invalid-feedback">
-                                            Lütfen geçerli bir Ülke girin.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="City" class="form-label">Şehir</label>
-                                        <input type="text" class="form-control" id="City" asp-for="City" placeholder="Şehir" required>
-                                        <div class="invalid-feedback">
-                                            Lütfen geçerli bir Şehir girin.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="City" class="form-label">Adres</label>
-                                        <input type="text" class="form-control" id="Adres" asp-for="Address" placeholder="Adres" required>
-                                        <div class="invalid-feedback">
-                                            Lütfen geçerli bir Adres girin.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="Zip" class="form-label">Posta Kodu</label>
-                                        <input type="text" class="form-control" id="Zip" asp-for="Zip" placeholder="Posta Kodu" required>
-                                        <div class="invalid-feedback">
-                                            Lütfen geçerli bir Posta Kodu girin.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                          
-                            <div>
-                                <button class="btn btn-success waves-effect waves-light" type="submit">Kaydet</button>
-                            </div>
-                        </form>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="LastName" class="form-label">Soyisim</label>
+                        <input type="text" class="form-control" id="LastName" asp-for="Surname" placeholder="Soyisim" required>
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Soyisim girin.
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 company">
-                <div class="col-6">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0">Şirket</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="Kimlik No" class="form-label">Kimlik No</label>
+                        <input type="text" class="form-control" id="TcNo" asp-for="TcNo" placeholder="Kimlik No" required>
+                        <div class="invalid-feedback">
+                            Lütfen 11 haneli geçerli Kimlik Numaranızı girin.
+                        </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-body">
-                        <form class="needs-validation" method="post" novalidate>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <label for="Title" class="form-label">Şirket Ünvanı</label>
-                                        <input type="text" class="form-control" id="Title" asp-for="Title" placeholder="Şirket Ünvanı" required>
-                                        <div class="invalid-feedback">
-                                            Lütfen geçerli bir Şirket Ünvanı girin.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="PhoneNumber" class="form-label">Telefon</label>
-                                        <input type="text" class="form-control" id="PhoneNumber" asp-for="PhoneNumber" placeholder="Telefon" required>
-                                        <div class="invalid-feedback">
-                                            Lütfen geçerli bir Telefon Numarası girin.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="Email" class="form-label">E-Posta</label>
-                                        <input type="text" class="form-control" id="Email" asp-for="Email" placeholder="E-posta" required>
-                                        <div class="invalid-feedback">
-                                            Lütfen geçerli bir E-posta girin.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="Country" class="form-label">Ülke</label>
-                                        <input type="text" class="form-control" id="Country" asp-for="Country" placeholder="Ülke" required>
-                                        <div class="invalid-feedback">
-                                            Lütfen geçerli bir Ülke girin.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="City" class="form-label">Şehir</label>
-                                        <input type="text" class="form-control" id="City" asp-for="City" placeholder="Şehir" required>
-                                        <div class="invalid-feedback">
-                                            Lütfen geçerli bir Şehir girin.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="City" class="form-label">Adres</label>
-                                        <input type="text" class="form-control" id="City" asp-for="Address" placeholder="Şehir" required>
-                                        <div class="invalid-feedback">
-                                            Lütfen geçerli bir Adres girin.
-                                        </div>
-                                    </div>
-                                </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="OfficialName" class="form-label">Yetkili İsim</label>
-                                            <input type="text" class="form-control" id="OfficialName" asp-for="OfficialName" placeholder="Yetkili İsim" required>
-                                            <div class="invalid-feedback">
-                                                Lütfen geçerli bir Yetkili ismi girin.
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="OfficialSurname" class="form-label">Yetkili Soyismi</label>
-                                            <input type="text" class="form-control" id="OfficialSurname" asp-for="OfficialSurname" placeholder="Yetkili Soyismi" required>
-                                            <div class="invalid-feedback">
-                                                Lütfen geçerli bir Yetkili Soyismi girin.
-                                            </div>
-                                        </div>
-                                    </div>
-                            </div>
-                           
-                            <div>
-                                <button class="btn btn-success waves-effect waves-light" type="submit">Kaydet</button>
-                            </div>
-                        </form>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="City" class="form-label">Telefon</label>
+                        <input type="text" class="form-control" id="PhoneNumber" asp-for="PhoneNumber" placeholder="Telefon" required>
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Telefon Numarası girin.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="Email" class="form-label">E-Posta</label>
+                        <input type="text" class="form-control" id="Email" asp-for="Email" placeholder="E-posta" required>
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir E-posta girin.
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="City" class="form-label">Adres</label>
+                        <input type="text" class="form-control" id="Adres" asp-for="Address" placeholder="Adres" required>
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Adres girin.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="Zip" class="form-label">Posta Kodu</label>
+                        <input type="text" class="form-control" id="Zip" asp-for="Zip" placeholder="Posta Kodu" required>
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Posta Kodu girin.
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div>
+                <button class="btn btn-success waves-effect waves-light" type="submit">Kaydet</button>
+            </div>
+
         </div>
     </div>
 </div>
+<div class="col-lg-6 company">
+    <div class="col-6">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Şirket</h4>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <label for="Title" class="form-label">Şirket Ünvanı</label>
+                        <input type="text" class="form-control" id="Title" asp-for="Title" placeholder="Şirket Ünvanı" required>
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Şirket Ünvanı girin.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="PhoneNumber" class="form-label">Telefon</label>
+                        <input type="text" class="form-control" id="PhoneNumber" asp-for="PhoneNumber" placeholder="Telefon" required>
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Telefon Numarası girin.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="Email" class="form-label">E-Posta</label>
+                        <input type="text" class="form-control" id="Email" asp-for="Email" placeholder="E-posta" required>
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir E-posta girin.
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="City" class="form-label">Adres</label>
+                        <input type="text" class="form-control" id="Adres" asp-for="Address" placeholder="Şehir" required>
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Adres girin.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="OfficialName" class="form-label">Yetkili İsim</label>
+                        <input type="text" class="form-control" id="OfficialName" asp-for="OfficialName" placeholder="Yetkili İsim" required>
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Yetkili ismi girin.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="OfficialSurname" class="form-label">Yetkili Soyismi</label>
+                        <input type="text" class="form-control" id="OfficialSurname" asp-for="OfficialSurname" placeholder="Yetkili Soyismi" required>
+                        <div class="invalid-feedback">
+                            Lütfen geçerli bir Yetkili Soyismi girin.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <button class="btn btn-success waves-effect waves-light" type="submit">Kaydet</button>
+            </div>
+        </div>
+    </div>
+   
+</div>
+<div class="col-md-6">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-7">
+                        <div class="mb-3">
+                            <label for="Country" class="form-label">Ülke</label>
+                            <select type="text" class="form-control select2" asp-for="Country" id="Country" asp-items="@ViewBag.CountryList" placeholder="Ülke" required>
+                                <option>Seçiniz...</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Lütfen geçerli bir Ülke girin.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="City" class="form-label">Şehir</label>
+                            <select type="text" class="form-control select2" id="City" asp-for="City" placeholder="Şehir" required>
+                                <option>Seçiniz...</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Lütfen geçerli bir Şehir girin.
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+</div>
+</div>
+</div>
+</form>
 <!-- end row -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var personForm = document.querySelector('.person form');
-        var companyForm = document.querySelector('.company form');
 
-        var personInputs = personForm.querySelectorAll('input');
-        personInputs.forEach(function(input) {
-            input.addEventListener('input', function() {
-                if (input.value.trim() !== '') {
-                    companyForm.style.display = 'none';
-                } else {
-                    companyForm.style.display = 'block';
-                }
-            });
+    $(document).ready(function () {
+        // Person div'indeki inputlara değer girildiğinde
+        $('.person input').on('input', function () {
+            // Eğer input değeri varsa, company div'ini gizle ve required özelliğini kaldır
+            if ($(this).val().trim() !== '') {
+                $('.company').hide();
+                $('.company input').removeAttr('required');
+            } else {
+                // Eğer input değeri yoksa, company div'ini görünür yap ve required özelliğini ekle
+                $('.company').show();
+                $('.company input').attr('required', 'required');
+            }
         });
 
-        var companyInputs = companyForm.querySelectorAll('input');
-        companyInputs.forEach(function(input) {
-            input.addEventListener('input', function() {
-                if (input.value.trim() !== '') {
-                    personForm.style.display = 'none';
-                } else {
-                    personForm.style.display = 'block';
+        // Company div'indeki inputlara değer girildiğinde
+        $('.company input').on('input', function () {
+            // Eğer input değeri varsa, person div'ini gizle ve required özelliğini kaldır
+            if ($(this).val().trim() !== '') {
+                $('.person').hide();
+                $('.person input').removeAttr('required');
+            } else {
+                // Eğer input değeri yoksa, person div'ini görünür yap ve required özelliğini ekle
+                $('.person').show();
+                $('.person input').attr('required', 'required');
+            }
+        });
+    });
+    $(document).ready(function () {
+        // Ülke seçimi değiştiğinde
+        $('#Country').change(function () {
+            // Seçilen ülkenin adını al
+            var selectedCountry = $(this).val();
+
+            // AJAX isteği gönder
+            $.ajax({
+                url: '/customer/getcities', // Şehirleri getiren endpoint
+                type: 'GET',
+                data: { countryName: selectedCountry }, // Seçilen ülkenin adını gönder
+                success: function (data) {
+                    // AJAX isteği başarılı olduğunda şehirlerin listesini güncelle
+                    $('#City').empty(); // Şehirlerin listesini temizle
+                    $.each(data, function (index, city) {
+                        // Her bir şehri dropdown listesine ekle
+                        $('#City').append($('<option>').text(city.stateName).attr('value', city.stateName));
+                    });
                 }
             });
         });
     });
+    
+    
 </script>

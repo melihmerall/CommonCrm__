@@ -55,6 +55,8 @@ namespace CommonCrm.Data.DbContexts
         public DbSet<ExchangeRate> ExchangeRates { get; set; }
         public DbSet<CategoryProduct> CategoryProducts { get; set; }
         public DbSet<CollectionProduct> CollectionProducts { get; set; }
+        public DbSet<CountryStates> CountryStates { get; set; }
+        public DbSet<Country> Countries { get; set; }
 
     }
     public class IdentityContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
